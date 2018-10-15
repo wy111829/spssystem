@@ -40,6 +40,7 @@
 </template>
 
 <script>
+
 export default {
   name: 'orderList',
   data() {

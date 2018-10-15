@@ -53,49 +53,49 @@ export default new Router({
                     meta: { title: '经销商管理' }
                 },
                 {
-                    // 富文本编辑器组件
+
                     path: '/systemEmailAdressList',
                     component: resolve => require(['@/views/systemSet/systemEmailAdressList'], resolve),
                     meta: { title: '邮件地址管理' }
                 },
                 {
-                    // markdown组件
+
                     path: '/systemEmailAdressNew',
                     component: resolve => require(['@/views/systemSet/systemEmailAdressNew'], resolve),
                     meta: { title: '新增邮件地址' }
                 },
                 {
-                    // 图片上传组件
+
                     path: '/systemEmailTemList',
                     component: resolve => require(['@/views/systemSet/systemEmailTemList'], resolve),
                     meta: { title: '邮件模板管理' }
                 },
                 {
-                    // vue-schart组件
+
                     path: '/systemEmailTemNew',
                     component: resolve => require(['@/views/systemSet/systemEmailTemNew'], resolve),
                     meta: { title: '新增邮件模块' }
                 },
                 {
-                    // 拖拽列表组件
+
                     path: '/systemMsg',
                     component: resolve => require(['@/views/systemSet/systemMsg'], resolve),
                     meta: { title: '系统消息' }
                 },
                 {
-                    // 权限页面
+
                     path: '/systemPswd',
                     component: resolve => require(['@/views/systemSet/systemPswd'], resolve),
                     meta: { title: '系统消息', permission: true }
                 },
                 {
-                    // 权限页面
+
                     path: '/systemRegionalManger',
                     component: resolve => require(['@/views/systemSet/systemRegionalManger'], resolve),
                     meta: { title: '区域经理管理', permission: true }
                 },
                 {
-                    // 权限页面
+
                     path: '/systemUnableParts',
                     component: resolve => require(['@/views/systemSet/systemUnableParts'], resolve),
                     meta: { title: '不可订货的配件', permission: true }
