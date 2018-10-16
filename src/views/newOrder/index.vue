@@ -47,15 +47,15 @@
                     <el-input v-model="form.name"></el-input>
                 </el-form-item>
                 <el-form-item label="是否厂商喷漆:" class="el-col el-col-12 el-col-xs-24">
-                    <el-radio-group v-model="form.name">
-                        <el-radio label="是"></el-radio>
-                        <el-radio label="否"></el-radio>
+                    <el-radio-group v-model="form.radio1">
+                        <el-radio label="y">是</el-radio>
+                        <el-radio label="n">否</el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="是否额外工时支持：" class="el-col el-col-12 el-col-xs-24">
-                    <el-radio-group v-model="form.name">
-                        <el-radio label="是"></el-radio>
-                        <el-radio label="否"></el-radio>
+                    <el-radio-group v-model="form.radio2">
+                        <el-radio label="y">是</el-radio>
+                        <el-radio label="n">否</el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="事故描述:" class="el-col el-col-24">
@@ -133,17 +133,17 @@
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="案件状态：" class="el-col el-col-12 el-col-xs-24">
-                    <el-select v-model="form.region" placeholder="--Please select case status--">
-                        <el-option label="Dealer self" value=""></el-option>
-                        <el-option label="Expansion" value=""></el-option>
-                        <el-option label="Recommended" value=""></el-option>
+                    <el-select v-model="form.region" placeholder="Please select case status">
+                        <el-option label="Dealer self" value="1"></el-option>
+                        <el-option label="Expansion" value="2"></el-option>
+                        <el-option label="Recommended" value="3"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="流失去向：" class="el-col el-col-12 el-col-xs-24">
-                    <el-select v-model="form.region" placeholder="--Please select customer churn to--">
-                        <el-option label="Other BMW 4S Dealer" value=""></el-option>
-                        <el-option label="Independent repair workshop" value=""></el-option>
-                        <el-option label="others" value=""></el-option>
+                    <el-select v-model="form.region" placeholder="Please select customer churn to">
+                        <el-option label="Other BMW 4S Dealer" value="1"></el-option>
+                        <el-option label="Independent repair workshop" value="2"></el-option>
+                        <el-option label="others" value="3"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="保险公司联系人：" class="el-col el-col-12 el-col-xs-24">
@@ -155,8 +155,16 @@
                 <el-form-item label="客户挽留措施:" class="el-col el-col-24">
                     <el-input type="textarea" v-model="form.name" placeholder="Within 500 characters"></el-input>
                 </el-form-item>
-                <el-form-item label="附件：" class="el-col el-col-12 el-col-xs-24">
-                    <el-input v-model="form.name"></el-input>
+                <el-form-item label="附件：" class="el-col el-col-xs-24 el-col-12">
+                    <el-upload class="upload-demo" action="" :on-preview="handlePreview" :on-remove="handleRemove" :before-remove="beforeRemove" multiple :limit="3" :on-exceed="handleExceed" :file-list="fileList">
+                        <el-button size="small" type="primary">点击上传</el-button>
+                        <div slot="tip" class="el-upload__tip">只能上传XXX文件，且不超过XXXkb</div>
+                    </el-upload>
+                </el-form-item>
+                <el-form-item class="el-col el-col-xs-24 el-col-24">
+                    <el-button type="primary" @click="">保存但不提交</el-button>
+                    <el-button type="primary" @click="onSubmit">保存并提交</el-button>
+                    <el-button>取消</el-button>
                 </el-form-item>
             </el-form>
         </div>
@@ -179,9 +187,19 @@ export default {
                 type: [''],
                 resource: '',
                 desc: '',
-                options: []
+                options: [],
+                radio1: 'y',
+                radio2: 'y'
             },
-            fileList: [],
+            fileList: [{
+                    name: 'food.jpeg',
+                    url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
+                },
+                {
+                    name: 'food2.jpeg',
+                    url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
+                }
+            ],
             tableData: [{
                     number: '41217182570',
                     name: 'Rear left sidewall',
@@ -239,6 +257,18 @@ export default {
         },
         handleSelectionChange(val) {
             this.multipleSelection = val;
+        },
+        handleRemove(file, fileList) {
+            console.log(file, fileList);
+        },
+        handlePreview(file) {
+            console.log(file);
+        },
+        handleExceed(files, fileList) {
+            this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+        },
+        beforeRemove(file, fileList) {
+            return this.$confirm(`确定移除 ${ file.name }？`);
         }
     }
 }
@@ -254,5 +284,11 @@ export default {
             margin: 20px 0;
         }
     }
+}
+.el-form-item__content > div {
+    width: 100%;
+}
+.el-input--small {
+    font-size: 14px;
 }
 </style>

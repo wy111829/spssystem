@@ -101,6 +101,12 @@ export default new Router({
                     meta: { title: '不可订货的配件', permission: true }
                 },
                 {
+
+                    path: '/systemNewDealer',
+                    component: resolve => require(['@/views/systemSet/systemNewDealer'], resolve),
+                    meta: { title: '新建经销商', permission: true }
+                },
+                {
                     path: '/404',
                     component: resolve => require(['@/views/error/404.vue'], resolve),
                     meta: { title: '404' }
