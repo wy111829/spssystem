@@ -99,12 +99,22 @@
                     }
                 }
                 this.fullscreen = !this.fullscreen;
+            },
+            resizeFun(){
+              if(window.innerWidth < 750){
+                  console.log(window.innerWidth)
+                  bus.$emit('collapse', true);
+              }else{
+                  bus.$emit('collapse', false);
+              }
             }
         },
         mounted(){
-            if(document.body.clientWidth < 1500){
-                this.collapseChage();
-            }
+          let self =  this
+          this.resizeFun()
+          window.onresize=function(){
+            self.resizeFun()
+          }
         }
     }
 </script>

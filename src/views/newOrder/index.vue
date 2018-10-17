@@ -46,13 +46,13 @@
                 <el-form-item label="报案号:" class="el-col el-col-12 el-col-xs-24">
                     <el-input v-model="form.name"></el-input>
                 </el-form-item>
-                <el-form-item label="是否厂商喷漆:" class="el-col el-col-12 el-col-xs-24">
+                <el-form-item label="是否厂商喷漆:" class="el-col el-col-12 el-col-xs-24 small-label">
                     <el-radio-group v-model="form.radio1">
                         <el-radio label="y">是</el-radio>
                         <el-radio label="n">否</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <el-form-item label="是否额外工时支持：" class="el-col el-col-12 el-col-xs-24">
+                <el-form-item label="是否额外工时支持：" class="el-col el-col-12 el-col-xs-24 small-label">
                     <el-radio-group v-model="form.radio2">
                         <el-radio label="y">是</el-radio>
                         <el-radio label="n">否</el-radio>
@@ -68,22 +68,39 @@
                 配件明细
             </div>
             <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
-                <el-table-column label="配件号">
+                <el-table-column label="配件号" sortable>
                     <template slot-scope="scope">{{ scope.row.number }}</template>
                 </el-table-column>
                 <el-table-column prop="name" label="配件名称">
                 </el-table-column>
                 <el-table-column prop="count" label="订购数量" show-overflow-tooltip>
                 </el-table-column>
-                <el-table-column prop="price" label="单价" show-overflow-tooltip>
+                <el-table-column prop="unitprice" label="单价" sortable show-overflow-tooltip>
                 </el-table-column>
-                <el-table-column prop="totle" label="总价" show-overflow-tooltip>
+                <el-table-column prop="totalprice" label="总价" show-overflow-tooltip>
                 </el-table-column>
-                <el-table-column type="selection" label="订购">
+                <el-table-column prop="isorder"  label="订购">
+                  <template slot-scope="scope">
+                    <el-checkbox v-model="scope.row.isorder"></el-checkbox>
+                   </template>
                 </el-table-column>
                 <el-table-column prop="" label="物流说明" show-overflow-tooltip>
+                  <template slot-scope="scope">
+                    <el-input
+                        placeholder="请输入内容"
+                        v-model="scope.row.logisticsdes"
+                        clearable>
+                      </el-input>
+                   </template>
                 </el-table-column>
                 <el-table-column prop="" label="宝马审批说明" show-overflow-tooltip>
+                  <template slot-scope="scope">
+                    <el-input
+                      placeholder="请输入内容"
+                      v-model="scope.row.approvaldes"
+                      clearable>
+                    </el-input>
+                   </template>
                 </el-table-column>
             </el-table>
         </div>
@@ -126,7 +143,7 @@
                 <el-form-item label="车龄（月）：" class="el-col el-col-12 el-col-xs-24">
                     <el-input v-model="form.name"></el-input>
                 </el-form-item>
-                <el-form-item label="是否流失：" class="el-col el-col-12 el-col-xs-24">
+                <el-form-item label="是否流失：" class="el-col el-col-12 el-col-xs-24 small-label">
                     <el-radio-group v-model="form.name">
                         <el-radio label="是"></el-radio>
                         <el-radio label="否"></el-radio>
@@ -162,7 +179,7 @@
                     </el-upload>
                 </el-form-item>
                 <el-form-item class="el-col el-col-xs-24 el-col-24">
-                    <el-button type="primary" @click="">保存但不提交</el-button>
+                    <el-button type="primary" @click="onSubmit">保存但不提交</el-button>
                     <el-button type="primary" @click="onSubmit">保存并提交</el-button>
                     <el-button>取消</el-button>
                 </el-form-item>
@@ -204,43 +221,61 @@ export default {
                     number: '41217182570',
                     name: 'Rear left sidewall',
                     count: '1',
-                    price: '500',
-                    totle: '500'
+                    unitprice: '500',
+                    totalprice: '500',
+                    isorder: true,
+                    logisticsdes: 'ddddd',
+                    approvaldes: 'ddddddd'
                 },
                 {
-                    number: '41217182570',
-                    name: 'Rear left sidewall',
-                    count: '1',
-                    price: '500',
-                    totle: '500'
+                  number: '41217182570',
+                  name: 'Rear left sidewall',
+                  count: '1',
+                  unitprice: '500',
+                  totalprice: '500',
+                  isorder: true,
+                  logisticsdes: 'ddddd',
+                  approvaldes: 'ddddddd'
                 },
                 {
-                    number: '41217182570',
-                    name: 'Rear left sidewall',
-                    count: '1',
-                    price: '500',
-                    totle: '500'
+                  number: '41217182570',
+                  name: 'Rear left sidewall',
+                  count: '1',
+                  unitprice: '500',
+                  totalprice: '500',
+                  isorder: true,
+                  logisticsdes: 'ddddd',
+                  approvaldes: 'ddddddd'
                 },
                 {
-                    number: '41217182570',
-                    name: 'Rear left sidewall',
-                    count: '1',
-                    price: '500',
-                    totle: '500'
+                  number: '41217182570',
+                  name: 'Rear left sidewall',
+                  count: '1',
+                  unitprice: '500',
+                  totalprice: '500',
+                  isorder: true,
+                  logisticsdes: 'ddddd',
+                  approvaldes: 'ddddddd'
                 },
                 {
-                    number: '41217182570',
-                    name: 'Rear left sidewall',
-                    count: '1',
-                    price: '500',
-                    totle: '500'
+                  number: '41217182570',
+                  name: 'Rear left sidewall',
+                  count: '1',
+                  unitprice: '500',
+                  totalprice: '500',
+                  isorder: true,
+                  logisticsdes: 'ddddd',
+                  approvaldes: 'ddddddd'
                 },
                 {
-                    number: '41217182570',
-                    name: 'Rear left sidewall',
-                    count: '1',
-                    price: '500',
-                    totle: '500'
+                  number: '41217182570',
+                  name: 'Rear left sidewall',
+                  count: '1',
+                  unitprice: '500',
+                  totalprice: '500',
+                  isorder: true,
+                  logisticsdes: 'ddddd',
+                  approvaldes: 'ddddddd'
                 },
             ]
         }
@@ -269,6 +304,9 @@ export default {
         },
         beforeRemove(file, fileList) {
             return this.$confirm(`确定移除 ${ file.name }？`);
+        },
+        onSubmit(){
+
         }
     }
 }
@@ -288,7 +326,7 @@ export default {
 .el-form-item__content > div {
     width: 100%;
 }
-.el-input--small {
-    font-size: 14px;
+div.small-label {
+    height: 32px;
 }
 </style>

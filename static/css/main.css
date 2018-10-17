@@ -23,7 +23,7 @@ a {
 
 .content-box {
     position: absolute;
-    left: 250px;
+    left: 200px;
     right: 0;
     top: 70px;
     bottom: 0;
@@ -157,4 +157,12 @@ a {
 
 .v-note-wrapper .v-note-panel {
     min-height: 500px;
+}
+.text-center{
+  text-align: center;
+}
+
+.main-container{
+    background-color: #fff;
+    padding: 30px;
 }
