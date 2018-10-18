@@ -98,7 +98,7 @@
 <style>
     .tags {
         position: relative;
-        height: 30px;
+        /* height: 30px; */
         padding: 10px 0;
         overflow: hidden;
         background: #fff;
@@ -162,7 +162,7 @@
         padding-top: 1px;
         text-align: center;
         width: 110px;
-        height: 30px;
+        /* height: 30px; */
         background: #fff;
         z-index: 10;
     }

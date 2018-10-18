@@ -184,7 +184,6 @@
             }
         },
         components: {
-            Schart
         },
         computed: {
             role() {

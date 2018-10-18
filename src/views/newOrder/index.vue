@@ -59,7 +59,7 @@
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="事故描述:" class="el-col el-col-24">
-                    <el-input type="textarea" v-model="form.name"></el-input>
+                    <el-input type="textarea" v-model="form.name" :autosize="{minRows:5}"></el-input>
                 </el-form-item>
             </el-form>
         </div>
@@ -79,28 +79,22 @@
                 </el-table-column>
                 <el-table-column prop="totalprice" label="总价" show-overflow-tooltip>
                 </el-table-column>
-                <el-table-column prop="isorder"  label="订购">
-                  <template slot-scope="scope">
-                    <el-checkbox v-model="scope.row.isorder"></el-checkbox>
-                   </template>
+                <el-table-column prop="isorder" label="订购">
+                    <template slot-scope="scope">
+                        <el-checkbox v-model="scope.row.isorder"></el-checkbox>
+                    </template>
                 </el-table-column>
                 <el-table-column prop="" label="物流说明" show-overflow-tooltip>
-                  <template slot-scope="scope">
-                    <el-input
-                        placeholder="请输入内容"
-                        v-model="scope.row.logisticsdes"
-                        clearable>
-                      </el-input>
-                   </template>
+                    <template slot-scope="scope">
+                        <el-input placeholder="请输入内容" v-model="scope.row.logisticsdes" clearable>
+                        </el-input>
+                    </template>
                 </el-table-column>
                 <el-table-column prop="" label="宝马审批说明" show-overflow-tooltip>
-                  <template slot-scope="scope">
-                    <el-input
-                      placeholder="请输入内容"
-                      v-model="scope.row.approvaldes"
-                      clearable>
-                    </el-input>
-                   </template>
+                    <template slot-scope="scope">
+                        <el-input placeholder="请输入内容" v-model="scope.row.approvaldes" clearable>
+                        </el-input>
+                    </template>
                 </el-table-column>
             </el-table>
         </div>
@@ -170,7 +164,7 @@
                     <el-input v-model="form.name"></el-input>
                 </el-form-item>
                 <el-form-item label="客户挽留措施:" class="el-col el-col-24">
-                    <el-input type="textarea" v-model="form.name" placeholder="Within 500 characters"></el-input>
+                    <el-input type="textarea" v-model="form.name" :autosize="{minRows:5}" placeholder="Within 500 characters"></el-input>
                 </el-form-item>
                 <el-form-item label="附件：" class="el-col el-col-xs-24 el-col-12">
                     <el-upload class="upload-demo" action="" :on-preview="handlePreview" :on-remove="handleRemove" :before-remove="beforeRemove" multiple :limit="3" :on-exceed="handleExceed" :file-list="fileList">
@@ -228,54 +222,54 @@ export default {
                     approvaldes: 'ddddddd'
                 },
                 {
-                  number: '41217182570',
-                  name: 'Rear left sidewall',
-                  count: '1',
-                  unitprice: '500',
-                  totalprice: '500',
-                  isorder: true,
-                  logisticsdes: 'ddddd',
-                  approvaldes: 'ddddddd'
+                    number: '41217182570',
+                    name: 'Rear left sidewall',
+                    count: '1',
+                    unitprice: '500',
+                    totalprice: '500',
+                    isorder: true,
+                    logisticsdes: 'ddddd',
+                    approvaldes: 'ddddddd'
                 },
                 {
-                  number: '41217182570',
-                  name: 'Rear left sidewall',
-                  count: '1',
-                  unitprice: '500',
-                  totalprice: '500',
-                  isorder: true,
-                  logisticsdes: 'ddddd',
-                  approvaldes: 'ddddddd'
+                    number: '41217182570',
+                    name: 'Rear left sidewall',
+                    count: '1',
+                    unitprice: '500',
+                    totalprice: '500',
+                    isorder: true,
+                    logisticsdes: 'ddddd',
+                    approvaldes: 'ddddddd'
                 },
                 {
-                  number: '41217182570',
-                  name: 'Rear left sidewall',
-                  count: '1',
-                  unitprice: '500',
-                  totalprice: '500',
-                  isorder: true,
-                  logisticsdes: 'ddddd',
-                  approvaldes: 'ddddddd'
+                    number: '41217182570',
+                    name: 'Rear left sidewall',
+                    count: '1',
+                    unitprice: '500',
+                    totalprice: '500',
+                    isorder: true,
+                    logisticsdes: 'ddddd',
+                    approvaldes: 'ddddddd'
                 },
                 {
-                  number: '41217182570',
-                  name: 'Rear left sidewall',
-                  count: '1',
-                  unitprice: '500',
-                  totalprice: '500',
-                  isorder: true,
-                  logisticsdes: 'ddddd',
-                  approvaldes: 'ddddddd'
+                    number: '41217182570',
+                    name: 'Rear left sidewall',
+                    count: '1',
+                    unitprice: '500',
+                    totalprice: '500',
+                    isorder: true,
+                    logisticsdes: 'ddddd',
+                    approvaldes: 'ddddddd'
                 },
                 {
-                  number: '41217182570',
-                  name: 'Rear left sidewall',
-                  count: '1',
-                  unitprice: '500',
-                  totalprice: '500',
-                  isorder: true,
-                  logisticsdes: 'ddddd',
-                  approvaldes: 'ddddddd'
+                    number: '41217182570',
+                    name: 'Rear left sidewall',
+                    count: '1',
+                    unitprice: '500',
+                    totalprice: '500',
+                    isorder: true,
+                    logisticsdes: 'ddddd',
+                    approvaldes: 'ddddddd'
                 },
             ]
         }
@@ -305,7 +299,7 @@ export default {
         beforeRemove(file, fileList) {
             return this.$confirm(`确定移除 ${ file.name }？`);
         },
-        onSubmit(){
+        onSubmit() {
 
         }
     }
@@ -327,6 +321,6 @@ export default {
     width: 100%;
 }
 div.small-label {
-    height: 32px;
+    height: 33px;
 }
 </style>

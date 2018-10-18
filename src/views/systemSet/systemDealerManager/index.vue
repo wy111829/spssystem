@@ -95,7 +95,17 @@
       }
     },
     methods: { //事件处理器
+        handleCurrentChange(val) {
+            this.curpage = val;
+            this.getData();
+        },
+        // 获取 easy-mock 的模拟数据
+        getData() {
 
+        },
+        search() {
+
+        }
     },
     components: { //定义组件
 
