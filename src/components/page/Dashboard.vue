@@ -10,20 +10,20 @@
                             <div>{{role}}</div>
                         </div>
                     </div>
-                    <div class="user-info-list">上次登录时间：<span>2018-01-01</span></div>
-                    <div class="user-info-list">上次登录地点：<span>东莞</span></div>
+                    <div class="user-info-list">上次登录时间：<span></span></div>
+                    <div class="user-info-list">上次登录地点：<span></span></div>
                 </el-card>
                 <el-card shadow="hover" style="height:252px;">
                     <div slot="header" class="clearfix">
-                        <span>语言详情</span>
+                        <span></span>
                     </div>
-                    Vue
+
                     <el-progress :percentage="71.3" color="#42b983"></el-progress>
-                    JavaScript
+
                     <el-progress :percentage="24.1" color="#f1e05a"></el-progress>
-                    CSS
+
                     <el-progress :percentage="3.7"></el-progress>
-                    HTML
+
                     <el-progress :percentage="0.9" color="#f56c6c"></el-progress>
                 </el-card>
             </el-col>
@@ -34,8 +34,8 @@
                             <div class="grid-content grid-con-1">
                                 <i class="el-icon-lx-people grid-con-icon"></i>
                                 <div class="grid-cont-right">
-                                    <div class="grid-num">1234</div>
-                                    <div>用户访问量</div>
+                                    <div class="grid-num"></div>
+                                    <div></div>
                                 </div>
                             </div>
                         </el-card>
@@ -113,26 +113,26 @@
             return {
                 name: localStorage.getItem('ms_username'),
                 todoList: [{
-                        title: '今天要修复100个bug',
+                        title: 'xxxxxxxxxxxx',
                         status: false,
                     },
                     {
-                        title: '今天要修复100个bug',
+                        title: 'xxxxxxxxxxxxxxx',
                         status: false,
                     },
                     {
-                        title: '今天要写100行代码加几个bug吧',
+                        title: 'xxxxxxxxxxxxxxxxx',
                         status: false,
                     }, {
-                        title: '今天要修复100个bug',
+                        title: 'xxxxxxxxxxxxxxx',
                         status: false,
                     },
                     {
-                        title: '今天要修复100个bug',
+                        title: 'xxxxxxxxxxxxxxx',
                         status: true,
                     },
                     {
-                        title: '今天要写100行代码加几个bug吧',
+                        title: 'xxxxxxxxxxxxxxxxx',
                         status: true,
                     }
                 ],
@@ -220,8 +220,8 @@
                 }, 300);
             },
             renderChart(){
-                this.$refs.bar.renderChart();
-                this.$refs.line.renderChart();
+                // this.$refs.bar.renderChart();
+                // this.$refs.line.renderChart();
             }
         }
     }

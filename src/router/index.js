@@ -43,6 +43,11 @@ export default new Router({
                     meta: { title: '订单列表' }
                 },
                 {
+                    path: '/orderDetial',
+                    component: resolve => require(['@/views/orderDetial'], resolve),
+                    meta: { title: '订单详情' }
+                },
+                {
                     path: '/report',
                     component: resolve => require(['@/views/report'], resolve),
                     meta: { title: '统计分析' }

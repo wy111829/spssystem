@@ -5,7 +5,7 @@
                 <el-input v-model="form.title"></el-input>
             </el-form-item>
             <el-form-item label="收件人:" class="el-col el-col-24 el-col-xs-24">
-                <el-select v-model="form.Recipient" clearable placeholder="--Pleas select address role--">
+                <el-select v-model="form.Recipient" placeholder="--Pleas select address role--">
                     <el-option label="Dealer" value="Dealer"></el-option>
                     <el-option label="Rgion Manager" value="RgionManager"></el-option>
                     <el-option label="BMW body-paint team" value="BMW body-paint team"></el-option>
@@ -14,6 +14,10 @@
             </el-form-item>
             <el-form-item label="正文：" class="el-col el-col-24 el-col-xs-24">
                 <el-input v-model="form.text" type="textarea" :autosize="{minRows:8,maxRows:30}"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="onSubmit">确定</el-button>
+                <el-button>取消</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -30,7 +34,9 @@ export default {
         }
     },
     methods: { //事件处理器
+        onSubmit() {
 
+        }
     },
     components: { //定义组件
 

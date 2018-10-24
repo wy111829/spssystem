@@ -1,7 +1,7 @@
 <template>
 <div class="newDealer-container main-container">
     <div class="form-box-newdealer">
-        <el-form class="inline-form el-row" :rules="rules"  label-width="150px">
+        <el-form class="inline-form el-row" :rules="rules" label-width="150px">
             <el-form-item label="CBU：" prop="cbu">
                 <el-input v-model="form.cbu" clearable></el-input>
             </el-form-item>
@@ -17,34 +17,34 @@
             <el-form-item label="登录名：" prop="username">
                 <el-input v-model="form.username" clearable></el-input>
             </el-form-item>
-            <el-form-item label="密码：" prop="password" >
+            <el-form-item label="密码：" prop="password">
                 <el-input v-model="form.password" type="password" clearable></el-input>
             </el-form-item>
-            <el-form-item label="密码确认:"  prop="passwordagain">
+            <el-form-item label="密码确认：" prop="passwordagain">
                 <el-input v-model="form.passwordagain" type="password" clearable></el-input>
             </el-form-item>
-            <el-form-item label="经销商集团:" prop="dealercompany">
+            <el-form-item label="经销商集团：" prop="dealercompany">
                 <el-input v-model="form.dealercompany" clearable></el-input>
             </el-form-item>
-            <el-form-item label="区域:" prop="region">
+            <el-form-item label="区域： " prop="region">
                 <el-select v-model="form.region" @change="regionChange" clearable placeholder="请选择">
                     <el-option v-for="(item, index) in area" :key="item.id" :label="item.name" :value="item.id">
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="省份:" prop="province">
+            <el-form-item label="省份：" prop="province">
                 <el-select v-model="form.province" @change="provinceChange" clearable placeholder="请选择">
                     <el-option v-for="(item, index) in provinceList" :key="item.id" :label="item.name" :value="item.id">
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="城市:" prop="city">
+            <el-form-item label="城市：" prop="city">
                 <el-select v-model="form.city" clearable placeholder="请选择">
                     <el-option v-for="(item, index) in cityList" :key="item.id" :label="item.name" :value="item.id">
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="邮箱:" prop="email">
+            <el-form-item label="邮箱：" prop="email">
                 <el-input v-model="form.email" clearable></el-input>
             </el-form-item>
             <el-form-item label="状态：" prop="stat">
@@ -66,89 +66,156 @@
 import areaData from '@/defined/area.js'
 export default {
     data() { //选项 / 数据
-      var validatePass = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请输入密码'))
-        } else {
-          if (this.ruleForm2.checkPass !== '') {
-            this.$refs.ruleForm2.validateField('checkPass')
-          }
-          callback()
+        var validatePass = (rule, value, callback) => {
+            if (value === '') {
+                callback(new Error('请输入密码'))
+            } else {
+                if (this.ruleForm2.checkPass !== '') {
+                    this.$refs.ruleForm2.validateField('checkPass')
+                }
+                callback()
+            }
         }
-      }
-      var validatePass2 = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请再次输入密码'))
-        } else if (value !== this.ruleForm2.pass) {
-          callback(new Error('两次输入密码不一致!'))
-        } else {
-          callback()
+        var validatePass2 = (rule, value, callback) => {
+            if (value === '') {
+                callback(new Error('请再次输入密码'))
+            } else if (value !== this.ruleForm2.pass) {
+                callback(new Error('两次输入密码不一致!'))
+            } else {
+                callback()
+            }
         }
-      }
         return {
             form: {
-                cbu: '2220',
-                ckd: '222',
-                dealerfullname: 'sjsjjs',
-                dealername: '855552',
-                username: 'jsdjkkkd',
-                password: '55555',
-                passwordagain: '525525',
+                cbu: '',
+                ckd: '',
+                dealerfullname: '',
+                dealername: '',
+                username: '',
+                password: '',
+                passwordagain: '',
                 region: '',
                 province: '',
                 city: '',
-                dealercompany: 'dddd',
-                email: 'dsdd',
+                dealercompany: '',
+                email: '',
                 stat: 0,
             },
             rules: {
-               cbu: [
-                 { required: true, message: '请输入CBU', trigger: 'blur' },
-                 { min: 1, max: 100, message: '长度小于100个字', trigger: 'blur' }
-               ],
-               ckd: [
-                 { required: true, message: '请输入CKD', trigger: 'blur' },
-                 { min: 1, max: 100, message: '长度小于100个字', trigger: 'blur' }
-               ],
-               dealerfullname: [
-                 { required: true, message: '请输入CKD', trigger: 'blur' },
-                 { min: 1, max: 100, message: '长度小于100个字', trigger: 'blur' }
-               ],
-               dealername: [
-                 { required: true, message: '请输入CKD', trigger: 'blur' },
-                 { min: 1, max: 100, message: '长度小于100个字', trigger: 'blur' }
-               ],
-               username: [
-                 { required: true, message: '请输入CKD', trigger: 'blur' },
-                 { min: 1, max: 100, message: '长度小于100个字', trigger: 'blur' }
-               ],
-               password: [
-                 { required: true, validator: validatePass, trigger: 'blur'  }
-               ],
-               passwordagain: [
-                 { required: true, validatePass2, trigger: 'blur' }
-               ],
-               region: [
-                 { required: true, message: '选择地区', trigger: 'change' }
-               ],
-               province: [
-                  { required: true, message: '选择地区', trigger: 'change' }
-               ],
-               city: [
-                  { required: true, message: '选择地区', trigger: 'change' }
-               ],
-               dealercompany: [
-                 { required: true, message: '请输入CKD', trigger: 'blur' },
-                 { min: 1, max: 100, message: '长度小于100个字', trigger: 'blur' }
-               ],
-               email: [
-                 { required: true, message: '请输入邮箱地址', trigger: 'blur' },
-                 { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
-               ],
-               stat: [
-                 { required: true, message: '请填写活动形式', trigger: 'blur' }
-               ]
-             },
+                cbu: [{
+                        required: true,
+                        message: '请输入CBU',
+                        trigger: 'blur'
+                    },
+                    {
+                        min: 1,
+                        max: 100,
+                        message: '长度小于100个字',
+                        trigger: 'blur'
+                    }
+                ],
+                ckd: [{
+                        required: true,
+                        message: '请输入CKD',
+                        trigger: 'blur'
+                    },
+                    {
+                        min: 1,
+                        max: 100,
+                        message: '长度小于100个字',
+                        trigger: 'blur'
+                    }
+                ],
+                dealerfullname: [{
+                        required: true,
+                        message: '请输入经销商名称',
+                        trigger: 'blur'
+                    },
+                    {
+                        min: 1,
+                        max: 100,
+                        message: '长度小于100个字',
+                        trigger: 'blur'
+                    }
+                ],
+                dealername: [{
+                        required: true,
+                        message: '请输入CKD',
+                        trigger: 'blur'
+                    },
+                    {
+                        min: 1,
+                        max: 100,
+                        message: '长度小于100个字',
+                        trigger: 'blur'
+                    }
+                ],
+                username: [{
+                        required: true,
+                        message: '请输入CKD',
+                        trigger: 'blur'
+                    },
+                    {
+                        min: 1,
+                        max: 100,
+                        message: '长度小于100个字',
+                        trigger: 'blur'
+                    }
+                ],
+                password: [{
+                    required: true,
+                    validator: validatePass,
+                    trigger: 'blur'
+                }],
+                passwordagain: [{
+                    required: true,
+                    validatePass2,
+                    trigger: 'blur'
+                }],
+                region: [{
+                    required: true,
+                    message: '选择地区',
+                    trigger: 'change'
+                }],
+                province: [{
+                    required: true,
+                    message: '选择地区',
+                    trigger: 'change'
+                }],
+                city: [{
+                    required: true,
+                    message: '选择地区',
+                    trigger: 'change'
+                }],
+                dealercompany: [{
+                        required: true,
+                        message: '请输入CKD',
+                        trigger: 'blur'
+                    },
+                    {
+                        min: 1,
+                        max: 100,
+                        message: '长度小于100个字',
+                        trigger: 'blur'
+                    }
+                ],
+                email: [{
+                        required: true,
+                        message: '请输入邮箱地址',
+                        trigger: 'blur'
+                    },
+                    {
+                        type: 'email',
+                        message: '请输入正确的邮箱地址',
+                        trigger: ['blur', 'change']
+                    }
+                ],
+                stat: [{
+                    required: true,
+                    message: '请填写活动形式',
+                    trigger: 'blur'
+                }]
+            },
             area: [],
             provinceList: [],
             cityList: []
@@ -218,46 +285,46 @@ export default {
             console.log('处理后', arr)
             this.area = arr
         },
-        formTest () {
-          if (!form.cbu) {
-            this.openalert(rule.cbu[0].message)
-            return
-          }
-          if (!form.ckd) {
-            this.openalert(rule.ckd[0].message)
-            return
-          }
-          if (!form.dealerfullname) {
-            this.openalert(rule.dealerfullname[0].message)
-            return
-          }
-          if (!form.dealename) {
-            this.openalert(rule.dealename[0].message)
-            return
-          }
-          if (!form.username) {
-            this.openalert(rule.username[0].message)
-            return
-          }
-          if (!form.dealercompany) {
-            this.openalert(rule.dealercompany[0].message)
-            return
-          }
-          if (form.passwordagain == '') {
-            this.openalert('请再次输入密码')
-            return
-          } else if (form.passwordagain == form.password) {
-              this.openalert('两次输入密码不一致!')
-              return
-          }
+        formTest() {
+            if (!form.cbu) {
+                this.openalert(rule.cbu[0].message)
+                return
+            }
+            if (!form.ckd) {
+                this.openalert(rule.ckd[0].message)
+                return
+            }
+            if (!form.dealerfullname) {
+                this.openalert(rule.dealerfullname[0].message)
+                return
+            }
+            if (!form.dealename) {
+                this.openalert(rule.dealename[0].message)
+                return
+            }
+            if (!form.username) {
+                this.openalert(rule.username[0].message)
+                return
+            }
+            if (!form.dealercompany) {
+                this.openalert(rule.dealercompany[0].message)
+                return
+            }
+            if (form.passwordagain == '') {
+                this.openalert('请再次输入密码')
+                return
+            } else if (form.passwordagain == form.password) {
+                this.openalert('两次输入密码不一致!')
+                return
+            }
         },
-        openalert (msg) {
-          this.$alert(msg, '提示', {
-             confirmButtonText: '确定',
-             callback: action => {
+        openalert(msg) {
+            this.$alert(msg, '提示', {
+                confirmButtonText: '确定',
+                callback: action => {
 
-             }
-           })
+                }
+            })
         }
     },
     components: { //定义组件

@@ -39,7 +39,7 @@
                         title: '系统首页'
                     },
                     {
-                        icon: 'el-icon-lx-cascades',
+                        icon: 'el-icon-document',
                         index: 'orderList',
                         title: '订单列表'
                     },
@@ -49,7 +49,7 @@
                         title: '统计分析'
                     },
                     {
-                        icon: 'el-icon-lx-calendar',
+                        icon: 'el-icon-setting',
                         index: '3',
                         title: '系统设置',
                         subs: [
@@ -80,21 +80,6 @@
                             {
                                 index: 'systemPswd',
                                 title: '修改密码'
-                            }
-                        ]
-                    },
-                    {
-                        icon: 'el-icon-lx-warn',
-                        index: '6',
-                        title: '错误处理',
-                        subs: [
-                            {
-                                index: 'permission',
-                                title: '权限测试'
-                            },
-                            {
-                                index: '404',
-                                title: '404页面'
                             }
                         ]
                     }

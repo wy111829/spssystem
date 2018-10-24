@@ -9,19 +9,6 @@
     <div class="container">
         <div class="form-box-neworder">
             <div class="form-title">
-                导入定损单信息
-            </div>
-            <el-form label-width="120px" class="el-row">
-                <el-form-item label="DAT定损单号" class="el-col el-col-md-12 el-col-sm-12">
-                    <el-input v-model="form.name"></el-input>
-                </el-form-item>
-                <el-form-item label-width="10px" label="" class="el-col el-col-md-12 el-col-sm-10">
-                    <el-button size="small" type="primary">导入</el-button>
-                </el-form-item>
-            </el-form>
-        </div>
-        <div class="form-box-neworder">
-            <div class="form-title">
                 客户及车辆信息
             </div>
             <el-form class="inline-form el-row" label-width="150px">
@@ -166,12 +153,13 @@
                 <el-form-item label="客户挽留措施:" class="el-col el-col-24">
                     <el-input type="textarea" v-model="form.name" :autosize="{minRows:5}" placeholder="Within 500 characters"></el-input>
                 </el-form-item>
-                <el-form-item label="附件：" class="el-col el-col-xs-24 el-col-12">
-                    <el-upload class="upload-demo" action="" :on-preview="handlePreview" :on-remove="handleRemove" :before-remove="beforeRemove" multiple :limit="3" :on-exceed="handleExceed" :file-list="fileList">
-                        <el-button size="small" type="primary">点击上传</el-button>
-                        <div slot="tip" class="el-upload__tip">只能上传XXX文件，且不超过XXXkb</div>
-                    </el-upload>
-                </el-form-item>
+            </el-form>
+        </div>
+        <div class="form-box-neworder">
+            <div class="form-title">
+                附件
+            </div>
+            <le-form class="inline-form el-row" lebel-width="150px">
             </el-form>
         </div>
         <div class="form-box-neworder text-center">
@@ -203,11 +191,11 @@ export default {
                 radio2: 'y'
             },
             fileList: [{
-                    name: '',
+                    name: 'food.jpeg',
                     url: ''
                 },
                 {
-                    name: '',
+                    name: 'food2.jpeg',
                     url: ''
                 }
             ],

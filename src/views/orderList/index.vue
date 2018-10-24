@@ -108,7 +108,9 @@ export default {
             this.curpage = val;
             this.getData();
         },
-        // 获取 easy-mock 的模拟数据
+        handleEdit(){
+            this.$router.push({path:'/orderDetial'});
+        },
         getData() {
 
         },
