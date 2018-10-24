@@ -14,15 +14,16 @@
                     </el-input>
                 </el-form-item>
                 <div class="login-btn">
-                    <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
+                    <el-button type="primary" @click="submitForm">登录</el-button>
                 </div>
-                <p class="login-tips">Tips : 用户名和密码随便填。</p>
             </el-form>
         </div>
     </div>
 </template>
 
 <script>
+import {General} from '@/networks/api'
+import '@/MockData/MockData'
     export default {
         data: function(){
             return {
@@ -42,16 +43,30 @@
         },
         methods: {
             submitForm(formName) {
-                this.$refs[formName].validate((valid) => {
-                    if (valid) {
-                        localStorage.setItem('ms_username',this.ruleForm.username);
-                        this.$router.push('/');
-                    } else {
-                        console.log('error submit!!');
-                        return false;
-                    }
-                });
+                if (this.ruleForm.username && this.ruleForm.username.length > 0 && this.ruleForm.password && this.ruleForm.password.length > 0) {
+                  localStorage.setItem('ms_username',this.ruleForm.username)
+                    this.goLogin()
+                } else {
+                  this.$alert('用户名或密码错误', '提示')
+                }
+            },
+            async goLogin () {
+              try {
+                const response = await General.Login({
+                  UserName: this.ruleForm.username,
+                  Password: this.ruleForm.password
+                })
+                console.log(response)
+                if (response.data.Code == 200) {
+                  this.$router.push('/orderList')
+                }
+              } catch (error) {
+
+              }
             }
+        },
+        created () {
+
         }
     }
 </script>
