@@ -8,7 +8,12 @@ axios.defaults.baseURL = portUrl
 
 axios.interceptors.response.use((response) => {
     // console.log('=====axios--response====', response)
-  return response
+    if (response.data.Code == 200) {
+      return response.data
+    } else if (response.data.Code == 300 || response.data.Code == 301 || response.data.Code == 302 || response.data.Code == 400) {
+      alert(response.data.Message)
+      return ''
+    }
 }, (e) => {
     return Promise.reject(e)
 })

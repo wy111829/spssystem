@@ -57,9 +57,7 @@ import '@/MockData/MockData'
                   Password: this.ruleForm.password
                 })
                 console.log(response)
-                if (response.data.Code == 200) {
-                  this.$router.push('/orderList')
-                }
+                this.$router.push('/orderList')
               } catch (error) {
 
               }

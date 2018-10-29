@@ -76,67 +76,7 @@ export default {
                 "SparePartCostTotal":8000,
                 "StatusCode":201,
                 "Status":"待提交"
-              },
-                {
-                  "OrderID":122121,
-                  "ReferenceNumber":"DAT-20181019152745251",
-                  "CreateDate":"2018-10-19",
-                  "RegionID":"100004",
-                  "RegionName":"北区",
-                  "ProvinceID":"110000",
-                  "ProvinceName":"北京",
-                  "CityID":"110100",
-                  "CityName":"北京",
-                  "PlateNumber":"京N88888",
-                  "VIN":"LBVPZ1100ASD77412",
-                  "SubModel":"520Li",
-                  "Insurer":"中国人保",
-                  "RepairCostTotal":10726,
-                  "VehicleCurrentPrice":92000,
-                  "SparePartCostTotal":8000,
-                  "StatusCode":201,
-                  "Status":"待提交"
-                },
-                {
-                  "OrderID":122121,
-                  "ReferenceNumber":"DAT-20181019152745251",
-                  "CreateDate":"2018-10-19",
-                  "RegionID":"100004",
-                  "RegionName":"北区",
-                  "ProvinceID":"110000",
-                  "ProvinceName":"北京",
-                  "CityID":"110100",
-                  "CityName":"北京",
-                  "PlateNumber":"京N88888",
-                  "VIN":"LBVPZ1100ASD77412",
-                  "SubModel":"520Li",
-                  "Insurer":"中国人保",
-                  "RepairCostTotal":10726,
-                  "VehicleCurrentPrice":92000,
-                  "SparePartCostTotal":8000,
-                  "StatusCode":201,
-                  "Status":"待提交"
-                },
-                {
-                  "OrderID":122121,
-                  "ReferenceNumber":"DAT-20181019152745251",
-                  "CreateDate":"2018-10-19",
-                  "RegionID":"100004",
-                  "RegionName":"北区",
-                  "ProvinceID":"110000",
-                  "ProvinceName":"北京",
-                  "CityID":"110100",
-                  "CityName":"北京",
-                  "PlateNumber":"京N88888",
-                  "VIN":"LBVPZ1100ASD77412",
-                  "SubModel":"520Li",
-                  "Insurer":"中国人保",
-                  "RepairCostTotal":10726,
-                  "VehicleCurrentPrice":92000,
-                  "SparePartCostTotal":8000,
-                  "StatusCode":201,
-                  "Status":"待提交"
-                }
+              }
             ],
             TotalNumber: 0
         }
@@ -146,8 +86,9 @@ export default {
             this.curpage = val;
             this.getData();
         },
-        handleEdit(){
-            this.$router.push({path:'/orderDetial'});
+        handleEdit(index, data){
+          console.log(index, data)
+          this.$router.push({name: 'orderDetial', query: {id: data.OrderID}});
         },
         async getData() {
           try{
@@ -161,9 +102,8 @@ export default {
               "RowCount":20
             })
             console.log('订单列表', response)
-            if (response.data.Code == 200) {
-              this.TotalNumber = response.data.Data.TotalNumber
-            }
+              this.TotalNumber = response.Data.TotalNumber
+              this.Orders = response.Data.Orders
           } catch (error) {
 
           }

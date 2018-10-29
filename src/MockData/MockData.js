@@ -58,3 +58,86 @@ Mock.mock(/GetOrderList/, 'post', {
         ]
     }
 })
+
+// 获取订单详细信息
+Mock.mock(/GetOrderInfo([\w|\?\S*]+)/, 'get', {
+    "Code":200,
+    "Data":{
+        "OrderID":21171,
+        "ContractID":122121,
+        "ReferenceNumber":"DAT-20181019152745251",
+        "VehicleOwner":"张三",
+        "PlateNumber":"京N88888",
+        "VIN":"LBVPZ1100ASD77412",
+        "SubModel":"520Li",
+        "VehicleFirstRegDate":"2017-10-12",
+        "VehicleAge":18,
+        "Insurer":"中国人保",
+        "InsurerContactPerson":"李四",
+        "InsuranceNumber":"Dfaas12892182",
+        "AccidentBrief":"双方事故，宝马全责，宝马右侧受损",
+        "VehicleMSRP":128000,
+        "VehicleCurrentPrice":95000,
+        "RepairCostTotal":23500,
+        "SparePartCostTotal":19000,
+        "LaborCostTotal":4500,
+        "InsuredAmount":23500,
+        "IsManufacturerPaint":true,
+        "HasAdditionalLabor":false,
+        "CaseStatus":"自店",
+        "IsCustomerChurned":false,
+        "ChurnTo":"",
+        "ChurnReason":"",
+        "RetentionActions":"",
+        "StatusCode":201,
+        "Status":"待提交",
+        "SpareParts":[
+            {
+                "PartNumber":"41217182570",
+                "PartName":"左后翼子板",
+                "Price":600,
+                "Quantity":1,
+                "IsOrdered":true,
+                "LogisticsCmt":"",
+                "BMWApprovalCmt":""
+            },
+            {
+                "PartNumber":"83190301421",
+                "PartName":"左前门",
+                "Price":600,
+                "Quantity":1,
+                "IsOrdered":true,
+                "LogisticsCmt":"",
+                "BMWApprovalCmt":""
+            }
+        ],
+        "Attachments":[
+            {
+                "FileName":"TestPic1.PNG",
+                "DownloadFileName":"89m9b43b-4f2b-4b69-98e9-84d23ae38ae2_TestPic2.PNG",
+                "FileSize":6000,
+                "UploadDate":"2018-10-19 14:23:38"
+            },
+            {
+                "FileName":"TestPic2.PNG",
+                "DownloadFileName":"92f9b43b-4f2b-4b69-98e9-84d23ae38ae2_TestPic2.PNG",
+                "FileSize":6000,
+                "UploadDate":"2018-10-19 14:27:38"
+            }
+        ],
+        "ApplicationLogs":[
+            {
+                "OperationDate":"2018-10-19 13:23:38",
+                "Operator":"张三",
+                "Operation":"经销商提交申请",
+                "Comments":""
+            },
+            {
+                "OperationDate":"2018-10-19 14:23:38",
+                "Operator":"李四",
+                "Operation":"区域经理审批通过",
+                "Comments":"同意"
+            }
+        ]
+    }
+})
