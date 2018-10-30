@@ -11,6 +11,11 @@
             <el-radio v-model="radio" label="6">待上传工单和发票</el-radio>
             <el-radio v-model="radio" label="7">已完成</el-radio>
         </template>
+        <div class="sort-select">
+            <el-select v-model="selectword" placeholder="--请选择要查询的字段--">
+                <el-option v-for="" :key=""></el-option>
+            </el-select>
+        </div>
         <div class="handle-input">
             <el-input placeholder="VIN search" v-model="input5" class="input-with-select">
                 <el-button slot="append" icon="el-icon-search"></el-button>
@@ -29,7 +34,7 @@
         <el-table-column prop="RepairCostTotal" label="维修总价"></el-table-column>
         <el-table-column prop="SparePartCostTotal" label="配件费用"></el-table-column>
         <el-table-column label="配件占比">
-          <template slot-scope="scope">
+            <template slot-scope="scope">
               {{Math.round(scope.row.SparePartCostTotal/scope.row.RepairCostTotal*10000)/100 + '%'}}
           </template>
         </el-table-column>
@@ -49,7 +54,9 @@
 </template>
 
 <script>
-import {General} from '@/networks/api'
+import {
+    General
+} from '@/networks/api'
 export default {
     name: 'orderList',
     data() {
@@ -58,26 +65,25 @@ export default {
             selectword: '',
             curpage: 1,
             Orders: [{
-                "OrderID":122121,
-                "ReferenceNumber":"DAT-20181019152745251",
-                "CreateDate":"2018-10-19",
-                "RegionID":"100004",
-                "RegionName":"北区",
-                "ProvinceID":"110000",
-                "ProvinceName":"北京",
-                "CityID":"110100",
-                "CityName":"北京",
-                "PlateNumber":"京N88888",
-                "VIN":"LBVPZ1100ASD77412",
-                "SubModel":"520Li",
-                "Insurer":"中国人保",
-                "RepairCostTotal":10726,
-                "VehicleCurrentPrice":92000,
-                "SparePartCostTotal":8000,
-                "StatusCode":201,
-                "Status":"待提交"
-              }
-            ],
+                "OrderID": 122121,
+                "ReferenceNumber": "DAT-20181019152745251",
+                "CreateDate": "2018-10-19",
+                "RegionID": "100004",
+                "RegionName": "北区",
+                "ProvinceID": "110000",
+                "ProvinceName": "北京",
+                "CityID": "110100",
+                "CityName": "北京",
+                "PlateNumber": "京N88888",
+                "VIN": "LBVPZ1100ASD77412",
+                "SubModel": "520Li",
+                "Insurer": "中国人保",
+                "RepairCostTotal": 10726,
+                "VehicleCurrentPrice": 92000,
+                "SparePartCostTotal": 8000,
+                "StatusCode": 201,
+                "Status": "待提交"
+            }],
             TotalNumber: 0
         }
     },
@@ -86,34 +92,39 @@ export default {
             this.curpage = val;
             this.getData();
         },
-        handleEdit(index, data){
-          console.log(index, data)
-          this.$router.push({name: 'orderDetial', query: {id: data.OrderID}});
+        handleEdit(index, data) {
+            console.log(index, data)
+            this.$router.push({
+                name: 'orderDetial',
+                query: {
+                    id: data.OrderID
+                }
+            });
         },
         async getData() {
-          try{
-            const response = await General.GetOrderList({
-              "Status":101,
-              "SearchField":"RegionID",
-              "SearchValue":"101",
-              "SortField":"RegionID",
-              "SortType":"ASC",
-              "RowOffset":0,
-              "RowCount":20
-            })
-            console.log('订单列表', response)
-              this.TotalNumber = response.Data.TotalNumber
-              this.Orders = response.Data.Orders
-          } catch (error) {
+            try {
+                const response = await General.GetOrderList({
+                    "Status": 101,
+                    "SearchField": "RegionID",
+                    "SearchValue": "101",
+                    "SortField": "RegionID",
+                    "SortType": "ASC",
+                    "RowOffset": 0,
+                    "RowCount": 20
+                })
+                console.log('订单列表', response)
+                this.TotalNumber = response.Data.TotalNumber
+                this.Orders = response.Data.Orders
+            } catch (error) {
 
-          }
+            }
         },
         search() {
 
         }
     },
-    created () {
-      this.getData()
+    created() {
+        this.getData()
     }
 }
 </script>
@@ -139,6 +150,11 @@ export default {
         color: #fff;
     }
     .handle-input {
+        width: 200px;
+        margin: 10px;
+        display: inline-block;
+    }
+    .sort-select {
         width: 200px;
         margin: 10px;
         display: inline-block;

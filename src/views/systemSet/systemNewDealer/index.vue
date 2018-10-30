@@ -1,61 +1,63 @@
 <template>
 <div class="newDealer-container main-container">
     <div class="form-box-newdealer">
-        <el-form class="inline-form el-row" :rules="rules" label-width="150px">
-            <el-form-item label="CBU：" prop="cbu">
-                <el-input v-model="form.cbu" clearable></el-input>
+        <el-form class="inline-form el-row"  ref="Dealer"  :model="Dealer" :rules="rules" label-width="150px">
+            <el-form-item label="CBU：" prop="CBU">
+                <el-input v-model="Dealer.CBU" clearable></el-input>
             </el-form-item>
-            <el-form-item label="CKD：" prop="ckd">
-                <el-input v-model="form.ckd" clearable></el-input>
+            <el-form-item label="CKD：" prop="CKD">
+                <el-input v-model="Dealer.CKD" clearable></el-input>
             </el-form-item>
-            <el-form-item label="经销商名称(全称)：" prop="dealerfullname">
-                <el-input v-model="form.dealerfullname" clearable></el-input>
+            <el-form-item label="经销商名称(全称)：" prop="FullName">
+                <el-input v-model="Dealer.FullName" clearable></el-input>
             </el-form-item>
-            <el-form-item label="经销商名称(简称)：" prop="dealername">
-                <el-input v-model="form.dealername" clearable></el-input>
+            <el-form-item label="经销商名称(简称)：" prop="ShortName">
+                <el-input v-model="Dealer.ShortName" clearable></el-input>
             </el-form-item>
-            <el-form-item label="登录名：" prop="username">
-                <el-input v-model="form.username" clearable></el-input>
+            <el-form-item label="登录名：" prop="LoginName">
+                <el-input v-model="Dealer.LoginName" clearable></el-input>
             </el-form-item>
-            <el-form-item label="密码：" prop="password">
-                <el-input v-model="form.password" type="password" clearable></el-input>
+            <el-form-item label="密码：" prop="Password">
+                <el-input v-model="Dealer.Password" type="Password" clearable></el-input>
             </el-form-item>
-            <el-form-item label="密码确认：" prop="passwordagain">
-                <el-input v-model="form.passwordagain" type="password" clearable></el-input>
+            <el-form-item label="密码确认：" prop="Passwordagain">
+                <el-input v-model="Dealer.Passwordagain" type="Password" clearable></el-input>
             </el-form-item>
-            <el-form-item label="经销商集团：" prop="dealercompany">
-                <el-input v-model="form.dealercompany" clearable></el-input>
+            <el-form-item label="经销商集团：" prop="DealerGroup">
+                <el-input v-model="Dealer.DealerGroup" clearable></el-input>
             </el-form-item>
-            <el-form-item label="区域： " prop="region">
-                <el-select v-model="form.region" @change="regionChange" clearable placeholder="请选择">
+            <el-form-item label="区域： " prop="RegionID">
+                <el-select v-model="Dealer.RegionID" @change="RegionIDChange" clearable placeholder="请选择">
                     <el-option v-for="(item, index) in area" :key="item.id" :label="item.name" :value="item.id">
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="省份：" prop="province">
-                <el-select v-model="form.province" @change="provinceChange" clearable placeholder="请选择">
-                    <el-option v-for="(item, index) in provinceList" :key="item.id" :label="item.name" :value="item.id">
+            <el-form-item label="省份：" prop="ProvinceID">
+                <el-select v-model="Dealer.ProvinceID" @change="ProvinceIDChange" clearable placeholder="请选择">
+                    <el-option v-for="(item, index) in ProvinceIDList" :key="item.id" :label="item.name" :value="item.id">
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="城市：" prop="city">
-                <el-select v-model="form.city" clearable placeholder="请选择">
-                    <el-option v-for="(item, index) in cityList" :key="item.id" :label="item.name" :value="item.id">
+            <el-form-item label="城市：" prop="CityID">
+                <el-select v-model="Dealer.CityID" clearable placeholder="请选择">
+                    <el-option v-for="(item, index) in CityIDList" :key="item.id" :label="item.name" :value="item.id">
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="邮箱：" prop="email">
-                <el-input v-model="form.email" clearable></el-input>
+            <el-form-item label="邮箱：" prop="MailBox">
+                <el-input v-model="Dealer.MailBox" clearable></el-input>
             </el-form-item>
-            <el-form-item label="状态：" prop="stat">
-                <el-radio-group v-model="form.stat">
+            <el-form-item label="状态：" prop="Status">
+                <el-radio-group v-model="Dealer.Status">
                     <el-radio label="1">启用</el-radio>
                     <el-radio label="0">停用</el-radio>
                 </el-radio-group>
             </el-form-item>
             <el-row class="text-center">
-                <el-button type="primary">保存</el-button>
-                <el-button type="info">取消</el-button>
+                <el-form-item>
+                    <el-button type="primary" @click="submitForm('Dealer')">保存</el-button>
+                    <el-button type="info">取消</el-button>
+                </el-form-item>
             </el-row>
         </el-form>
     </div>
@@ -70,8 +72,8 @@ export default {
             if (value === '') {
                 callback(new Error('请输入密码'))
             } else {
-                if (this.ruleForm2.checkPass !== '') {
-                    this.$refs.ruleForm2.validateField('checkPass')
+                if (this.Dealer.Passwordagain !== '') {
+                    this.$refs.Dealer.validateField('Passwordagain')
                 }
                 callback()
             }
@@ -79,42 +81,42 @@ export default {
         var validatePass2 = (rule, value, callback) => {
             if (value === '') {
                 callback(new Error('请再次输入密码'))
-            } else if (value !== this.ruleForm2.pass) {
+            } else if (value !== this.Dealer.Password) {
                 callback(new Error('两次输入密码不一致!'))
             } else {
                 callback()
             }
         }
         return {
-            form: {
-                cbu: '',
-                ckd: '',
-                dealerfullname: '',
-                dealername: '',
-                username: '',
-                password: '',
-                passwordagain: '',
-                region: '',
-                province: '',
-                city: '',
-                dealercompany: '',
-                email: '',
-                stat: 0,
+            Dealer: {
+                CBU: '',
+                CKD: '',
+                FullName: '',
+                ShortName: '',
+                LoginName: '',
+                Password: '',
+                Passwordagain: '',
+                RegionID: '',
+                ProvinceID: '',
+                CityID: '',
+                DealerGroup: '',
+                MailBox: '',
+                Status: 0,
             },
             rules: {
-                cbu: [{
+                CBU: [{
                         required: true,
                         message: '请输入CBU',
                         trigger: 'blur'
                     },
                     {
-                        min: 1,
-                        max: 100,
+                        min: 3,
+                        max: 5,
                         message: '长度小于100个字',
                         trigger: 'blur'
                     }
                 ],
-                ckd: [{
+                CKD: [{
                         required: true,
                         message: '请输入CKD',
                         trigger: 'blur'
@@ -126,9 +128,9 @@ export default {
                         trigger: 'blur'
                     }
                 ],
-                dealerfullname: [{
+                FullName: [{
                         required: true,
-                        message: '请输入经销商名称',
+                        message: '请输入经销商名称(全称)',
                         trigger: 'blur'
                     },
                     {
@@ -138,9 +140,9 @@ export default {
                         trigger: 'blur'
                     }
                 ],
-                dealername: [{
+                ShortName: [{
                         required: true,
-                        message: '请输入CKD',
+                        message: '请输入经销商名称(简称)',
                         trigger: 'blur'
                     },
                     {
@@ -150,9 +152,9 @@ export default {
                         trigger: 'blur'
                     }
                 ],
-                username: [{
+                LoginName: [{
                         required: true,
-                        message: '请输入CKD',
+                        message: '登录名',
                         trigger: 'blur'
                     },
                     {
@@ -162,34 +164,34 @@ export default {
                         trigger: 'blur'
                     }
                 ],
-                password: [{
+                Password: [{
                     required: true,
                     validator: validatePass,
                     trigger: 'blur'
                 }],
-                passwordagain: [{
+                Passwordagain: [{
                     required: true,
-                    validatePass2,
+                    validator: validatePass2,
                     trigger: 'blur'
                 }],
-                region: [{
+                RegionID: [{
                     required: true,
                     message: '选择地区',
                     trigger: 'change'
                 }],
-                province: [{
+                ProvinceID: [{
                     required: true,
                     message: '选择地区',
                     trigger: 'change'
                 }],
-                city: [{
+                CityID: [{
                     required: true,
                     message: '选择地区',
                     trigger: 'change'
                 }],
-                dealercompany: [{
+                DealerGroup: [{
                         required: true,
-                        message: '请输入CKD',
+                        message: '请输入经销商集团',
                         trigger: 'blur'
                     },
                     {
@@ -199,7 +201,7 @@ export default {
                         trigger: 'blur'
                     }
                 ],
-                email: [{
+                MailBox: [{
                         required: true,
                         message: '请输入邮箱地址',
                         trigger: 'blur'
@@ -210,39 +212,39 @@ export default {
                         trigger: ['blur', 'change']
                     }
                 ],
-                stat: [{
+                Status: [{
                     required: true,
                     message: '请填写活动形式',
                     trigger: 'blur'
                 }]
             },
             area: [],
-            provinceList: [],
-            cityList: []
+            ProvinceIDList: [],
+            CityIDList: []
         }
     },
     methods: { //事件处理器
-        regionChange(region) {
-            console.log('regionChange', region)
-            this.provinceList = []
-            this.cityList = []
-            this.form.province = ''
-            this.form.city = ''
+        RegionIDChange(RegionID) {
+            console.log('RegionIDChange', RegionID)
+            this.ProvinceIDList = []
+            this.CityIDList = []
+            this.Dealer.ProvinceID = ''
+            this.Dealer.CityID = ''
             this.area.map((item) => {
-                if (item.id == region) {
-                    this.provinceList = item.child
+                if (item.id == RegionID) {
+                    this.ProvinceIDList = item.child
                 }
             })
         },
-        provinceChange(province) {
-            console.log('provinceChange', province)
-            this.cityList = []
-            this.form.city = ''
+        ProvinceIDChange(ProvinceID) {
+            console.log('ProvinceIDChange', ProvinceID)
+            this.CityIDList = []
+            this.Dealer.CityID = ''
             this.area.map((item) => {
-                if (item.id == this.form.region) {
+                if (item.id == this.Dealer.RegionID) {
                     item.child.map((citem) => {
-                        if (citem.id == province) {
-                            this.cityList = citem.child
+                        if (citem.id == ProvinceID) {
+                            this.CityIDList = citem.child
                         }
                     })
                 }
@@ -285,45 +287,22 @@ export default {
             console.log('处理后', arr)
             this.area = arr
         },
-        formTest() {
-            if (!form.cbu) {
-                this.openalert(rule.cbu[0].message)
-                return
-            }
-            if (!form.ckd) {
-                this.openalert(rule.ckd[0].message)
-                return
-            }
-            if (!form.dealerfullname) {
-                this.openalert(rule.dealerfullname[0].message)
-                return
-            }
-            if (!form.dealename) {
-                this.openalert(rule.dealename[0].message)
-                return
-            }
-            if (!form.username) {
-                this.openalert(rule.username[0].message)
-                return
-            }
-            if (!form.dealercompany) {
-                this.openalert(rule.dealercompany[0].message)
-                return
-            }
-            if (form.passwordagain == '') {
-                this.openalert('请再次输入密码')
-                return
-            } else if (form.passwordagain == form.password) {
-                this.openalert('两次输入密码不一致!')
-                return
-            }
-        },
         openalert(msg) {
             this.$alert(msg, '提示', {
                 confirmButtonText: '确定',
                 callback: action => {
 
                 }
+            })
+        },
+        submitForm(formName) {
+            this.$refs[formName].validate((valid) => {
+                 if (valid) {
+                   alert('submit!');
+                 } else {
+                   console.log('error submit!!');
+                   return false;
+                 }
             })
         }
     },
