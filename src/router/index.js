@@ -43,6 +43,12 @@ export default new Router({
                     name: 'orderList'
                 },
                 {
+                    path: '/DealerManagment',
+                    component: resolve => require(['@/views/DealerManagment'], resolve),
+                    meta: { title: '审批策略设置' },
+                    name: 'DealerManagment'
+                },
+                {
                     path: '/orderDetial',
                     component: resolve => require(['@/views/orderDetial'], resolve),
                     meta: { title: '订单详情' },
@@ -66,13 +72,6 @@ export default new Router({
                     component: resolve => require(['@/views/systemSet/systemEmailAdressList'], resolve),
                     meta: { title: '邮件地址管理' },
                     name: 'systemEmailAdressList'
-                },
-                {
-
-                    path: '/systemEmailAdressNew',
-                    component: resolve => require(['@/views/systemSet/systemEmailAdressNew'], resolve),
-                    meta: { title: '新增邮件地址' },
-                    name: 'systemEmailAdressNew'
                 },
                 {
 

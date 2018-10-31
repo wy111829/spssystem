@@ -5,7 +5,7 @@
                 <el-button slot="append" icon="el-icon-search"></el-button>
             </el-input>
         </div>
-        <el-button type="primary" class="newOrderButton" @click="dialogFormVisible=true">新建区域经理</el-button>
+        <!-- <el-button type="primary" class="newOrderButton" @click="dialogFormVisible=true">新建区域经理</el-button> -->
         <el-table :data="tableList" class="table" ref="multipleTable">
             <el-table-column prop="name" label="姓名"></el-table-column>
             <el-table-column prop="area" label="所辖区域"></el-table-column>
@@ -14,12 +14,13 @@
             <el-table-column label="操作" width="180" align="center">
                 <template slot-scope="scope">
                     <el-button type="text"  @click="handleEdit(scope.$index, scope.row)">Edit</el-button>
-                    <el-button type="text"  @click="handleDelete(scope.$index, scope.row)">Disable</el-button>
+                    <el-button type="text"  @click="handleDisable(scope.$index, scope.row)">Disable</el-button>
                     <el-button type="text"  @click="handleDelete(scope.$index, scope.row)">Delete</el-button>
                 </template>
             </el-table-column>
         </el-table>
-        <el-dialog title="区域经理" :visible.sync="dialogFormVisible">
+        
+        <!-- <el-dialog title="区域经理" :visible.sync="dialogFormVisible">
             <el-form :model="newInfo" label-width="80px">
                 <el-form-item label="Name: ">
                     <el-input v-model="newInfo.Name" autocomplete="off"></el-input>
@@ -49,7 +50,7 @@
                 <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
                 <el-button @click="dialogFormVisible = false">取 消</el-button>
             </div>
-        </el-dialog>
+        </el-dialog> -->
     </div>
 </template>
 

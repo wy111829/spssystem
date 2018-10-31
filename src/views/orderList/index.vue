@@ -3,17 +3,23 @@
 <div class="main-container">
     <div class="search-box">
         <template>
-            <el-radio v-model="radio" label="1">全部</el-radio>
-            <el-radio v-model="radio" label="2">未提交</el-radio>
-            <el-radio v-model="radio" label="3">待区域审批</el-radio>
-            <el-radio v-model="radio" label="4">待宝马审批</el-radio>
-            <el-radio v-model="radio" label="5">被宝马退回</el-radio>
-            <el-radio v-model="radio" label="6">待上传工单和发票</el-radio>
-            <el-radio v-model="radio" label="7">已完成</el-radio>
+            <el-radio-group v-model="Status">
+                <el-radio label="全部" value=""></el-radio>
+                <el-radio label="待提交" value="201"></el-radio>
+                <el-radio label="待区域经理审批" value="202"></el-radio>
+                <el-radio label="被区域经理退回" value="203"></el-radio>
+                <el-radio label="待宝马审批" value="204"></el-radio>
+                <el-radio label="被宝马退回" value="205"></el-radio>
+                <el-radio label="待上传工单和发票" value="206"></el-radio>
+                <el-radio label="已完成" value="207"></el-radio>
+            </el-radio-group>
         </template>
         <div class="sort-select">
-            <el-select v-model="selectword" placeholder="--请选择要查询的字段--">
-                <el-option v-for="" :key=""></el-option>
+            <el-select v-model="selectword" placeholder="--请选择要查询的字段--" style="width:200px">
+                <el-option label="车牌号" value="PlateNumber"></el-option>
+                <el-option label="VIN码" value="VIN"></el-option>
+                <el-option label="保险公司" value="Insurer"></el-option>
+                <el-option label="车型" value="SubModel"></el-option>
             </el-select>
         </div>
         <div class="handle-input">
@@ -61,7 +67,7 @@ export default {
     name: 'orderList',
     data() {
         return {
-            radio: '1',
+            Status: '',
             selectword: '',
             curpage: 1,
             Orders: [{

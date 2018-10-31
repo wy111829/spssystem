@@ -19,30 +19,30 @@
                     <el-input v-model="detailData.PlateNumber"></el-input>
                 </el-form-item>
                 <el-form-item label="车架号：" class="el-col el-col-12 el-col-xs-24">
-                    <el-input v-model="detailData.VIN"></el-input>
+                    <el-input v-model="detailData.VIN" readonly></el-input>
                 </el-form-item>
                 <el-form-item label="车型：" class="el-col el-col-12 el-col-xs-24">
-                    <el-input v-model="detailData.SubModel"></el-input>
+                    <el-input v-model="detailData.SubModel" readonly></el-input>
                 </el-form-item>
                 <el-form-item label="车辆首次登记日期：" class="el-col el-col-12 el-col-xs-24">
                     <el-date-picker type="date" placeholder="选择日期" v-model="detailData.VehicleFirstRegDate" style="width: 100%;"></el-date-picker>
                 </el-form-item>
                 <el-form-item label="保险公司：" class="el-col el-col-12 el-col-xs-24">
-                    <el-input v-model="detailData.Insurer"></el-input>
+                    <el-input v-model="detailData.Insurer" readonly></el-input>
                 </el-form-item>
                 <el-form-item label="报案号:" class="el-col el-col-12 el-col-xs-24">
                     <el-input v-model="detailData.InsuranceNumber"></el-input>
                 </el-form-item>
                 <el-form-item label="是否厂商喷漆:" class="el-col el-col-12 el-col-xs-24 small-label">
                     <el-radio-group v-model="detailData.IsManufacturerPaint">
-                        <el-radio :label="true" >是</el-radio>
-                        <el-radio :label="false" >否</el-radio>
+                        <el-radio :label="true">是</el-radio>
+                        <el-radio :label="false">否</el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="是否额外工时支持：" class="el-col el-col-12 el-col-xs-24 small-label">
                     <el-radio-group v-model="detailData.HasAdditionalLabor">
-                      <el-radio :label="true" >是</el-radio>
-                      <el-radio :label="false" >否</el-radio>
+                        <el-radio :label="true">是</el-radio>
+                        <el-radio :label="false">否</el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="事故描述:" class="el-col el-col-24">
@@ -101,16 +101,16 @@
                     <el-input v-model="detailData.RepairCostTotal"></el-input>
                 </el-form-item>
                 <el-form-item label="实际价值占比：" class="el-col el-col-12 el-col-xs-24">
-                    <el-input v-model="detailData.name"></el-input>
+                    <el-input :value="Math.round(detailData.RepairCostTotal/detailData.VehicleCurrentPrice*10000)/100 + '%'"></el-input>
                 </el-form-item>
                 <el-form-item label="配件费用：" class="el-col el-col-12 el-col-xs-24">
                     <el-input v-model="detailData.SparePartCostTotal"></el-input>
                 </el-form-item>
                 <el-form-item label="配件占比：" class="el-col el-col-12 el-col-xs-24">
-                    <el-input v-model="detailData.name"></el-input>
+                    <el-input :value="Math.round(detailData.SparePartCostTotal/detailData.RepairCostTotal*10000)/100 + '%'"></el-input>
                 </el-form-item>
                 <el-form-item label="工时及其他：" class="el-col el-col-12 el-col-xs-24">
-                    <el-input v-model="detailData.name"></el-input>
+                    <el-input v-model="detailData.LaborCostTotal"></el-input>
                 </el-form-item>
                 <el-form-item label="保险公司估损金额：" class="el-col el-col-12 el-col-xs-24">
                     <el-input v-model="detailData.InsuredAmount"></el-input>
@@ -126,33 +126,33 @@
                     <el-input v-model="detailData.VehicleAge"></el-input>
                 </el-form-item>
                 <el-form-item label="是否流失：" class="el-col el-col-12 el-col-xs-24 small-label">
-                    <el-radio-group v-model="detailData.name">
-                      <el-radio :label="true" >是</el-radio>
-                      <el-radio :label="false" >否</el-radio>
+                    <el-radio-group v-model="detailData.IsCustomerChurned">
+                        <el-radio :label="true">是</el-radio>
+                        <el-radio :label="false">否</el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="案件状态：" class="el-col el-col-12 el-col-xs-24">
-                    <el-select v-model="detailData.region" placeholder="Please select case status">
-                        <el-option label="Dealer self" value="1"></el-option>
-                        <el-option label="Expansion" value="2"></el-option>
-                        <el-option label="Recommended" value="3"></el-option>
+                    <el-select v-model="detailData.CaseStatus" placeholder="Please select case status">
+                        <el-option label="自店" value="1"></el-option>
+                        <el-option label="外拓" value="2"></el-option>
+                        <el-option label="推荐" value="3"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="流失去向：" class="el-col el-col-12 el-col-xs-24">
-                    <el-select v-model="detailData.region" placeholder="Please select customer churn to">
-                        <el-option label="Other BMW 4S Dealer" value="1"></el-option>
-                        <el-option label="Independent repair workshop" value="2"></el-option>
-                        <el-option label="others" value="3"></el-option>
+                    <el-select v-model="detailData.ChurnTo" placeholder="请选择流失去向">
+                        <el-option label="其他宝马4S店" value="1"></el-option>
+                        <el-option label="综合修理厂" value="2"></el-option>
+                        <el-option label="其他" value="3"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="保险公司联系人：" class="el-col el-col-12 el-col-xs-24">
-                    <el-input v-model="detailData.name"></el-input>
+                    <el-input v-model="detailData.InsurerContactPerson"></el-input>
                 </el-form-item>
                 <el-form-item label="流失原因：" class="el-col el-col-12 el-col-xs-24">
-                    <el-input v-model="detailData.name"></el-input>
+                    <el-input v-model="detailData.ChurnReason"></el-input>
                 </el-form-item>
                 <el-form-item label="客户挽留措施:" class="el-col el-col-24">
-                    <el-input type="textarea" v-model="detailData.name" :autosize="{minRows:5}" placeholder="Within 500 characters"></el-input>
+                    <el-input type="textarea" v-model="detailData.RetentionActions" :autosize="{minRows:5}" placeholder="Within 500 characters"></el-input>
                 </el-form-item>
             </el-form>
         </div>
@@ -167,6 +167,7 @@
             <el-button type="primary" @click="onSubmit">保存但不提交</el-button>
             <el-button type="primary" @click="onSubmit">保存并提交</el-button>
             <el-button>取消</el-button>
+            <el-button>删除</el-button>
         </div>
     </div>
 
@@ -174,56 +175,45 @@
 </template>
 
 <script>
-import {General} from '@/networks/api'
+import {
+    General
+} from '@/networks/api'
 export default {
     name: 'orderDetail',
     data: function() {
         return {
-          detailData: {
-            AccidentBrief: "双方事故，宝马全责，宝马右侧受损",
-            ApplicationLogs: [],
-            Attachments: [],
-            CaseStatus: "自店",
-            ChurnReason: "",
-            ChurnTo: "",
-            ContractID: 122121,
-            HasAdditionalLabor: false,
-            InsuranceNumber: "Dfaas12892182",
-            InsuredAmount: 23500,
-            Insurer: "中国人保",
-            InsurerContactPerson: "李四",
-            IsCustomerChurned: false,
-            IsManufacturerPaint: true,
-            LaborCostTotal: 4500,
-            OrderID: 21171,
-            PlateNumber: "京N88888",
-            ReferenceNumber: "DAT-20181019152745251",
-            RepairCostTotal: 23500,
-            RetentionActions: "",
-            SparePartCostTotal: 19000,
-            SpareParts: [],
-            Status: "待提交",
-            StatusCode: 201,
-            SubModel: "520Li",
-            VIN: "LBVPZ1100ASD77412",
-            VehicleAge: 18,
-            VehicleCurrentPrice: 95000,
-            VehicleFirstRegDate: "2017-10-12",
-            VehicleMSRP: 128000,
-            VehicleOwner: "张三",
-          },
-            form: {
-                name: '',
-                region: '',
-                date1: '',
-                date2: '',
-                delivery: true,
-                type: [''],
-                resource: '',
-                desc: '',
-                options: [],
-                radio1: 'y',
-                radio2: 'y'
+            detailData: {
+                AccidentBrief: "双方事故，宝马全责，宝马右侧受损",
+                ApplicationLogs: [],
+                Attachments: [],
+                CaseStatus: "自店",
+                ChurnReason: "",
+                ChurnTo: "",
+                ContractID: 122121,
+                HasAdditionalLabor: false,
+                InsuranceNumber: "Dfaas12892182",
+                InsuredAmount: 23500,
+                Insurer: "中国人保",
+                InsurerContactPerson: "李四",
+                IsCustomerChurned: false,
+                IsManufacturerPaint: true,
+                LaborCostTotal: 4500,
+                OrderID: 21171,
+                PlateNumber: "京N88888",
+                ReferenceNumber: "DAT-20181019152745251",
+                RepairCostTotal: 23500,
+                RetentionActions: "",
+                SparePartCostTotal: 19000,
+                SpareParts: [],
+                Status: "待提交",
+                StatusCode: 201,
+                SubModel: "520Li",
+                VIN: "LBVPZ1100ASD77412",
+                VehicleAge: 18,
+                VehicleCurrentPrice: 95000,
+                VehicleFirstRegDate: "2017-10-12",
+                VehicleMSRP: 128000,
+                VehicleOwner: "张三",
             },
             fileList: [{
                     name: 'food.jpeg',
@@ -234,67 +224,6 @@ export default {
                     url: ''
                 }
             ],
-            tableData: [{
-                    number: '41217182570',
-                    name: 'Rear left sidewall',
-                    count: '1',
-                    unitprice: '500',
-                    totalprice: '500',
-                    isorder: true,
-                    logisticsdes: '',
-                    approvaldes: ''
-                },
-                {
-                    number: '41217182570',
-                    name: 'Rear left sidewall',
-                    count: '1',
-                    unitprice: '500',
-                    totalprice: '500',
-                    isorder: true,
-                    logisticsdes: '',
-                    approvaldes: ''
-                },
-                {
-                    number: '41217182570',
-                    name: 'Rear left sidewall',
-                    count: '1',
-                    unitprice: '500',
-                    totalprice: '500',
-                    isorder: true,
-                    logisticsdes: '',
-                    approvaldes: ''
-                },
-                {
-                    number: '41217182570',
-                    name: 'Rear left sidewall',
-                    count: '1',
-                    unitprice: '500',
-                    totalprice: '500',
-                    isorder: true,
-                    logisticsdes: '',
-                    approvaldes: ''
-                },
-                {
-                    number: '41217182570',
-                    name: 'Rear left sidewall',
-                    count: '1',
-                    unitprice: '500',
-                    totalprice: '500',
-                    isorder: true,
-                    logisticsdes: '',
-                    approvaldes: ''
-                },
-                {
-                    number: '41217182570',
-                    name: 'Rear left sidewall',
-                    count: '1',
-                    unitprice: '500',
-                    totalprice: '500',
-                    isorder: true,
-                    logisticsdes: '',
-                    approvaldes: ''
-                },
-            ]
         }
     },
     methods: {
@@ -325,21 +254,21 @@ export default {
         onSubmit() {
 
         },
-        async GetOrderInfo () {
-          try {
-            const response = await General.GetOrderInfo({
-              OrderID: this.$route.query.id
-            })
-            this.detailData = response.Data
-            console.log(this.detailData)
-          } catch (error) {
-            console.log(error)
-          }
+        async GetOrderInfo() {
+            try {
+                const response = await General.GetOrderInfo({
+                    OrderID: this.$route.query.id
+                })
+                this.detailData = response.Data
+                console.log(this.detailData)
+            } catch (error) {
+                console.log(error)
+            }
         }
     },
-    created () {
-      console.log('this.$route.query', this.$route)
-      this.GetOrderInfo()
+    created() {
+        console.log('this.$route.query', this.$route)
+        this.GetOrderInfo()
     }
 }
 </script>

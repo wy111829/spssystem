@@ -44,6 +44,11 @@
                         title: '统计分析'
                     },
                     {
+                        icon: 'el-icon-lx-copy',
+                        index: 'DealerManagment',
+                        title: '审批策略设置'
+                    },
+                    {
                         icon: 'el-icon-setting',
                         index: '3',
                         title: '系统设置',
@@ -64,10 +69,10 @@
                                 index: 'systemEmailAdressList',
                                 title: '邮件地址管理'
                             },
-                            {
-                                index: 'systemEmailTemList',
-                                title: '邮件模板管理'
-                            },
+                            // {
+                            //     index: 'systemEmailTemList',
+                            //     title: '邮件模板管理'
+                            // },
                             {
                                 index: 'systemMsg',
                                 title: '系统消息'
