@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-// import store from './store'
+import store from './store'
 import axios from 'axios'
 import './networks/init.js'
 import ElementUI from 'element-ui'
@@ -36,7 +36,7 @@ router.beforeEach((to, from, next) => {
 
 new Vue({
     router,
-    // store,
+    store,
     render: h => h(App)
 }).$mount('#app')
 // new Vue({

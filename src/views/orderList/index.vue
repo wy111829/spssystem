@@ -3,37 +3,38 @@
 <div class="main-container">
     <div class="search-box">
         <template>
-            <el-radio-group v-model="Status">
-                <el-radio label="全部" value=""></el-radio>
-                <el-radio label="待提交" value="201"></el-radio>
-                <el-radio label="待区域经理审批" value="202"></el-radio>
-                <el-radio label="被区域经理退回" value="203"></el-radio>
-                <el-radio label="待宝马审批" value="204"></el-radio>
-                <el-radio label="被宝马退回" value="205"></el-radio>
-                <el-radio label="待上传工单和发票" value="206"></el-radio>
-                <el-radio label="已完成" value="207"></el-radio>
+            <el-radio-group v-model="Status" @change="handleRadioChange">
+                <el-radio  :label="null">全部</el-radio>
+                <el-radio  label="201">待提交</el-radio>
+                <el-radio  label="202">待区域经理审批</el-radio>
+                <el-radio  label="203">被区域经理退回</el-radio>
+                <el-radio  label="204">待宝马审批</el-radio>
+                <el-radio  label="205">被宝马退回</el-radio>
+                <el-radio  label="206">待上传工单和发票</el-radio>
+                <el-radio  label="207">已完成</el-radio>
             </el-radio-group>
         </template>
         <div class="sort-select">
-            <el-select v-model="selectword" placeholder="--请选择要查询的字段--" style="width:200px">
+            <el-select v-model="SearchField" placeholder="--请选择要查询的字段--" style="width:200px">
                 <el-option label="车牌号" value="PlateNumber"></el-option>
                 <el-option label="VIN码" value="VIN"></el-option>
-                <el-option label="保险公司" value="Insurer"></el-option>
                 <el-option label="车型" value="SubModel"></el-option>
+                <el-option label="地区" value="RegionID"></el-option>
+                <el-option label="经销商" value="DealerName"></el-option>
             </el-select>
         </div>
         <div class="handle-input">
-            <el-input placeholder="VIN search" v-model="input5" class="input-with-select">
-                <el-button slot="append" icon="el-icon-search"></el-button>
+            <el-input placeholder="VIN search" v-model="SearchValue" :disabled="!SearchField" class="input-with-select">
+                <el-button slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
             </el-input>
         </div>
-        <router-link class="button" to="/newOrder">
+        <router-link class="button" to="/orderDetial">
             <el-button type="primary" class="newOrderButton">新建订单</el-button>
         </router-link>
     </div>
-    <el-table :data="Orders" class="table" ref="multipleTable">
+    <el-table :data="Orders" class="table" ref="multipleTable" @sort-change="handleSortChange" :default-sort="{prop: 'CreateDate', order: 'descending'}">
         <el-table-column prop="CreateDate" label="创建日期" sortable></el-table-column>
-        <el-table-column prop="PlateNumber" label="车牌号"></el-table-column>
+        <el-table-column prop="PlateNumber" label="车牌号" sortable></el-table-column>
         <el-table-column prop="VIN" label="VIN"></el-table-column>
         <el-table-column prop="SubModel" label="车型"></el-table-column>
         <el-table-column prop="Insurer" label="保险公司"></el-table-column>
@@ -67,9 +68,13 @@ export default {
     name: 'orderList',
     data() {
         return {
-            Status: '',
-            selectword: '',
-            curpage: 1,
+            Status: null,
+            SearchField: null,
+            SearchValue: '',
+            SortField: null,
+            SortType: null,
+            RowOffset: 0,
+            RowCount: 6,
             Orders: [{
                 "OrderID": 122121,
                 "ReferenceNumber": "DAT-20181019152745251",
@@ -94,8 +99,24 @@ export default {
         }
     },
     methods: {
+        handleRadioChange(val) {
+            console.log(val)
+            this.getData()
+        },
+        handleSearch(val) {
+            if (this.SearchValue.trim()) {
+                this.SearchValue = this.SearchValue.trim()
+                this.getData()
+            }
+        },
+        handleSortChange(obj) {
+            console.log(obj)
+            this.SortType = obj.order == 'ascending'? 'ASC' : obj.order == 'descending' ? 'DESC' : null
+            this.SortField = obj.prop
+            this.getData()
+        },
         handleCurrentChange(val) {
-            this.curpage = val;
+            this.RowOffset = val;
             this.getData();
         },
         handleEdit(index, data) {
@@ -110,13 +131,13 @@ export default {
         async getData() {
             try {
                 const response = await General.GetOrderList({
-                    "Status": 101,
-                    "SearchField": "RegionID",
-                    "SearchValue": "101",
-                    "SortField": "RegionID",
-                    "SortType": "ASC",
-                    "RowOffset": 0,
-                    "RowCount": 20
+                    "Status": this.Status,
+                    "SearchField": this.SearchField,
+                    "SearchValue": this.SearchValue,
+                    "SortField": this.SortField,
+                    "SortType": this.SortType,
+                    "RowOffset": this.RowOffset,
+                    "RowCount": this.RowCount
                 })
                 console.log('订单列表', response)
                 this.TotalNumber = response.Data.TotalNumber

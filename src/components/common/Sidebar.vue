@@ -3,12 +3,12 @@
         <el-menu class="sidebar-el-menu" :default-active="onRoutes" :collapse="collapse" background-color="#324157"
             text-color="#bfcbd9" active-text-color="#20a0ff" unique-opened router>
             <template v-for="item in items">
-                <template v-if="item.subs">
-                    <el-submenu :index="item.index" :key="item.index">
+                <template v-if="item.subs&&item.role.includes(UserRole)">
+                    <el-submenu  v-if="item.role.includes(UserRole)" :index="item.index" :key="item.index">
                         <template slot="title">
                             <i :class="item.icon"></i><span slot="title">{{ item.title }}</span>
                         </template>
-                        <template v-for="subItem in item.subs">
+                        <template v-for="subItem in item.subs"  v-if="subItem.role.includes(UserRole)">
                             <el-menu-item  :index="subItem.index" :key="subItem.index">
                                 {{ subItem.title }}
                             </el-menu-item>
@@ -16,7 +16,7 @@
                     </el-submenu>
                 </template>
                 <template v-else>
-                    <el-menu-item :index="item.index" :key="item.index">
+                    <el-menu-item v-if="item.role.includes(UserRole)" :index="item.index" :key="item.index">
                         <i :class="item.icon"></i><span slot="title">{{ item.title }}</span>
                     </el-menu-item>
                 </template>
@@ -28,46 +28,56 @@
 
 <script>
     import bus from '../common/bus';
+    import { mapState} from 'vuex'
     export default {
         data() {
             return {
+                // UserRole: 'Dealer',
                 collapse: false,
                 items: [
                     {
                         icon: 'el-icon-document',
                         index: 'orderList',
-                        title: '订单列表'
+                        title: '订单列表',
+                        role: ['Dealer', 'RM', 'BMW']
                     },
                     {
                         icon: 'el-icon-lx-copy',
                         index: 'report',
-                        title: '统计分析'
+                        title: '统计分析',
+                        role:  ['Dealer', 'RM', 'BMW']
                     },
                     {
                         icon: 'el-icon-lx-copy',
                         index: 'DealerManagment',
-                        title: '审批策略设置'
+                        title: '审批策略设置',
+                        role:  ['RM']
                     },
                     {
                         icon: 'el-icon-setting',
                         index: '3',
                         title: '系统设置',
+                        role: ['Dealer', 'RM', 'BMW'],
                         subs: [
                             {
                                 index: 'systemDealerManager',
-                                title: '经销商管理'
+                                title: '经销商管理',
+                                role: ['BMW']
                             },
                             {
                                 index: 'systemRegionalManger',
-                                title: '区域经理管理'
+                                title: '区域经理管理',
+                                role: ['BMW']
                             },
                             {
                                 index: 'systemUnableParts',
-                                title: '不可订货的配件'
+                                title: '不可订货的配件',
+                                role: ['BMW']
                             },
                             {
                                 index: 'systemEmailAdressList',
-                                title: '邮件地址管理'
+                                title: '邮件地址管理',
+                                role: ['BMW']
                             },
                             // {
                             //     index: 'systemEmailTemList',
@@ -75,11 +85,13 @@
                             // },
                             {
                                 index: 'systemMsg',
-                                title: '系统消息'
+                                title: '系统消息',
+                                role: ['BMW']
                             },
                             {
                                 index: 'systemPswd',
-                                title: '修改密码'
+                                title: '修改密码',
+                                role:  ['Dealer', 'RM', 'BMW']
                             }
                         ]
                     }
@@ -87,6 +99,10 @@
             }
         },
         computed:{
+            ...mapState([
+                'UserName',
+                'UserRole'
+           ]),
             onRoutes(){
                 return this.$route.path.replace('/','');
             }

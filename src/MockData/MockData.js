@@ -13,7 +13,7 @@ Mock.mock(/Login/, 'post', {
 Mock.mock(/GetOrderList/, 'post', {
     "Code": 200,
     "Data": {
-        "TotalNumber": 120,
+        "TotalNumber": 20,
         "Orders": [{
                 "OrderID": 122121,
                 "ReferenceNumber": "DAT-20181019152745251",
@@ -36,6 +36,86 @@ Mock.mock(/GetOrderList/, 'post', {
             },
             {
                 "OrderID": 122122,
+                "ReferenceNumber": "DAT-20181020152745251",
+                "CreateDate": "2018-10-20",
+                "RegionID": "100004",
+                "RegionName": "北区",
+                "ProvinceID": "110000",
+                "ProvinceName": "北京",
+                "CityID": "110100",
+                "CityName": "北京",
+                "PlateNumber": "京N88888",
+                "VIN": "LBVPZ1100ASD77412",
+                "SubModel": "520Li",
+                "Insurer": "中国人保",
+                "RepairCostTotal": 10726,
+                "VehicleCurrentPrice": 92000,
+                "SparePartCostTotal": 8000,
+                "StatusCode": 202,
+                "Status": "待区域经理审批"
+            },
+            {
+                "OrderID": 122123,
+                "ReferenceNumber": "DAT-20181020152745251",
+                "CreateDate": "2018-10-17",
+                "RegionID": "100004",
+                "RegionName": "北区",
+                "ProvinceID": "110000",
+                "ProvinceName": "北京",
+                "CityID": "110100",
+                "CityName": "北京",
+                "PlateNumber": "京N88888",
+                "VIN": "LBVPZ1100ASD77412",
+                "SubModel": "520Li",
+                "Insurer": "中国人保",
+                "RepairCostTotal": 10726,
+                "VehicleCurrentPrice": 92000,
+                "SparePartCostTotal": 8000,
+                "StatusCode": 202,
+                "Status": "待区域经理审批"
+            },
+            {
+                "OrderID": 122124,
+                "ReferenceNumber": "DAT-20181020152745251",
+                "CreateDate": "2018-10-13",
+                "RegionID": "100004",
+                "RegionName": "北区",
+                "ProvinceID": "110000",
+                "ProvinceName": "北京",
+                "CityID": "110100",
+                "CityName": "北京",
+                "PlateNumber": "京N88888",
+                "VIN": "LBVPZ1100ASD77412",
+                "SubModel": "520Li",
+                "Insurer": "中国人保",
+                "RepairCostTotal": 10726,
+                "VehicleCurrentPrice": 92000,
+                "SparePartCostTotal": 8000,
+                "StatusCode": 202,
+                "Status": "待区域经理审批"
+            },
+            {
+                "OrderID": 122125,
+                "ReferenceNumber": "DAT-20181020152745251",
+                "CreateDate": "2018-10-10",
+                "RegionID": "100004",
+                "RegionName": "北区",
+                "ProvinceID": "110000",
+                "ProvinceName": "北京",
+                "CityID": "110100",
+                "CityName": "北京",
+                "PlateNumber": "京N88888",
+                "VIN": "LBVPZ1100ASD77412",
+                "SubModel": "520Li",
+                "Insurer": "中国人保",
+                "RepairCostTotal": 10726,
+                "VehicleCurrentPrice": 92000,
+                "SparePartCostTotal": 8000,
+                "StatusCode": 202,
+                "Status": "待区域经理审批"
+            },
+            {
+                "OrderID": 122126,
                 "ReferenceNumber": "DAT-20181020152745251",
                 "CreateDate": "2018-10-20",
                 "RegionID": "100004",
@@ -174,5 +254,13 @@ Mock.mock(/GetDealerPolicyList/, 'post',{
             }
         ]
     }
+})
 
+// 1.3获取用户信息
+Mock.mock(/GetUserInfo/, 'get',{
+    "Code":200,
+    "Data":{
+        "Role":"BMW",
+        "UserName":"北京某某经销商"
+    }
 })

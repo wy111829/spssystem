@@ -6,7 +6,7 @@
             <v-tags></v-tags>
             <div class="content">
                 <transition name="move" mode="out-in">
-                    <keep-alive :include="tagsList">
+                    <keep-alive exclude="orderDetail">
                         <router-view></router-view>
                     </keep-alive>
                 </transition>
@@ -20,15 +20,27 @@
     import vSidebar from './Sidebar.vue';
     import vTags from './Tags.vue';
     import bus from './bus';
+    import {mapState, mapActions} from 'vuex'
     export default {
         data(){
             return {
-                tagsList: [],
+                tagsList: ['orderDetial'],
                 collapse: false
             }
         },
+        computed: {
+            ...mapState([
+                'UserName',
+                'UserRole'
+           ])
+        },
         components:{
             vHead, vSidebar, vTags
+        },
+        methods: {
+            ...mapActions([
+              'GetUserInfo'
+            ])
         },
         created(){
             bus.$on('collapse', msg => {
@@ -43,6 +55,8 @@
                 }
                 this.tagsList = arr;
             })
+            this.GetUserInfo()
+            console.log(this.$store)
         }
     }
 </script>

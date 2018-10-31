@@ -25,7 +25,7 @@
                     <el-input v-model="detailData.SubModel" readonly></el-input>
                 </el-form-item>
                 <el-form-item label="车辆首次登记日期：" class="el-col el-col-12 el-col-xs-24">
-                    <el-date-picker type="date" placeholder="选择日期" v-model="detailData.VehicleFirstRegDate" style="width: 100%;"></el-date-picker>
+                    <el-date-picker type="date" @change="handleDatePicker" placeholder="选择日期" v-model="detailData.VehicleFirstRegDate" style="width: 100%;"></el-date-picker>
                 </el-form-item>
                 <el-form-item label="保险公司：" class="el-col el-col-12 el-col-xs-24">
                     <el-input v-model="detailData.Insurer" readonly></el-input>
@@ -101,13 +101,13 @@
                     <el-input v-model="detailData.RepairCostTotal"></el-input>
                 </el-form-item>
                 <el-form-item label="实际价值占比：" class="el-col el-col-12 el-col-xs-24">
-                    <el-input :value="Math.round(detailData.RepairCostTotal/detailData.VehicleCurrentPrice*10000)/100 + '%'"></el-input>
+                    <el-input disabled :value="detailData.VehicleCurrentPrice?Math.round(detailData.RepairCostTotal/detailData.VehicleCurrentPrice*10000)/100 + '%': ''"></el-input>
                 </el-form-item>
                 <el-form-item label="配件费用：" class="el-col el-col-12 el-col-xs-24">
                     <el-input v-model="detailData.SparePartCostTotal"></el-input>
                 </el-form-item>
                 <el-form-item label="配件占比：" class="el-col el-col-12 el-col-xs-24">
-                    <el-input :value="Math.round(detailData.SparePartCostTotal/detailData.RepairCostTotal*10000)/100 + '%'"></el-input>
+                    <el-input disabled :value="detailData.RepairCostTotal?Math.round(detailData.SparePartCostTotal/detailData.RepairCostTotal*10000)/100 + '%':''"></el-input>
                 </el-form-item>
                 <el-form-item label="工时及其他：" class="el-col el-col-12 el-col-xs-24">
                     <el-input v-model="detailData.LaborCostTotal"></el-input>
@@ -123,7 +123,7 @@
             </div>
             <el-form class="inline-form el-row" label-width="150px">
                 <el-form-item label="车龄（月）：" class="el-col el-col-12 el-col-xs-24">
-                    <el-input v-model="detailData.VehicleAge"></el-input>
+                    <el-input  disabled v-model="detailData.VehicleAge"></el-input>
                 </el-form-item>
                 <el-form-item label="是否流失：" class="el-col el-col-12 el-col-xs-24 small-label">
                     <el-radio-group v-model="detailData.IsCustomerChurned">
@@ -183,37 +183,37 @@ export default {
     data: function() {
         return {
             detailData: {
-                AccidentBrief: "双方事故，宝马全责，宝马右侧受损",
+                AccidentBrief: "",
                 ApplicationLogs: [],
                 Attachments: [],
-                CaseStatus: "自店",
+                CaseStatus: "",
                 ChurnReason: "",
                 ChurnTo: "",
-                ContractID: 122121,
+                ContractID: null,
                 HasAdditionalLabor: false,
-                InsuranceNumber: "Dfaas12892182",
-                InsuredAmount: 23500,
-                Insurer: "中国人保",
-                InsurerContactPerson: "李四",
+                InsuranceNumber: "",
+                InsuredAmount: null,
+                Insurer: "",
+                InsurerContactPerson: "",
                 IsCustomerChurned: false,
                 IsManufacturerPaint: true,
-                LaborCostTotal: 4500,
-                OrderID: 21171,
-                PlateNumber: "京N88888",
-                ReferenceNumber: "DAT-20181019152745251",
-                RepairCostTotal: 23500,
+                LaborCostTotal: null,
+                OrderID: 0,
+                PlateNumber: "",
+                ReferenceNumber: "",
+                RepairCostTotal: null,
                 RetentionActions: "",
-                SparePartCostTotal: 19000,
+                SparePartCostTotal: null,
                 SpareParts: [],
-                Status: "待提交",
-                StatusCode: 201,
-                SubModel: "520Li",
-                VIN: "LBVPZ1100ASD77412",
-                VehicleAge: 18,
-                VehicleCurrentPrice: 95000,
-                VehicleFirstRegDate: "2017-10-12",
-                VehicleMSRP: 128000,
-                VehicleOwner: "张三",
+                Status: "",
+                StatusCode: null,
+                SubModel: "",
+                VIN: "",
+                VehicleAge: null,
+                VehicleCurrentPrice: null,
+                VehicleFirstRegDate: "",
+                VehicleMSRP: null,
+                VehicleOwner: "",
             },
             fileList: [{
                     name: 'food.jpeg',
@@ -227,6 +227,14 @@ export default {
         }
     },
     methods: {
+        handleDatePicker(val) {
+            console.log(this.detailData.VehicleFirstRegDate, val)
+            let now = new Date()
+            let cartime = new Date(val)
+            let carage = Math.round((now - cartime)/1000/60/60/24/30)
+            console.log(carage)
+            this.detailData.VehicleAge = carage
+        },
         toggleSelection(rows) {
             if (rows) {
                 rows.forEach(row => {
@@ -260,15 +268,24 @@ export default {
                     OrderID: this.$route.query.id
                 })
                 this.detailData = response.Data
-                console.log(this.detailData)
+                // console.log(this.detailData)
             } catch (error) {
                 console.log(error)
             }
+        },
+        routeChange () {
+            this.detailData.OrderID = this.$route.query.id? this.$route.query.id: 0
+            if (this.detailData.OrderID) {
+                this.GetOrderInfo()
+            }
         }
+    },
+    watch: {
+        // '$route': 'routeChange'
     },
     created() {
         console.log('this.$route.query', this.$route)
-        this.GetOrderInfo()
+        this.routeChange()
     }
 }
 </script>

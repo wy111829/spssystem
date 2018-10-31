@@ -27,7 +27,7 @@
             <!-- 用户名下拉菜单 -->
             <el-dropdown class="user-name" trigger="click" @command="handleCommand">
                 <span class="el-dropdown-link">
-                    {{username}} <i class="el-icon-caret-bottom"></i>
+                    {{UserName}} <i class="el-icon-caret-bottom"></i>
                 </span>
                 <el-dropdown-menu slot="dropdown">
                     <!-- <a href="http://blog.gdfengshuo.com/about/" target="_blank">
@@ -44,7 +44,8 @@
 </div>
 </template>
 <script>
-import bus from '../common/bus';
+import bus from '../common/bus'
+import { mapState} from 'vuex'
 export default {
     data() {
         return {
@@ -55,6 +56,10 @@ export default {
         }
     },
     computed: {
+        ...mapState([
+            'UserName',
+            'UserRole'
+        ]),
         username() {
             let username = localStorage.getItem('ms_username');
             return username ? username : this.name;
@@ -115,6 +120,9 @@ export default {
         window.onresize = function() {
             self.resizeFun()
         }
+    },
+    created () {
+        console.log(7777, this.UserName, this.UserRole)
     }
 }
 </script>
