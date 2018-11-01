@@ -1,5 +1,6 @@
 import General from './General'
 
 export {
-  General
+  General,
+  Dealer
 }

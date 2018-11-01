@@ -31,107 +31,101 @@ export default new Router({
             name: 'Home',
             children:[
                 {
-                    path: '/newOrder',
-                    component: resolve => require(['@/views/newOrder'], resolve),
-                    meta: { title: '新建订单' },
-                    name: 'newOrder'
-                },
-                {
                     path: '/orderList',
                     component: resolve => require(['@/views/orderList'], resolve),
-                    meta: { title: '订单列表' },
+                    meta: { title: '订单列表', keepAlive: true  },
                     name: 'orderList'
                 },
                 {
                     path: '/DealerManagment',
                     component: resolve => require(['@/views/DealerManagment'], resolve),
-                    meta: { title: '审批策略设置' },
+                    meta: { title: '审批策略设置', keepAlive: true  },
                     name: 'DealerManagment'
                 },
                 {
-                    path: '/orderDetial',
+                    path: '/orderDetial/:id?',
                     component: resolve => require(['@/views/orderDetial'], resolve),
-                    meta: { title: '订单详情' },
+                    meta: { title: '订单详情', keepAlive: false  },
                     name: 'orderDetial'
                 },
                 {
                     path: '/report',
                     component: resolve => require(['@/views/report'], resolve),
-                    meta: { title: '统计分析' },
+                    meta: { title: '统计分析', keepAlive: true  },
                     name: 'report'
                 },
                 {
                     path: '/systemDealerManager',
                     component: resolve => require(['@/views/systemSet/systemDealerManager'], resolve),
-                    meta: { title: '经销商管理' },
+                    meta: { title: '经销商管理', keepAlive: true  },
                     name: 'systemDealerManager'
                 },
                 {
 
                     path: '/systemEmailAdressList',
                     component: resolve => require(['@/views/systemSet/systemEmailAdressList'], resolve),
-                    meta: { title: '邮件地址管理' },
+                    meta: { title: '邮件地址管理', keepAlive: true  },
                     name: 'systemEmailAdressList'
                 },
                 {
 
                     path: '/systemEmailTemList',
                     component: resolve => require(['@/views/systemSet/systemEmailTemList'], resolve),
-                    meta: { title: '邮件模板管理' },
+                    meta: { title: '邮件模板管理', keepAlive: true  },
                     name: 'systemEmailTemList'
                 },
                 {
 
                     path: '/systemEmailTemNew',
                     component: resolve => require(['@/views/systemSet/systemEmailTemNew'], resolve),
-                    meta: { title: '新增邮件模块' },
+                    meta: { title: '新增邮件模块', keepAlive: true  },
                     name: 'systemEmailTemNew'
                 },
                 {
 
                     path: '/systemMsg',
                     component: resolve => require(['@/views/systemSet/systemMsg'], resolve),
-                    meta: { title: '系统消息' },
+                    meta: { title: '系统消息', keepAlive: true  },
                     name: 'systemMsg'
                 },
                 {
 
                     path: '/systemPswd',
                     component: resolve => require(['@/views/systemSet/systemPswd'], resolve),
-                    meta: { title: '系统消息', permission: true },
+                    meta: { title: '系统消息', permission: true, keepAlive: true  },
                     name: 'systemPswd'
                 },
                 {
 
                     path: '/systemRegionalManger',
                     component: resolve => require(['@/views/systemSet/systemRegionalManger'], resolve),
-                    meta: { title: '区域经理管理', permission: true },
+                    meta: { title: '区域经理管理', permission: true, keepAlive: true  },
                     name: 'systemRegionalManger'
                 },
                 {
 
                     path: '/systemUnableParts',
                     component: resolve => require(['@/views/systemSet/systemUnableParts'], resolve),
-                    meta: { title: '不可订货的配件', permission: true },
+                    meta: { title: '不可订货的配件', permission: true, keepAlive: true  },
                     name: 'systemUnableParts'
                 },
                 {
 
                     path: '/systemNewDealer',
                     component: resolve => require(['@/views/systemSet/systemNewDealer'], resolve),
-                    meta: { title: '新建经销商', permission: true },
+                    meta: { title: '新建经销商', permission: true , keepAlive: true },
                     name: 'systemNewDealer'
                 },
                 {
                     path: '/404',
                     component: resolve => require(['@/views/error/404.vue'], resolve),
-                    meta: { title: '404' },
+                    meta: { title: '404', keepAlive: true  },
                     name: '404'
                 },
                 {
                     path: '/403',
                     component: resolve => require(['@/views/error/403.vue'], resolve),
-                    meta: { title: '403' },
+                    meta: { title: '403', keepAlive: true  },
                     name: '403'
                 }
             ]
@@ -139,7 +133,8 @@ export default new Router({
         {
             path: '/login',
             component: resolve => require(['@/views/login'], resolve),
-            name: 'login'
+            name: 'login',
+            meta: { title: '登录', keepAlive: false  },
         },
         {
             path: '*',

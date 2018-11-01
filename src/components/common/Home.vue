@@ -6,9 +6,12 @@
             <v-tags></v-tags>
             <div class="content">
                 <transition name="move" mode="out-in">
-                    <keep-alive exclude="orderDetail">
-                        <router-view></router-view>
-                    </keep-alive>
+                    <div>
+                        <keep-alive>
+                            <router-view v-if="$route.meta.keepAlive"></router-view>
+                        </keep-alive>
+                        <router-view v-if="!$route.meta.keepAlive"></router-view>
+                    </div>
                 </transition>
             </div>
         </div>

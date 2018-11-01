@@ -16,14 +16,7 @@
         </template>
         <div class="sort-select">
             <el-select v-model="SearchField" placeholder="--请选择要查询的字段--" style="width:200px">
-                <el-option label="区域" value="RegionID"></el-option>
-                <el-option label="省份" value="ProvinceID"></el-option>
-                <el-option label="城市" value="CityID"></el-option>
-                <el-option label="经销商名称" value="DealerName"></el-option>
-                <el-option label="车牌号" value="PlateNumber"></el-option>
-                <el-option label="VIN码" value="VIN"></el-option>
-                <el-option label="保险公司" value="Insurer"></el-option>
-                <el-option label="车型" value="SubModel"></el-option>
+                <el-option v-for="(item, index) in selectList" :key="index" v-if="item.role.includes(UserRole)" :label="item.label" :value="item.value"></el-option>
             </el-select>
         </div>
         <div class="handle-input">
@@ -36,17 +29,8 @@
         </router-link>
     </div>
     <el-table :data="Orders" class="table" ref="multipleTable" @sort-change="handleSortChange" :default-sort="{prop: 'CreateDate', order: 'descending'}">
-        <el-table-column prop="CreateDate" label="创建日期" sortable v-if="UserRole=='Dealer'||UserRole=='Administrator'" width="100px"></el-table-column>
-        <el-table-column prop="PlateNumber" label="车牌号" sortable v-if="UserRole=='Dealer'||UserRole=='Administrator'" width="100px"></el-table-column>
-        <el-table-column prop="SubmitDate" label="申请日期" sortable v-if="UserRole!='Dealer'" width="100px"></el-table-column>
-        <el-table-column prop="RegionName" label="区域" v-if="UserRole=='BMW-BP'||UserRole=='Administrator'"></el-table-column>
-        <el-table-column prop="ProvinceName" label="省份" v-if="UserRole!='Dealer'"></el-table-column>
-        <el-table-column prop="CityName" label="城市" v-if="UserRole!='Dealer'"></el-table-column>
-        <el-table-column prop="DealerName" label="经销商名称" v-if="UserRole!='Dealer'" width="120px"></el-table-column>
-        <el-table-column prop="VIN" label="VIN" v-if="UserRole=='Dealer'||UserRole=='Administrator'"></el-table-column>
-        <el-table-column prop="SubModel" label="车型" v-if="UserRole=='Dealer'||UserRole=='Administrator'"></el-table-column>
-        <el-table-column prop="Insurer" label="保险公司" v-if="UserRole=='Dealer'||UserRole=='Administrator'||UserRole=='RegionManager'"></el-table-column>
-        <el-table-column prop="RepairCostTotal" label="本次维修报价"></el-table-column>
+        <el-table-column v-for="(item, index) in tableList" :key="index" v-if="item.role.includes(UserRole)"   :prop="item.prop" :label="item.label" :sortable="item.sortable" width="100px"></el-table-column>
+        <el-table-column prop="RepairCostTotal" label="本次维修价格"></el-table-column>
         <el-table-column label="占实际价值比">
             <template slot-scope="scope">
               {{Math.round(scope.row.RepairCostTotal/scope.row.VehicleCurrentPrice*10000)/100 + '%'}}
@@ -106,7 +90,91 @@ export default {
                 "StatusCode": 201,
                 "Status": "待提交"
             }],
-            TotalNumber: 0
+            TotalNumber: 0,
+            selectList: [{
+                label: '区域',
+                value: 'RegionID',
+                role:  ['BMW-BP','Administrator']
+            },{
+                label: '省份',
+                value: 'ProvinceID',
+                role:  ['RegionManager', 'BMW-BP','Administrator']
+            },{
+                label: '城市',
+                value: 'CityID',
+                role:  ['RegionManager', 'BMW-BP','Administrator']
+            },{
+                label: '经销商名称',
+                value: 'DealerName',
+                role:  ['RegionManager', 'BMW-BP','Administrator']
+            },{
+                label: '车牌号',
+                value: 'PlateNumber',
+                role:  ['Dealer','Administrator']
+            },{
+                label: 'VIN码',
+                value: 'VIN',
+                role:  ['Dealer','Administrator']
+            },{
+                label: '保险公司',
+                value: 'Insurer',
+                role:  ['Dealer', 'RegionManager','Administrator']
+            },{
+                label: '车型',
+                value: 'SubModel',
+                role:  ['Dealer','Administrator']
+            }],
+            tableList: [{
+                prop: 'CreateDate',
+                label: '创建日期',
+                sortable: true,
+                role:  ['Dealer','Administrator']
+            },{
+                prop: 'PlateNumber',
+                label: '车牌号',
+                sortable: true,
+                role:  ['Dealer','Administrator']
+            },{
+                prop: 'SubmitDate',
+                label: '申请日期',
+                sortable: true,
+                role:  ['RegionManager', 'BMW-BP','Administrator']
+            },{
+                prop: 'RegionName',
+                label: '区域',
+                sortable: true,
+                role:  ['BMW-BP','Administrator']
+            },{
+                prop: 'ProvinceName',
+                label: '省份',
+                sortable: true,
+                role:  ['RegionManager', 'BMW-BP','Administrator']
+            },{
+                prop: 'CityName',
+                label: '城市',
+                sortable: true,
+                role:  ['RegionManager', 'BMW-BP','Administrator']
+            },{
+                prop: 'DealerName',
+                label: '经销商名称',
+                sortable: true,
+                role:  ['RegionManager', 'BMW-BP','Administrator']
+            },{
+                prop: 'VIN',
+                label: 'VIN',
+                sortable: true,
+                role:  ['Dealer','Administrator']
+            },{
+                prop: 'SubModel',
+                label: '车型',
+                sortable: true,
+                role:  ['Dealer','Administrator']
+            },{
+                prop: 'Insurer',
+                label: '保险公司',
+                sortable: true,
+                role:  ['Dealer', 'RegionManager','Administrator']
+            }]
         }
     },
     methods: {
@@ -134,7 +202,7 @@ export default {
             console.log(index, data)
             this.$router.push({
                 name: 'orderDetial',
-                query: {
+                params: {
                     id: data.OrderID
                 }
             });

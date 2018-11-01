@@ -74,7 +74,7 @@
                 </el-table-column>
                 <el-table-column prop="IsOrdered" label="订购">
                     <template slot-scope="scope">
-                        <el-checkbox v-model="scope.row.IsOrdered" ></el-checkbox>
+                        <el-checkbox v-model="scope.row.IsOrdered=true" ></el-checkbox>
                     </template>
                 </el-table-column>
                 <el-table-column prop="" label="物流说明" show-overflow-tooltip width="200">
@@ -161,18 +161,44 @@
                 </el-form-item>
             </el-form>
         </div>
-        <div class="form-box-neworder">
-            <div class="form-title">
-                附件
+        <div v-if="UserRole == 'Dealer' || UserRole == 'Administrator' " class="">
+            <div class="form-box-neworder">
+                <div class="form-title">
+                    附件
+                </div>
+                <el-form class="inline-form el-row" lebel-width="150px">
+                </el-form>
             </div>
-            <el-form class="inline-form el-row" lebel-width="150px">
-            </el-form>
+            <div class="form-box-neworder text-center">
+                <el-button type="primary" @click="onSubmit">保存但不提交</el-button>
+                <el-button type="primary" @click="onSubmit">保存并提交</el-button>
+                <el-button>取消</el-button>
+                <el-button type="danger">删除</el-button>
+            </div>
         </div>
-        <div class="form-box-neworder text-center">
-            <el-button type="primary" @click="onSubmit">保存但不提交</el-button>
-            <el-button type="primary" @click="onSubmit">保存并提交</el-button>
-            <el-button>取消</el-button>
-            <el-button type="danger">删除</el-button>
+        <!-- 区域经理和bmw -->
+        <div v-if="UserRole == 'RegionManager' || UserRole == 'BMW-BP' || UserRole == 'Administrator' " class="">
+            <div class="form-box-neworder">
+                <div class="form-title">
+                    附件
+                </div>
+            </div>
+            <div class="form-box-neworder text-center">
+                <span>审核备注：<el-input v-model="Remarks"></el-input></span>
+                <el-button type="primary" @click="onSubmit">通过</el-button>
+                <el-button type="primary" @click="onSubmit">不通过</el-button>
+                <el-button>退出</el-button>
+            </div>
+            <div class="form-box-neworder">
+                <div class="form-title">
+                    申请日志
+                </div>
+                <el-row v-for="item in 10" :key="item">
+                    <el-col :span="6">2018-03-02 13:23:38</el-col>
+                    <el-col :span="6">张三：经销商提交申请</el-col>
+                    <el-col :span="6">审批备注：同意</el-col>
+                </el-row>
+            </div>
         </div>
     </div>
 
@@ -181,12 +207,15 @@
 
 <script>
 import {
-    General
+    General, Dealer
 } from '@/networks/api'
+import { mapState} from 'vuex'
 export default {
     name: 'orderDetail',
     data: function() {
         return {
+            Result: '', // 审批结果 “Approved”：通过 “Rejected”：不通过
+            Remarks: '',
             detailData: {
                 ReferenceNumber: "",
                 AccidentBrief: "",
@@ -232,6 +261,12 @@ export default {
             ],
         }
     },
+    computed: {
+        ...mapState([
+            'UserName',
+            'UserRole'
+       ])
+    },
     methods: {
         handleDatePicker(val) {
             console.log(this.detailData.VehicleFirstRegDate, val)
@@ -268,10 +303,21 @@ export default {
         onSubmit() {
 
         },
+        async SaveOrder() {
+            try{
+                const response = await Dealer.SaveOrder({
+                    Operation: this.detailData.OrderID? 'Update' : 'Create',
+                    Order: this.detailData
+                })
+
+            } catch (error) {
+                console.log(error)
+            }
+        },
         async GetOrderInfo() {
             try {
                 const response = await General.GetOrderInfo({
-                    OrderID: this.$route.query.id
+                    OrderID: this.detailData.OrderID
                 })
                 this.detailData = response.Data
                 // console.log(this.detailData)
@@ -280,9 +326,12 @@ export default {
             }
         },
         routeChange () {
-            this.detailData.OrderID = this.$route.query.id? this.$route.query.id: 0
+            this.detailData.OrderID = this.$route.params.id? this.$route.params.id: 0
             if (this.detailData.OrderID) {
                 this.GetOrderInfo()
+                this.$route.meta.title = '订单详情'
+            } else {
+                this.$route.meta.title = '新建订单'
             }
         },
         async handleImport() {
@@ -297,10 +346,10 @@ export default {
         }
     },
     watch: {
-        // '$route': 'routeChange'
+        '$route': 'routeChange'
     },
     created() {
-        console.log('this.$route.query', this.$route)
+        console.log('this.$route', this.$route)
         this.routeChange()
     }
 }
