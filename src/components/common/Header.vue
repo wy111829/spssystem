@@ -122,7 +122,6 @@ export default {
         }
     },
     created () {
-        console.log(7777, this.UserName, this.UserRole)
     }
 }
 </script>

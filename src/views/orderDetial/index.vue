@@ -1,12 +1,17 @@
 <template>
 <div class="newOrder-container">
-    <!-- <div class="crumbs">
-            <el-breadcrumb separator="/">
-                <el-breadcrumb-item><i class="el-icon-lx-calendar"></i> 表单</el-breadcrumb-item>
-                <el-breadcrumb-item>基本表单</el-breadcrumb-item>
-            </el-breadcrumb>
-        </div> -->
     <div class="container">
+        <div class="form-box-neworder">
+            <div class="form-title">
+                导入定损单信息
+            </div>
+            <el-form class="inline-form el-row" label-width="300px">
+                <el-form-item label="请输入需导入的定损单单号：" class="el-col el-col-12 el-col-xs-24">
+                    <el-input v-model="detailData.ReferenceNumber" placeholder=""></el-input>
+                </el-form-item>
+                <el-button type="primary" @click="handleImport">导入</el-button>
+            </el-form>
+        </div>
         <div class="form-box-neworder">
             <div class="form-title">
                 客户及车辆信息
@@ -22,13 +27,13 @@
                     <el-input v-model="detailData.VIN" readonly></el-input>
                 </el-form-item>
                 <el-form-item label="车型：" class="el-col el-col-12 el-col-xs-24">
-                    <el-input v-model="detailData.SubModel" readonly></el-input>
+                    <el-input v-model="detailData.SubModelName" readonly></el-input>
                 </el-form-item>
                 <el-form-item label="车辆首次登记日期：" class="el-col el-col-12 el-col-xs-24">
                     <el-date-picker type="date" @change="handleDatePicker" placeholder="选择日期" v-model="detailData.VehicleFirstRegDate" style="width: 100%;"></el-date-picker>
                 </el-form-item>
                 <el-form-item label="保险公司：" class="el-col el-col-12 el-col-xs-24">
-                    <el-input v-model="detailData.Insurer" readonly></el-input>
+                    <el-input v-model="detailData.InsurerName" readonly></el-input>
                 </el-form-item>
                 <el-form-item label="报案号:" class="el-col el-col-12 el-col-xs-24">
                     <el-input v-model="detailData.InsuranceNumber"></el-input>
@@ -69,7 +74,7 @@
                 </el-table-column>
                 <el-table-column prop="IsOrdered" label="订购">
                     <template slot-scope="scope">
-                        <el-checkbox v-model="scope.row.IsOrdered"></el-checkbox>
+                        <el-checkbox v-model="scope.row.IsOrdered" ></el-checkbox>
                     </template>
                 </el-table-column>
                 <el-table-column prop="" label="物流说明" show-overflow-tooltip width="200">
@@ -167,7 +172,7 @@
             <el-button type="primary" @click="onSubmit">保存但不提交</el-button>
             <el-button type="primary" @click="onSubmit">保存并提交</el-button>
             <el-button>取消</el-button>
-            <el-button>删除</el-button>
+            <el-button type="danger">删除</el-button>
         </div>
     </div>
 
@@ -183,6 +188,7 @@ export default {
     data: function() {
         return {
             detailData: {
+                ReferenceNumber: "",
                 AccidentBrief: "",
                 ApplicationLogs: [],
                 Attachments: [],
@@ -207,7 +213,7 @@ export default {
                 SpareParts: [],
                 Status: "",
                 StatusCode: null,
-                SubModel: "",
+                SubModelName: "",
                 VIN: "",
                 VehicleAge: null,
                 VehicleCurrentPrice: null,
@@ -278,6 +284,16 @@ export default {
             if (this.detailData.OrderID) {
                 this.GetOrderInfo()
             }
+        },
+        async handleImport() {
+            try {
+                const importInfo = await General.ImportOrderInfo({
+                    ReferenceNumber: this.detailData.ReferenceNumber
+                })
+                this.detailData = importInfo.Data
+            } catch(error){
+                console.log(error)
+            }
         }
     },
     watch: {
@@ -298,6 +314,9 @@ export default {
             padding-left: 10px;
             border-bottom: 1px solid #000000;
             margin: 20px 0;
+        }
+        button{
+            margin-left: 10px;
         }
     }
 }

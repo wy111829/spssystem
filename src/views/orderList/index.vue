@@ -16,11 +16,14 @@
         </template>
         <div class="sort-select">
             <el-select v-model="SearchField" placeholder="--请选择要查询的字段--" style="width:200px">
+                <el-option label="区域" value="RegionID"></el-option>
+                <el-option label="省份" value="ProvinceID"></el-option>
+                <el-option label="城市" value="CityID"></el-option>
+                <el-option label="经销商名称" value="DealerName"></el-option>
                 <el-option label="车牌号" value="PlateNumber"></el-option>
                 <el-option label="VIN码" value="VIN"></el-option>
+                <el-option label="保险公司" value="Insurer"></el-option>
                 <el-option label="车型" value="SubModel"></el-option>
-                <el-option label="地区" value="RegionID"></el-option>
-                <el-option label="经销商" value="DealerName"></el-option>
             </el-select>
         </div>
         <div class="handle-input">
@@ -33,12 +36,22 @@
         </router-link>
     </div>
     <el-table :data="Orders" class="table" ref="multipleTable" @sort-change="handleSortChange" :default-sort="{prop: 'CreateDate', order: 'descending'}">
-        <el-table-column prop="CreateDate" label="创建日期" sortable></el-table-column>
-        <el-table-column prop="PlateNumber" label="车牌号" sortable></el-table-column>
-        <el-table-column prop="VIN" label="VIN"></el-table-column>
-        <el-table-column prop="SubModel" label="车型"></el-table-column>
-        <el-table-column prop="Insurer" label="保险公司"></el-table-column>
-        <el-table-column prop="RepairCostTotal" label="维修总价"></el-table-column>
+        <el-table-column prop="CreateDate" label="创建日期" sortable v-if="UserRole=='Dealer'||UserRole=='Administrator'" width="100px"></el-table-column>
+        <el-table-column prop="PlateNumber" label="车牌号" sortable v-if="UserRole=='Dealer'||UserRole=='Administrator'" width="100px"></el-table-column>
+        <el-table-column prop="SubmitDate" label="申请日期" sortable v-if="UserRole!='Dealer'" width="100px"></el-table-column>
+        <el-table-column prop="RegionName" label="区域" v-if="UserRole=='BMW-BP'||UserRole=='Administrator'"></el-table-column>
+        <el-table-column prop="ProvinceName" label="省份" v-if="UserRole!='Dealer'"></el-table-column>
+        <el-table-column prop="CityName" label="城市" v-if="UserRole!='Dealer'"></el-table-column>
+        <el-table-column prop="DealerName" label="经销商名称" v-if="UserRole!='Dealer'" width="120px"></el-table-column>
+        <el-table-column prop="VIN" label="VIN" v-if="UserRole=='Dealer'||UserRole=='Administrator'"></el-table-column>
+        <el-table-column prop="SubModel" label="车型" v-if="UserRole=='Dealer'||UserRole=='Administrator'"></el-table-column>
+        <el-table-column prop="Insurer" label="保险公司" v-if="UserRole=='Dealer'||UserRole=='Administrator'||UserRole=='RegionManager'"></el-table-column>
+        <el-table-column prop="RepairCostTotal" label="本次维修报价"></el-table-column>
+        <el-table-column label="占实际价值比">
+            <template slot-scope="scope">
+              {{Math.round(scope.row.RepairCostTotal/scope.row.VehicleCurrentPrice*10000)/100 + '%'}}
+          </template>
+        </el-table-column>
         <el-table-column prop="SparePartCostTotal" label="配件费用"></el-table-column>
         <el-table-column label="配件占比">
             <template slot-scope="scope">
@@ -46,10 +59,9 @@
           </template>
         </el-table-column>
         <el-table-column prop="Status" label="状态"></el-table-column>
-        <el-table-column label="操作" width="180" align="center">
+        <el-table-column label="操作" align="center">
             <template slot-scope="scope">
                 <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
             </template>
         </el-table-column>
     </el-table>
@@ -61,9 +73,8 @@
 </template>
 
 <script>
-import {
-    General
-} from '@/networks/api'
+import {General} from '@/networks/api'
+import {mapState} from 'vuex'
 export default {
     name: 'orderList',
     data() {
@@ -150,7 +161,14 @@ export default {
 
         }
     },
+    computed:{
+        ...mapState([
+            'UserName',
+            'UserRole'
+        ]),
+    },
     created() {
+        console.log(12312312,this.UserRole)
         this.getData()
     }
 }

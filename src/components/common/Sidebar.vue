@@ -39,45 +39,45 @@
                         icon: 'el-icon-document',
                         index: 'orderList',
                         title: '订单列表',
-                        role: ['Dealer', 'RM', 'BMW']
+                        role: ['Dealer', 'RegionManager', 'BMW-BP','Administrator']
                     },
                     {
                         icon: 'el-icon-lx-copy',
                         index: 'report',
                         title: '统计分析',
-                        role:  ['Dealer', 'RM', 'BMW']
+                        role:  ['Dealer', 'RegionManager', 'BMW-BP','Administrator']
                     },
                     {
                         icon: 'el-icon-lx-copy',
                         index: 'DealerManagment',
                         title: '审批策略设置',
-                        role:  ['RM']
+                        role:  ['RegionManager','Administrator']
                     },
                     {
                         icon: 'el-icon-setting',
                         index: '3',
                         title: '系统设置',
-                        role: ['Dealer', 'RM', 'BMW'],
+                        role: ['Dealer', 'RegionManager', 'BMW-BP','Administrator'],
                         subs: [
                             {
                                 index: 'systemDealerManager',
                                 title: '经销商管理',
-                                role: ['BMW']
+                                role: ['BMW-BP','Administrator']
                             },
                             {
                                 index: 'systemRegionalManger',
                                 title: '区域经理管理',
-                                role: ['BMW']
+                                role: ['BMW-BP','Administrator']
                             },
                             {
                                 index: 'systemUnableParts',
                                 title: '不可订货的配件',
-                                role: ['BMW']
+                                role: ['BMW-BP','Administrator']
                             },
                             {
                                 index: 'systemEmailAdressList',
                                 title: '邮件地址管理',
-                                role: ['BMW']
+                                role: ['BMW-BP','Administrator']
                             },
                             // {
                             //     index: 'systemEmailTemList',
@@ -86,12 +86,12 @@
                             {
                                 index: 'systemMsg',
                                 title: '系统消息',
-                                role: ['BMW']
+                                role: ['Dealer', 'RegionManager','BMW-BP','Administrator']
                             },
                             {
                                 index: 'systemPswd',
                                 title: '修改密码',
-                                role:  ['Dealer', 'RM', 'BMW']
+                                role:  ['Dealer', 'RegionManager', 'BMW-BP','Administrator']
                             }
                         ]
                     }
