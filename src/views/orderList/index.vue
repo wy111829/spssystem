@@ -202,7 +202,7 @@ export default {
             console.log(index, data)
             this.$router.push({
                 name: 'orderDetial',
-                params: {
+                query: {
                     id: data.OrderID
                 }
             });

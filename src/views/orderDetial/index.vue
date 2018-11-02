@@ -1,7 +1,8 @@
 <template>
 <div class="newOrder-container">
     <div class="container">
-        <div class="form-box-neworder">
+        <!-- 经销商 -->
+        <div class="form-box-neworder" v-if="UserRole == 'Dealer'|| UserRole == 'Administrator'">
             <div class="form-title">
                 导入定损单信息
             </div>
@@ -11,6 +12,18 @@
                 </el-form-item>
                 <el-button type="primary" @click="handleImport">导入</el-button>
             </el-form>
+        </div>
+        <!-- 区域经理和bmw -->
+        <div class="form-box-neworder" v-if="UserRole == 'RegionManager' || UserRole == 'BMW-BP' || UserRole == 'Administrator' ">
+            <div class="form-title">
+                经销商信息
+            </div>
+            <el-row class="DealerMessage">
+                <el-col :span="5">经销商名称：{{detailData.DealerName}}</el-col>
+                <el-col :span="5">区域 :{{detailData.RegionName}}</el-col>
+                <el-col :span="5">省份：{{detailData.ProvinceName}}</el-col>
+                <el-col :span="5">城市：{{detailData.CityName}}</el-col>
+            </el-row>
         </div>
         <div class="form-box-neworder">
             <div class="form-title">
@@ -74,7 +87,7 @@
                 </el-table-column>
                 <el-table-column prop="IsOrdered" label="订购">
                     <template slot-scope="scope">
-                        <el-checkbox v-model="scope.row.IsOrdered=true" ></el-checkbox>
+                        <el-checkbox v-model="scope.row.IsOrdered" ></el-checkbox>
                     </template>
                 </el-table-column>
                 <el-table-column prop="" label="物流说明" show-overflow-tooltip width="200">
@@ -161,6 +174,7 @@
                 </el-form-item>
             </el-form>
         </div>
+        <!-- 经销商 -->
         <div v-if="UserRole == 'Dealer' || UserRole == 'Administrator' " class="">
             <div class="form-box-neworder">
                 <div class="form-title">
@@ -184,19 +198,23 @@
                 </div>
             </div>
             <div class="form-box-neworder text-center">
-                <span>审核备注：<el-input v-model="Remarks"></el-input></span>
-                <el-button type="primary" @click="onSubmit">通过</el-button>
-                <el-button type="primary" @click="onSubmit">不通过</el-button>
-                <el-button>退出</el-button>
+                <el-form class="inline-form el-row" label-width="200px">
+                    <el-form-item label="审核备注：" class="el-col el-col-12 el-col-xs-24">
+                        <el-input v-model="Remarks" placeholder=""></el-input>
+                    </el-form-item>
+                    <el-button type="primary" @click="onSubmit">通过</el-button>
+                    <el-button type="danger" @click="onSubmit">不通过</el-button>
+                    <el-button type="" @click="onSubmit">退出</el-button>
+                </el-form>
             </div>
             <div class="form-box-neworder">
                 <div class="form-title">
                     申请日志
                 </div>
-                <el-row v-for="item in 10" :key="item">
-                    <el-col :span="6">2018-03-02 13:23:38</el-col>
-                    <el-col :span="6">张三：经销商提交申请</el-col>
-                    <el-col :span="6">审批备注：同意</el-col>
+                <el-row v-for="(item,index) in this.detailData.ApplicationLogs" :key="index" class="ApplicationLogs">
+                    <el-col :span="5" class="OperationDate">{{item.OperationDate}}</el-col>
+                    <el-col :span="5">{{item.Operator}} :{{item.Operation}}</el-col>
+                    <el-col :span="5">审批备注：{{item.Comments}}</el-col>
                 </el-row>
             </div>
         </div>
@@ -217,6 +235,12 @@ export default {
             Result: '', // 审批结果 “Approved”：通过 “Rejected”：不通过
             Remarks: '',
             detailData: {
+                DATECode:"",
+                FZA:0,
+                HST:0,
+                HT:0,
+                UT:0,
+                MyClaimID:"",
                 ReferenceNumber: "",
                 AccidentBrief: "",
                 ApplicationLogs: [],
@@ -242,6 +266,7 @@ export default {
                 SpareParts: [],
                 Status: "",
                 StatusCode: null,
+                SubModelID:0,
                 SubModelName: "",
                 VIN: "",
                 VehicleAge: null,
@@ -301,7 +326,7 @@ export default {
             return this.$confirm(`确定移除 ${ file.name }？`);
         },
         onSubmit() {
-
+            this.SaveOrder()
         },
         async SaveOrder() {
             try{
@@ -326,17 +351,14 @@ export default {
             }
         },
         routeChange () {
-            this.detailData.OrderID = this.$route.params.id? this.$route.params.id: 0
+            this.detailData.OrderID = this.$route.query.id? this.$route.query.id: 0
             if (this.detailData.OrderID) {
                 this.GetOrderInfo()
-                this.$route.meta.title = '订单详情'
-            } else {
-                this.$route.meta.title = '新建订单'
             }
         },
         async handleImport() {
             try {
-                const importInfo = await General.ImportOrderInfo({
+                const importInfo = await Dealer.ImportOrderInfo({
                     ReferenceNumber: this.detailData.ReferenceNumber
                 })
                 this.detailData = importInfo.Data
@@ -366,6 +388,18 @@ export default {
         }
         button{
             margin-left: 10px;
+        }
+        .DealerMessage{
+            font-size: 15px;
+            margin-left: 40px;
+            color:#606266;
+        }
+        .ApplicationLogs{
+            font-size: 13px;
+            margin: 5px 50px;
+            .OperationDate{
+                color:#606266;
+            }
         }
     }
 }

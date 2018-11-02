@@ -13,7 +13,7 @@ Mock.mock(/Login/, 'post', {
 Mock.mock(/GetUserInfo/, 'get', {
     "Code": 200,
     "Data": {
-        "Role": "BMW-BP",
+        "Role": "Administrator",
         "UserName": "系统管理员"
     }
 })
@@ -173,105 +173,120 @@ Mock.mock(/GetOrderList/, 'post', {
 
 // 获取订单详细信息
 Mock.mock(/GetOrderInfo([\w|\?\S*]+)/, 'get', {
-    "Code": 200,
-    "Data": {
-        "OrderID": 722622,
-        "ContractID": 122121,
-        "ReferenceNumber": "DAT-20181019152745251",
-        "VehicleOwner": "张三",
-        "PlateNumber": "京N88888",
-        "VIN": "LBVPZ1100ASD77412",
-        "DATECode": "011300430200002",
-        "FZA": 1,
-        "HST": 130,
-        "HT": 43,
-        "UT": 20,
-        "SubModelID": 12,
-        "SubModelName": "520Li",
-        "VehicleMadeCountry": "CN",
-        "VehicleFirstRegDate": "2017-10-12",
-        "VehicleAge": 18,
-        "InsurerID": 23,
-        "InsurerName": "中国人保",
-        "InsurerContactPerson": "李四",
-        "InsuranceNumber": "Dfaas12892182",
-        "AccidentBrief": "双方事故，宝马全责，宝马右侧受损",
-        "VehicleMSRP": 128000,
-        "VehicleCurrentPrice": 95000,
-        "RepairCostTotal": 23500,
-        "SparePartCostTotal": 19000,
-        "LaborCostTotal": 4500,
-        "InsuredAmount": 23500,
-        "IsManufacturerPaint": true,
-        "HasAdditionalLabor": false,
-        "CaseStatus": "自店",
-        "IsCustomerChurned": false,
-        "ChurnTo": "",
-        "ChurnReason": "",
-        "RetentionActions": "",
-        "StatusCode": 201,
-        "Status": "待提交",
-        "SpareParts": [{
-                "ID": 3212,
-                "DVN": 42110,
-                "PartNumber": "41217182570",
-                "PartName": "左后翼子板",
-                "Price": 600,
-                "Quantity": 1,
-                "TotalPrice": 600,
-                "IsOrdered": true,
-                "LogisticsCmt": "",
-                "BMWApprovalCmt": ""
+    "Code":200,
+    "Data":{
+        "OrderID":722622,
+        "MyClaimID":122121,
+        "CeateDate":"2018-10-19 10:23:31",
+        "SubmitDate":"2018-10-19 10:23:31",
+        "ReferenceNumber":"DAT-20181019152745251",
+        "VehicleOwner":"张三",
+        "PlateNumber":"京N88888",
+        "VIN":"LBVPZ1100ASD77412",
+        "DATECode":"011300430200002",
+        "FZA":1,
+        "HST":130,
+        "HT":43,
+        "UT":20,
+        "SubModelID":12,
+        "SubModelName":"520Li",
+        "VehicleMadeCountry":"CN",
+        "VehicleFirstRegDate":"2017-10-12",
+        "VehicleAge":18,
+        "DealerID":23,
+        "DealerName":"中国人保",
+        "RegionID":"100004",
+        "RegionName":"北区",
+        "ProvinceID":"110000",
+        "ProvinceName":"北京",
+        "CityID":"110100",
+        "CityName":"北京",
+        "InsurerID":23,
+        "InsurerName":"中国人保",
+        "InsurerContactPerson":"李四",
+        "InsuranceNumber":"Dfaas12892182",
+        "AccidentBrief":"双方事故，宝马全责，宝马右侧受损",
+        "VehicleMSRP":128000,
+        "VehicleCurrentPrice":95000,
+        "RepairCostTotal":23500,
+        "Repair_CurrentPrice_PCT":24.7,
+        "SparePartCostTotal":19000,
+        "Part_Repair_PCT":80.9,
+        "LaborCostTotal":4500,
+        "InsuredAmount":23500,
+        "IsManufacturerPaint":true,
+        "HasAdditionalLabor":false,
+        "CaseStatus":"自店",
+        "IsCustomerChurned":false,
+        "ChurnTo":"",
+        "ChurnReason":"",
+        "RetentionActions":"",
+        "StatusCode":201,
+        "Status":"待提交",
+        "SpareParts":[
+            {
+                "ID":3212,
+                "DVN":42110,
+                "PartNumber":"41217182570",
+                "PartName":"左后翼子板",
+                "Price":600,
+                "Quantity":1,
+                "TotalPrice":600,
+                "IsOrdered":true,
+                "LogisticsCmt":"",
+                "BMWApprovalCmt":""
             },
             {
-                "ID": 3213,
-                "DVN": 47151,
-                "PartNumber": "51117293022",
-                "PartName": "前部保险杠",
-                "Price": 6580,
-                "Quantity": 1,
-                "TotalPrice": 6580,
-                "IsOrdered": true,
-                "LogisticsCmt": "",
-                "BMWApprovalCmt": ""
+                "ID":3213,
+                "DVN":47151,
+                "PartNumber":"51117293022",
+                "PartName":"前部保险杠",
+                "Price":6580,
+                "Quantity":1,
+                "TotalPrice":6580,
+                "IsOrdered":true,
+                "LogisticsCmt":"",
+                "BMWApprovalCmt":""
             },
             {
-                "ID": 3214,
-                "DVN": 42725,
-                "PartNumber": "83190301421",
-                "PartName": "左前门",
-                "Price": 600,
-                "Quantity": 1,
-                "TotalPrice": 600,
-                "IsOrdered": false,
-                "LogisticsCmt": "",
-                "BMWApprovalCmt": ""
+                "ID":3214,
+                "DVN":42725,
+                "PartNumber":"83190301421",
+                "PartName":"左前门",
+                "Price":600,
+                "Quantity":1,
+                "TotalPrice":600,
+                "IsOrdered":false,
+                "LogisticsCmt":"",
+                "BMWApprovalCmt":""
             }
         ],
-        "Attachments": [{
-                "FileName": "TestPic1.PNG",
-                "DownloadFileName": "89m9b43b-4f2b-4b69-98e9-84d23ae38ae2_TestPic2.PNG",
-                "FileSize": 6000,
-                "UploadDate": "2018-10-19 14:23:38"
+        "Attachments":[
+            {
+                "FileName":"TestPic1.PNG",
+                "DownloadFileName":"89m9b43b-4f2b-4b69-98e9-84d23ae38ae2_TestPic2.PNG",
+                "FileSize":6000,
+                "UploadDate":"2018-10-19 14:23:38"
             },
             {
-                "FileName": "TestPic2.PNG",
-                "DownloadFileName": "92f9b43b-4f2b-4b69-98e9-84d23ae38ae2_TestPic2.PNG",
-                "FileSize": 6000,
-                "UploadDate": "2018-10-19 14:27:38"
+                "FileName":"TestPic2.PNG",
+                "DownloadFileName":"92f9b43b-4f2b-4b69-98e9-84d23ae38ae2_TestPic2.PNG",
+                "FileSize":6000,
+                "UploadDate":"2018-10-19 14:27:38"
             }
         ],
-        "ApplicationLogs": [{
-                "OperationDate": "2018-10-19 13:23:38",
-                "Operator": "张三",
-                "Operation": "经销商提交申请",
-                "Comments": ""
+        "ApplicationLogs":[
+            {
+                "OperationDate":"2018-10-19 13:23:38",
+                "Operator":"张三",
+                "Operation":"经销商提交申请",
+                "Comments":""
             },
             {
-                "OperationDate": "2018-10-19 14:23:38",
-                "Operator": "李四",
-                "Operation": "区域经理审批通过",
-                "Comments": "同意"
+                "OperationDate":"2018-10-19 14:23:38",
+                "Operator":"李四",
+                "Operation":"区域经理审批通过",
+                "Comments":"同意"
             }
         ]
     }
@@ -364,5 +379,14 @@ Mock.mock(/ImportOrderInfo/, 'post', {
         ]
     }
 
+
+})
+
+//获取当前系统消息
+Mock.mock(/GetCurrentSysMessage/, 'get',{
+    "Code":200,
+    "Data":{
+        "MessageContent":"这是一条用于测试的系统消息。"
+    }
 
 })

@@ -43,7 +43,7 @@ export default new Router({
                     name: 'DealerManagment'
                 },
                 {
-                    path: '/orderDetial/:id?',
+                    path: '/orderDetial',
                     component: resolve => require(['@/views/orderDetial'], resolve),
                     meta: { title: '订单详情', keepAlive: false  },
                     name: 'orderDetial'

@@ -2,7 +2,7 @@
 <div class="main-container">
     <div class="search-box">
         <div class="sort-select">
-            <el-select v-model="selectword" placeholder="--请选择要查询的字段--" style="width:200px">
+            <el-select v-model="SearchField" placeholder="--请选择要查询的字段--" style="width:200px">
                 <el-option label="车牌号" value="PlateNumber"></el-option>
                 <el-option label="VIN码" value="VIN"></el-option>
                 <el-option label="保险公司" value="Insurer"></el-option>
@@ -25,7 +25,7 @@
         <el-table-column prop="DealerGroup" label="经销商集团"></el-table-column>
         <el-table-column label="审批策略" width="280" align="center">
             <template slot-scope="scope">
-                <el-radio-group v-model="scope.row.ApproveMethod">
+                <el-radio-group v-model="scope.row.ApproveMethod" @change="handleRadioChange(scope.row.DealerID,scope.row.ApproveMethod)">
                     <el-radio label="AutoApprove">永远同意</el-radio>
                     <el-radio label="ManualApprove">逐单审核</el-radio>
                 </el-radio-group>
@@ -41,7 +41,7 @@
 
 <script>
 import {
-    General
+    RegionManagers
 } from '@/networks/api'
 export default {
     name: 'DealerManagment',
@@ -53,7 +53,7 @@ export default {
     methods: {
         async getData() {
             try {
-                const response = await General.GetDealerPolicyList({
+                const response = await RegionManagers.GetDealerPolicyList({
                     "SearchField": "CBU",
                     "SearchValue": "36133",
                     "SortField": "CBU",
@@ -65,6 +65,24 @@ export default {
             } catch(error){
 
             }
+        },
+        async changeApprovePolicy(DealerID,ApproveMethod){
+            try{
+                const response = await RegionManagers.SetDealerApprovePolicy({
+                    "DealerID":DealerID,
+                    "ApproveMethod":ApproveMethod
+                })
+            }catch(error){
+                console.log(error)
+            }
+        },
+        handleRadioChange(DealerID,ApproveMethod){
+            console.log(DealerID,ApproveMethod);
+            this.changeApprovePolicy(DealerID,ApproveMethod)
+        },
+        handleCurrentChange(val) {
+            this.RowOffset = val;
+            this.getData();
         }
     },
     created() {
