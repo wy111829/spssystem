@@ -388,5 +388,4 @@ Mock.mock(/GetCurrentSysMessage/, 'get',{
     "Data":{
         "MessageContent":"这是一条用于测试的系统消息。"
     }
-
 })

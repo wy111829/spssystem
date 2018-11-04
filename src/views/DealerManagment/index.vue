@@ -10,7 +10,7 @@
             </el-select>
         </div>
         <div class="handle-input">
-            <el-input placeholder="VIN search" v-model="input5" class="input-with-select">
+            <el-input placeholder="VIN search" v-model="SearchValue" class="input-with-select">
                 <el-button slot="append" icon="el-icon-search"></el-button>
             </el-input>
         </div>
@@ -47,21 +47,29 @@ export default {
     name: 'DealerManagment',
     data() {
         return {
-            tableList: []
+            tableList: [],
+            SearchField: null,
+            SearchValue: null,
+            SortField: null,
+            SortType: null,
+            RowOffset: 0,
+            RowCount: 20,
+            TotalNumber: 0
         }
     },
     methods: {
         async getData() {
             try {
                 const response = await RegionManagers.GetDealerPolicyList({
-                    "SearchField": "CBU",
-                    "SearchValue": "36133",
-                    "SortField": "CBU",
-                    "SortType": "ASC",
-                    "RowOffset": 0,
-                    "RowCount": 20
+                  "SearchField": this.SearchField,
+                  "SearchValue": this.SearchValue,
+                  "SortField": this.SortField,
+                  "SortType": this.SortType,
+                  "RowOffset": this.RowOffset,
+                  "RowCount": this.RowCount
                 })
                 this.tableList = response.Data.Dealers
+                this.TotalNumber = response.Data.TotalNumber
             } catch(error){
 
             }

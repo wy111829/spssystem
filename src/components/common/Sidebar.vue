@@ -1,6 +1,6 @@
 <template>
     <div class="sidebar">
-        <el-menu class="sidebar-el-menu" :default-active="onRoutes" :collapse="collapse" background-color="#324157"
+        <el-menu class="sidebar-el-menu" :router="true" :default-active="onRoutes" :collapse="collapse" background-color="#324157"
             text-color="#bfcbd9" active-text-color="#20a0ff" unique-opened router>
             <template v-for="item in items">
                 <template v-if="item.subs&&item.role.includes(UserRole)">
@@ -9,19 +9,18 @@
                             <i :class="item.icon"></i><span slot="title">{{ item.title }}</span>
                         </template>
                         <template v-for="subItem in item.subs"  v-if="subItem.role.includes(UserRole)">
-                            <el-menu-item  :index="subItem.index" :key="subItem.index">
+                            <el-menu-item  :index="subItem.index"  :route="{name: item.name}" :key="subItem.index">
                                 {{ subItem.title }}
                             </el-menu-item>
                         </template>
                     </el-submenu>
                 </template>
                 <template v-else>
-                    <el-menu-item v-if="item.role.includes(UserRole)" :index="item.index" :key="item.index">
+                    <el-menu-item v-if="item.role.includes(UserRole)" :index="item.index"  :route="{name: item.name}" :key="item.index">
                         <i :class="item.icon"></i><span slot="title">{{ item.title }}</span>
                     </el-menu-item>
                 </template>
             </template>
-
         </el-menu>
     </div>
 </template>
@@ -37,59 +36,69 @@
                 items: [
                     {
                         icon: 'el-icon-document',
-                        index: 'orderList',
+                        name: 'orderList',
+                        index: '1',
                         title: '订单列表',
                         role: ['Dealer', 'RegionManager', 'BMW-BP','Administrator']
                     },
                     {
                         icon: 'el-icon-lx-copy',
-                        index: 'report',
+                        name: 'report',
                         title: '统计分析',
+                        index: '2',
                         role:  ['Dealer', 'RegionManager', 'BMW-BP','Administrator']
                     },
                     {
                         icon: 'el-icon-lx-copy',
-                        index: 'DealerManagment',
+                        name: 'DealerManagment',
+                        index: '3',
                         title: '审批策略设置',
                         role:  ['RegionManager','Administrator']
                     },
                     {
                         icon: 'el-icon-setting',
-                        index: '3',
+                        name: '3',
+                        index: '4',
                         title: '系统设置',
                         role: ['Dealer', 'RegionManager', 'BMW-BP','Administrator'],
                         subs: [
                             {
-                                index: 'systemDealerManager',
+                                name: 'systemDealerManager',
+                                index: '4-1',
                                 title: '经销商管理',
                                 role: ['BMW-BP','Administrator']
                             },
                             {
-                                index: 'systemRegionalManger',
+                                name: 'systemRegionalManger',
+                                index: '4-2',
                                 title: '区域经理管理',
                                 role: ['BMW-BP','Administrator']
                             },
                             {
-                                index: 'systemUnableParts',
+                                name: 'systemUnableParts',
+                                index: '4-3',
                                 title: '不可订货的配件',
                                 role: ['BMW-BP','Administrator']
                             },
                             {
-                                index: 'systemEmailAdressList',
+                                name: 'systemEmailAdressList',
+                                index: '4-4',
                                 title: '邮件地址管理',
                                 role: ['BMW-BP','Administrator']
                             },
                             // {
-                            //     index: 'systemEmailTemList',
+                            //     name: 'systemEmailTemList',
                             //     title: '邮件模板管理'
                             // },
                             {
-                                index: 'systemMsg',
+                                name: 'systemMsg',
+                                index: '4-5',
                                 title: '系统消息',
                                 role: ['Dealer', 'RegionManager','BMW-BP','Administrator']
                             },
                             {
-                                index: 'systemPswd',
+                                name: 'systemPswd',
+                                index: '4-6',
                                 title: '修改密码',
                                 role:  ['Dealer', 'RegionManager', 'BMW-BP','Administrator']
                             }

@@ -184,8 +184,8 @@
                 </el-form>
             </div>
             <div class="form-box-neworder text-center">
-                <el-button type="primary" @click="onSubmit">保存但不提交</el-button>
-                <el-button type="primary" @click="onSubmit">保存并提交</el-button>
+                <el-button type="primary" @click="handleSaveOrder">保存但不提交</el-button>
+                <el-button type="primary" @click="handleSubmitOrder">保存并提交</el-button>
                 <el-button>取消</el-button>
                 <el-button type="danger">删除</el-button>
             </div>
@@ -326,18 +326,51 @@ export default {
             return this.$confirm(`确定移除 ${ file.name }？`);
         },
         onSubmit() {
-            this.SaveOrder()
-        },
-        async SaveOrder() {
-            try{
-                const response = await Dealer.SaveOrder({
-                    Operation: this.detailData.OrderID? 'Update' : 'Create',
-                    Order: this.detailData
-                })
 
-            } catch (error) {
-                console.log(error)
+        },
+        async handleSaveOrder() { // 保存并不提交-经销商
+          // 验证字段、
+          try{
+              const response = await Dealer.SaveOrder({
+                  Operation: this.detailData.OrderID? 'Update' : 'Create',
+                  Order: this.detailData
+              })
+              if (response.Code == 200) {
+                this.detailData.OrderID = response.OrderID
+                this.$alert('保存成功，返回订单列表', '提示', {
+                  confirmButtonText: '确定',
+                  callback: action => {
+                    this.$router.push({name: 'orderList'})
+                  }
+                })
+              }
+          } catch (error) {
+              console.log(error)
+          }
+        },
+        async handleSubmitOrder() { // 保存并提交-经销商
+          try {
+            const response = await Dealer.SaveOrder({
+                Operation: this.detailData.OrderID? 'Update' : 'Create',
+                Order: this.detailData
+            })
+            if (response.Code == 200) {
+              this.detailData.OrderID = response.OrderID
+              const subresponse = await Dealer.SubmitOrder({
+                OrderID: this.detailData.OrderID
+              })
+              if (subresponse.Code == 200) {
+                this.$alert('保存并提交成功，返回订单列表', '提示', {
+                  confirmButtonText: '确定',
+                  callback: action => {
+                    this.$router.push({name: 'orderList'})
+                  }
+                })
+              }
             }
+          } catch (error) {
+
+          }
         },
         async GetOrderInfo() {
             try {
@@ -351,7 +384,7 @@ export default {
             }
         },
         routeChange () {
-            this.detailData.OrderID = this.$route.query.id? this.$route.query.id: 0
+            this.detailData.OrderID = this.$route.params.id? this.$route.params.id: 0
             if (this.detailData.OrderID) {
                 this.GetOrderInfo()
             }
