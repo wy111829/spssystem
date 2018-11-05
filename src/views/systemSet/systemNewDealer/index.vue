@@ -1,7 +1,7 @@
 <template>
 <div class="newDealer-container main-container">
     <div class="form-box-newdealer">
-        <el-form class="inline-form el-row"  ref="Dealer"  :model="Dealer" :rules="rules" label-width="150px">
+        <el-form class="inline-form el-row" ref="Dealer" :model="Dealer" :rules="rules" label-width="150px">
             <el-form-item label="CBU：" prop="CBU">
                 <el-input v-model="Dealer.CBU" clearable></el-input>
             </el-form-item>
@@ -297,12 +297,12 @@ export default {
         },
         submitForm(formName) {
             this.$refs[formName].validate((valid) => {
-                 if (valid) {
-                   alert('submit!');
-                 } else {
-                   console.log('error submit!!');
-                   return false;
-                 }
+                if (valid) {
+                    alert('submit!');
+                } else {
+                    console.log('error submit!!');
+                    return false;
+                }
             })
         }
     },

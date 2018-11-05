@@ -9,7 +9,7 @@
                             <i :class="item.icon"></i><span slot="title">{{ item.title }}</span>
                         </template>
                         <template v-for="subItem in item.subs"  v-if="subItem.role.includes(UserRole)">
-                            <el-menu-item  :index="subItem.index"  :route="{name: item.name}" :key="subItem.index">
+                            <el-menu-item  :index="subItem.index"  :route="{name: subItem.name}" :key="subItem.index">
                                 {{ subItem.title }}
                             </el-menu-item>
                         </template>
@@ -57,7 +57,7 @@
                     },
                     {
                         icon: 'el-icon-setting',
-                        name: '3',
+                        name: '',
                         index: '4',
                         title: '系统设置',
                         role: ['Dealer', 'RegionManager', 'BMW-BP','Administrator'],

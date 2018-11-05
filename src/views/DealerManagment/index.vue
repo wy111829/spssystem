@@ -15,15 +15,15 @@
             </el-input>
         </div>
     </div>
-    <el-table :data="tableList" class="table" ref="multipleTable">
-        <el-table-column prop="CBU" label="CBU"></el-table-column>
-        <el-table-column prop="CKD" label="CKD"></el-table-column>
-        <el-table-column prop="ShortName" label="经销商名称（简称）" width="150"></el-table-column>
-        <el-table-column prop="RegionName" label="地区"></el-table-column>
-        <el-table-column prop="ProvinceName" label="省份"></el-table-column>
-        <el-table-column prop="CityName" label="城市"></el-table-column>
-        <el-table-column prop="DealerGroup" label="经销商集团"></el-table-column>
-        <el-table-column label="审批策略" width="280" align="center">
+    <el-table :data="tableList" class="table" ref="multipleTable" @sort-change="handleSortChange">
+        <el-table-column prop="CBU" label="CBU" sortable ></el-table-column>
+        <el-table-column prop="CKD" label="CKD" sortable ></el-table-column>
+        <el-table-column prop="DealerName" label="经销商名称（简称）" sortable ></el-table-column>
+        <el-table-column prop="RegionName" label="地区" ></el-table-column>
+        <el-table-column prop="ProvinceName" label="省份" sortable ></el-table-column>
+        <el-table-column prop="CityName" label="城市" sortable ></el-table-column>
+        <el-table-column prop="DealerGroup" label="经销商集团" sortable ></el-table-column>
+        <el-table-column label="审批策略" width="280" align="center" sortable >
             <template slot-scope="scope">
                 <el-radio-group v-model="scope.row.ApproveMethod" @change="handleRadioChange(scope.row.DealerID,scope.row.ApproveMethod)">
                     <el-radio label="AutoApprove">永远同意</el-radio>
@@ -91,7 +91,13 @@ export default {
         handleCurrentChange(val) {
             this.RowOffset = val;
             this.getData();
-        }
+        },
+        handleSortChange(obj) {
+            console.log(obj)
+            this.SortType = obj.order == 'ascending'? 'ASC' : obj.order == 'descending' ? 'DESC' : null
+            this.SortField = obj.prop
+            this.getData()
+        },
     },
     created() {
         this.getData()

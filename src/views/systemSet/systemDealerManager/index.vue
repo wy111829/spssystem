@@ -1,107 +1,121 @@
 <template>
-    <div class="main-container">
+<div class="main-container">
+    <div class="search-box">
+        <div class="sort-select">
+            <el-select v-model="SearchField" placeholder="--请选择要查询的字段--" style="width:200px">
+                <el-option v-for="(item, index) in selectList" :key="index" :label="item.label" :value="item.value"></el-option>
+            </el-select>
+        </div>
         <div class="handle-input">
-            <el-input placeholder="Typing dealer name to search" v-model="input5" class="input-with-select">
+            <el-input placeholder="Typing dealer name to search" v-model="SearchValue" class="input-with-select">
                 <el-button slot="append" icon="el-icon-search"></el-button>
             </el-input>
         </div>
-        <router-link to="/systemNewDealer">
+        <router-link to="/systemNewDealer" class="button">
             <el-button type="primary" class="newOrderButton">新建经销商</el-button>
         </router-link>
-        <el-table :data="tableList" class="table" ref="multipleTable">
-            <el-table-column prop="cbu" label="CBU"></el-table-column>
-            <el-table-column prop="ckd" label="CKD"></el-table-column>
-            <el-table-column prop="dealerName" label="经销商名称（简称）"></el-table-column>
-            <el-table-column prop="region" label="地区"></el-table-column>
-            <el-table-column prop="provinces" label="省份"></el-table-column>
-            <el-table-column prop="city" label="城市"></el-table-column>
-            <el-table-column prop="Email" label="邮箱"></el-table-column>
-            <el-table-column prop="DealerGroup" label="经销商集团"></el-table-column>
-            <el-table-column label="操作" width="180" align="center">
-                <template slot-scope="scope">
-                    <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                    <el-button type="text" icon="el-icon-error" class="red" @click="handleDelete(scope.$index, scope.row)">停用</el-button>
-                </template>
-            </el-table-column>
-        </el-table>
-        <div class="pagination">
-            <el-pagination background @current-change="handleCurrentChange" layout="prev, pager, next" :total="1000">
-            </el-pagination>
-        </div>
     </div>
+    <el-table :data="tableList" class="table" ref="multipleTable" @sort-change="handleSortChange">
+        <el-table-column prop="CBU" label="CBU" sortable ></el-table-column>
+        <el-table-column prop="CKD" label="CKD" sortable ></el-table-column>
+        <el-table-column prop="ShortName" label="经销商名称（简称）" sortable ></el-table-column>
+        <el-table-column prop="RegionName" label="地区"></el-table-column>
+        <el-table-column prop="ProvinceName" label="省份" sortable ></el-table-column>
+        <el-table-column prop="CityName" label="城市" sortable ></el-table-column>
+        <el-table-column prop="DealerGroup" label="经销商集团" sortable ></el-table-column>
+        <el-table-column prop="StatusName" label="状态" sortable ></el-table-column>
+        <el-table-column label="操作" width="180" align="center">
+            <template slot-scope="scope">
+                <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                <el-button type="text" icon="el-icon-error" class="red" @click="handleDelete(scope.$index, scope.row)">停用</el-button>
+            </template>
+        </el-table-column>
+    </el-table>
+    <div class="pagination">
+        <el-pagination background @current-change="handleCurrentChange" layout="prev, pager, next" :total="1000">
+        </el-pagination>
+    </div>
+</div>
 </template>
 
 <script>
-  export default {
+import {
+    BMW
+} from '@/networks/api'
+export default {
     data() { //选项 / 数据
-      return {
-            tableList: [
-                {
-                    cbu: '36133',
-                    ckd: '36131',
-                    dealerName: '北京经销商',
-                    region: '北区',
-                    provinces: '北京',
-                    city: '北京',
-                    Email: 'aftsersalesmgr@bmw.com',
-                    DealerGroup: '中国和谐集团',
-
-                },
-                {
-                    cbu: '36133',
-                    ckd: '36131',
-                    dealerName: '北京经销商',
-                    region: '北区',
-                    provinces: '北京',
-                    city: '北京',
-                    Email: 'aftsersalesmgr@bmw.com',
-                    DealerGroup: '中国和谐集团',
-
-                },
-                {
-                    cbu: '36133',
-                    ckd: '36131',
-                    dealerName: '北京经销商',
-                    region: '北区',
-                    provinces: '北京',
-                    city: '北京',
-                    Email: 'aftsersalesmgr@bmw.com',
-                    DealerGroup: '中国和谐集团',
-
-                },
-                {
-                    cbu: '36133',
-                    ckd: '36131',
-                    dealerName: '北京经销商',
-                    region: '北区',
-                    provinces: '北京',
-                    city: '北京',
-                    Email: 'aftsersalesmgr@bmw.com',
-                    DealerGroup: '中国和谐集团',
-
-                },
-                {
-                    cbu: '36133',
-                    ckd: '36131',
-                    dealerName: '北京经销商',
-                    region: '北区',
-                    provinces: '北京',
-                    city: '北京',
-                    Email: 'aftsersalesmgr@bmw.com',
-                    DealerGroup: '中国和谐集团',
-
-                },
-            ]
-      }
+        return {
+            SearchField: null,
+            SearchValue: '',
+            SortField: null,
+            SortType: null,
+            TotalNumber: 0,
+            RowOffset: 0,
+            RowCount: 6,
+            tableList: [{
+                "DealerID": 122121,
+                "CBU": "36133",
+                "CKD": "36131",
+                "ShortName": "北京华德宝",
+                "RegionID": "100004",
+                "RegionName": "北区",
+                "ProvinceID": "110000",
+                "ProvinceName": "北京",
+                "CityID": "110100",
+                "CityName": "北京",
+                "DealerGroup": "北京经销商集团",
+                "Status": 101
+            }],
+            selectList: [{
+                label: 'CBU',
+                value: 'CBU',
+            }, {
+                label: 'CKD',
+                value: 'CKD',
+            }, {
+                label: '经销商名称',
+                value: 'DealerName',
+            }, {
+                label: '经销商集团',
+                value: 'DealerGroup',
+            }, {
+                label: '地区',
+                value: 'RegionName',
+            }, {
+                label: '省份',
+                value: 'ProvinceName',
+            }, {
+                label: '城市',
+                value: 'CityName',
+            }]
+        }
     },
     methods: { //事件处理器
         handleCurrentChange(val) {
-            this.curpage = val;
+            this.RowOffset = val;
             this.getData();
         },
-        // 获取 easy-mock 的模拟数据
-        getData() {
-
+        handleSortChange(obj) {
+            console.log(obj)
+            this.SortType = obj.order == 'ascending'? 'ASC' : obj.order == 'descending' ? 'DESC' : null
+            this.SortField = obj.prop
+            this.getData()
+        },
+        async getData() {
+            try {
+                const response = await BMW.GetDealerList({
+                    "SearchField": this.SearchField,
+                    "SearchValue": this.SearchValue,
+                    "SortField": this.SortField,
+                    "SortType": this.SortType,
+                    "RowOffset": this.RowOffset,
+                    "RowCount": this.RowCount
+                })
+                this.TotalNumber = response.Data.TotalNumber
+                this.tableList = response.Data.Dealers
+            } catch (error){
+                console.log(error)
+            }
         },
         search() {
 
@@ -111,22 +125,51 @@
 
     },
     created() { //生命周期函数
-
+        this.getData()
     }
-  }
+}
 </script>
 
 <style lang='less'>
-    .main-container{
-        background-color: #fff;
-        padding: 10px;
-        .handle-input{
-            width: 300px;
-            margin: 10px;
-            display: inline-block;
-        }
-        .newOrderButton {
-            color: #fff;
+.main-container {
+    background: #ffffff;
+    padding: 10px;
+    .search-box {
+        padding: 10px 0;
+    }
+    .handle-box {
+        margin-bottom: 20px;
+    }
+
+    .handle-select {
+        width: 120px;
+    }
+    .el-radio+.el-radio {
+        margin-left: 20px;
+    }
+    .newOrderButton {
+        color: #fff;
+    }
+    .handle-input {
+        width: 200px;
+        margin: 10px;
+        display: inline-block;
+    }
+    .sort-select {
+        width: 200px;
+        margin: 10px;
+        display: inline-block;
+    }
+    .table {
+        width: 100%;
+        font-size: 14px;
+        .has-gutter {
+            .gutter {
+                width: 100px;
+                display: inline-block!important;
+            }
         }
     }
+
+}
 </style>

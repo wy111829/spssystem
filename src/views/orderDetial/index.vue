@@ -87,7 +87,7 @@
                 </el-table-column>
                 <el-table-column prop="IsOrdered" label="订购">
                     <template slot-scope="scope">
-                        <el-checkbox v-model="scope.row.IsOrdered" ></el-checkbox>
+                        <el-checkbox v-model="scope.row.IsOrdered"></el-checkbox>
                     </template>
                 </el-table-column>
                 <el-table-column prop="" label="物流说明" show-overflow-tooltip width="200">
@@ -141,7 +141,7 @@
             </div>
             <el-form class="inline-form el-row" label-width="150px">
                 <el-form-item label="车龄（月）：" class="el-col el-col-12 el-col-xs-24">
-                    <el-input  disabled v-model="detailData.VehicleAge"></el-input>
+                    <el-input disabled v-model="detailData.VehicleAge"></el-input>
                 </el-form-item>
                 <el-form-item label="是否流失：" class="el-col el-col-12 el-col-xs-24 small-label">
                     <el-radio-group v-model="detailData.IsCustomerChurned">
@@ -187,7 +187,7 @@
                 <el-button type="primary" @click="handleSaveOrder">保存但不提交</el-button>
                 <el-button type="primary" @click="handleSubmitOrder">保存并提交</el-button>
                 <el-button>取消</el-button>
-                <el-button type="danger">删除</el-button>
+                <el-button type="danger" @click="handleDeleteOrder">删除</el-button>
             </div>
         </div>
         <!-- 区域经理和bmw -->
@@ -200,11 +200,11 @@
             <div class="form-box-neworder text-center">
                 <el-form class="inline-form el-row" label-width="200px">
                     <el-form-item label="审核备注：" class="el-col el-col-12 el-col-xs-24">
-                        <el-input v-model="Remarks" placeholder=""></el-input>
+                        <el-input v-model="Comment" placeholder=""></el-input>
                     </el-form-item>
-                    <el-button type="primary" @click="onSubmit">通过</el-button>
-                    <el-button type="danger" @click="onSubmit">不通过</el-button>
-                    <el-button type="" @click="onSubmit">退出</el-button>
+                    <el-button type="primary" @click="handleApproved('Approved')">通过</el-button>
+                    <el-button type="danger" @click="handleApproved('Rejected')">不通过</el-button>
+                    <el-button>退出</el-button>
                 </el-form>
             </div>
             <div class="form-box-neworder">
@@ -225,22 +225,27 @@
 
 <script>
 import {
-    General, Dealer
+    General,
+    Dealer,
+    RegionManagers,
+    BMW
 } from '@/networks/api'
-import { mapState} from 'vuex'
+import {
+    mapState
+} from 'vuex'
 export default {
     name: 'orderDetail',
     data: function() {
         return {
             Result: '', // 审批结果 “Approved”：通过 “Rejected”：不通过
-            Remarks: '',
+            Comment: '',
             detailData: {
-                DATECode:"",
-                FZA:0,
-                HST:0,
-                HT:0,
-                UT:0,
-                MyClaimID:"",
+                DATECode: "",
+                FZA: 0,
+                HST: 0,
+                HT: 0,
+                UT: 0,
+                MyClaimID: "",
                 ReferenceNumber: "",
                 AccidentBrief: "",
                 ApplicationLogs: [],
@@ -266,7 +271,7 @@ export default {
                 SpareParts: [],
                 Status: "",
                 StatusCode: null,
-                SubModelID:0,
+                SubModelID: 0,
                 SubModelName: "",
                 VIN: "",
                 VehicleAge: null,
@@ -290,14 +295,14 @@ export default {
         ...mapState([
             'UserName',
             'UserRole'
-       ])
+        ])
     },
     methods: {
         handleDatePicker(val) {
             console.log(this.detailData.VehicleFirstRegDate, val)
             let now = new Date()
             let cartime = new Date(val)
-            let carage = Math.round((now - cartime)/1000/60/60/24/30)
+            let carage = Math.round((now - cartime) / 1000 / 60 / 60 / 24 / 30)
             console.log(carage)
             this.detailData.VehicleAge = carage
         },
@@ -329,48 +334,77 @@ export default {
 
         },
         async handleSaveOrder() { // 保存并不提交-经销商
-          // 验证字段、
-          try{
-              const response = await Dealer.SaveOrder({
-                  Operation: this.detailData.OrderID? 'Update' : 'Create',
-                  Order: this.detailData
-              })
-              if (response.Code == 200) {
-                this.detailData.OrderID = response.OrderID
-                this.$alert('保存成功，返回订单列表', '提示', {
-                  confirmButtonText: '确定',
-                  callback: action => {
-                    this.$router.push({name: 'orderList'})
-                  }
+            // 验证字段、
+            try {
+                const response = await Dealer.SaveOrder({
+                    "Operation": this.detailData.OrderID ? 'Update' : 'Create',
+                    "Order": this.detailData
                 })
-              }
-          } catch (error) {
-              console.log(error)
-          }
+                if (response.Code == 200) {
+                    this.alertDialog()
+                }
+            } catch (error) {
+                console.log(error)
+            }
         },
         async handleSubmitOrder() { // 保存并提交-经销商
-          try {
-            const response = await Dealer.SaveOrder({
-                Operation: this.detailData.OrderID? 'Update' : 'Create',
-                Order: this.detailData
-            })
-            if (response.Code == 200) {
-              this.detailData.OrderID = response.OrderID
-              const subresponse = await Dealer.SubmitOrder({
-                OrderID: this.detailData.OrderID
-              })
-              if (subresponse.Code == 200) {
-                this.$alert('保存并提交成功，返回订单列表', '提示', {
-                  confirmButtonText: '确定',
-                  callback: action => {
-                    this.$router.push({name: 'orderList'})
-                  }
+            try {
+                const response = await Dealer.SaveOrder({
+                    "Operation": this.detailData.OrderID ? 'Update' : 'Create',
+                    "Order": this.detailData
                 })
-              }
+                if (response.Code == 200) {
+                    this.detailData.OrderID = response.OrderID
+                    const subresponse = await Dealer.SubmitOrder({
+                        "OrderID": this.detailData.OrderID
+                    })
+                    console.log(subresponse)
+                    if (subresponse.Code == 200) {
+                        this.alertDialog()
+                    }
+                }
+            } catch (error) {
+                console.log(error)
             }
-          } catch (error) {
+        },
+        async handleDeleteOrder() {
+            try {
+                const response = await Dealer.DeleteOrder({
+                    "OrderID": this.detailData.OrderID
+                })
+                if (response.Code == 200) {
+                    this.alertDialog()
+                }
+            } catch (e) {
+                console.log(e)
+            }
+        },
 
-          }
+        async handleApproved(val) { //审批 - 区域经理或BMW
+            try {
+                if (this.UserRole == 'RegionManager'){
+                    const response = await RegionManagers.RMApproveOrder({
+                        "OrderID": this.detailData.OrderID,
+                        "Result": val,
+                        Comment: this.Comment
+                    })
+                    if (response.Code == 200) {
+                        this.alertDialog()
+                    }
+                }else if (this.UserRole == 'BMW-BP') {
+                    const response = await BMW.BMWApproveOrder({
+                        "OrderID": this.detailData.OrderID,
+                        "Result": val,
+                        "Comment": this.Comment,
+                        "SpareParts": this.detailData.SpareParts
+                    })
+                    if (response.Code == 200) {
+                        this.alertDialog()
+                    }
+                }
+            } catch (e) {
+                console.log(e)
+            }
         },
         async GetOrderInfo() {
             try {
@@ -383,8 +417,8 @@ export default {
                 console.log(error)
             }
         },
-        routeChange () {
-            this.detailData.OrderID = this.$route.params.id? this.$route.params.id: 0
+        routeChange() {
+            this.detailData.OrderID = this.$route.params.id ? this.$route.params.id : 0
             if (this.detailData.OrderID) {
                 this.GetOrderInfo()
             }
@@ -392,19 +426,29 @@ export default {
         async handleImport() {
             try {
                 const importInfo = await Dealer.ImportOrderInfo({
-                    ReferenceNumber: this.detailData.ReferenceNumber
+                    "ReferenceNumber": this.detailData.ReferenceNumber
                 })
                 this.detailData = importInfo.Data
-            } catch(error){
+            } catch (error) {
                 console.log(error)
             }
-        }
+        },
+        alertDialog() {
+            this.$alert('操作完成，返回订单列表', '提示', {
+                confirmButtonText: '确定',
+                callback: action => {
+                    this.$router.push({
+                        name: 'orderList'
+                    })
+                }
+            })
+        },
+
     },
     watch: {
         '$route': 'routeChange'
     },
     created() {
-        console.log('this.$route', this.$route)
         this.routeChange()
     }
 }
@@ -419,19 +463,19 @@ export default {
             border-bottom: 1px solid #000000;
             margin: 20px 0;
         }
-        button{
+        button {
             margin-left: 10px;
         }
-        .DealerMessage{
+        .DealerMessage {
             font-size: 15px;
             margin-left: 40px;
-            color:#606266;
+            color: #606266;
         }
-        .ApplicationLogs{
+        .ApplicationLogs {
             font-size: 13px;
             margin: 5px 50px;
-            .OperationDate{
-                color:#606266;
+            .OperationDate {
+                color: #606266;
             }
         }
     }

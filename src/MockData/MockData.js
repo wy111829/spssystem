@@ -299,33 +299,34 @@ Mock.mock(/GetDealerPolicyList/, 'post', {
     "Data": {
         "TotalNumber": 120,
         "Dealers": [{
-                "DealerID": 122121,
-                "CBU": "36133",
-                "CKD": "36131",
-                "ShortName": "北京华德宝",
-                "RegionID": "100004",
-                "RegionName": "北区",
-                "ProvinceID": "110000",
-                "ProvinceName": "北京",
-                "CityID": "110100",
-                "CityName": "北京",
-                "DealerGroup": "北京经销商集团",
-                "ApproveMethod": "ManualApprove"
+                "DealerID":122121,
+                "CBU":"36133",
+                "CKD":"36131",
+                "DealerName":"北京华德宝",
+                "RegionID":"100004",
+                "RegionName":"北区",
+                "ProvinceID":"110000",
+                "ProvinceName":"北京",
+                "CityID":"110100",
+                "CityName":"北京",
+                "DealerGroup":"北京经销商集团",
+                "ApproveMethod":"ManualApprove"
             },
             {
-                "DealerID": 122122,
-                "CBU": "36153",
-                "CKD": "36161",
-                "ShortName": "DAT中国",
-                "RegionID": "100004",
-                "RegionName": "北区",
-                "ProvinceID": "110000",
-                "ProvinceName": "北京",
-                "CityID": "110100",
-                "CityName": "北京",
-                "DealerGroup": "",
-                "ApproveMethod": "AutoApprove"
+                "DealerID":122122,
+                "CBU":"36153",
+                "CKD":"36161",
+                "DealerName":"DAT中国",
+                "RegionID":"100004",
+                "RegionName":"北区",
+                "ProvinceID":"110000",
+                "ProvinceName":"北京",
+                "CityID":"110100",
+                "CityName":"北京",
+                "DealerGroup":"",
+                "ApproveMethod":"AutoApprove"
             }
+
         ]
     }
 })
@@ -388,4 +389,72 @@ Mock.mock(/GetCurrentSysMessage/, 'get',{
     "Data":{
         "MessageContent":"这是一条用于测试的系统消息。"
     }
+})
+
+//订单创建、修改
+Mock.mock(/SaveOrder/, 'post', {
+    "Code":200,
+    "OrderID":2511
+})
+
+//订单提交
+Mock.mock(/SubmitOrder([\w|\?\S*]+)/, 'get', {
+    "Code":200
+})
+
+//订单删除
+Mock.mock(/DeleteOrder([\w|\?\S*]+)/, 'get',{
+    "Code":200
+})
+
+//区域经理-审批
+Mock.mock(/RMApproveOrder/, 'post', {
+    "Code":200
+})
+
+//BMW-审批
+Mock.mock(/BMWApproveOrder/, 'post', {
+    "Code":200
+})
+
+//BMW-获取经销商列表
+Mock.mock(/GetDealerList/, 'post', {
+    "Code":200,
+    "Data":{
+        "TotalNumber":120,
+        "Dealers":[
+            {
+                "DealerID":122121,
+                "CBU":"36133",
+                "CKD":"36131",
+                "ShortName":"北京华德宝",
+                "RegionID":"100004",
+                "RegionName":"北区",
+                "ProvinceID":"110000",
+                "ProvinceName":"北京",
+                "CityID":"110100",
+                "CityName":"北京",
+                "DealerGroup":"北京经销商集团",
+                "StatusCode":101,
+                "StatusName":"启用"
+            },
+            {
+                "DealerID":122122,
+                "CBU":"36153",
+                "CKD":"36161",
+                "ShortName":"DAT中国",
+                "RegionID":"100004",
+                "RegionName":"北区",
+                "ProvinceID":"110000",
+                "ProvinceName":"北京",
+                "CityID":"110100",
+                "CityName":"北京",
+                "DealerGroup":"",
+                "StatusCode":101,
+                "StatusName":"启用"
+            }
+
+        ]
+    }
+
 })

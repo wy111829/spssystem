@@ -59,7 +59,6 @@
                 this.tagsList = arr;
             })
             this.GetUserInfo()
-            console.log(this.$store)
         }
     }
 </script>
