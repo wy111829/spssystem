@@ -456,5 +456,16 @@ Mock.mock(/GetDealerList/, 'post', {
 
         ]
     }
+})
 
+// BMW-经销商状态修改
+Mock.mock(/ChangeDealerStatus/, 'post', {
+  "Code": 300,
+  "Message":"错误信息"
+})
+
+// 区域经理-设置经销商审批策略
+Mock.mock(/SetDealerApprovePolicy/, 'post', {
+  "Code": 300,
+  "Message":"错误信息"
 })

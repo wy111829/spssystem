@@ -5,7 +5,7 @@
                 <router-link :to="item.path" class="tags-li-title">
                     {{item.title}}
                 </router-link>
-                <span class="tags-li-icon" @click="closeTags(index)"><i class="el-icon-close"></i></span>
+                <span class="tags-li-icon" @click="closeTags(item.name)"><i class="el-icon-close"></i></span>
             </li>
         </ul>
         <div class="tags-close-box">
@@ -24,65 +24,76 @@
 
 <script>
     import bus from './bus';
+    import { mapState, mapMutations} from 'vuex'
     export default {
         data() {
             return {
-                tagsList: []
+            }
+        },
+        computed: {
+            ...mapState([
+              'tagsList'
+            ]),
+            showTags() {
+                return this.tagsList.length > 0;
             }
         },
         methods: {
+            ...mapMutations([
+              'closeTags',
+              'closeAll',
+              'closeOther',
+              'setTagsList'
+            ]),
             isActive(name) {
                 return name === this.$route.name;
             },
             // 关闭单个标签
-            closeTags(index) {
-                const delItem = this.tagsList.splice(index, 1)[0];
-                const item = this.tagsList[index] ? this.tagsList[index] : this.tagsList[index - 1];
-                if (item) {
-                    delItem.path === this.$route.fullPath && this.$router.push(item.path);
-                }else{
-                    this.$router.push('/');
-                }
-            },
+            // closeTags(name) {
+            //     // const delItem = this.tagsList.splice(index, 1)[0];
+            //     // const item = this.tagsList[index] ? this.tagsList[index] : this.tagsList[index - 1];
+            //     // if (item) {
+            //     //     delItem.path === this.$route.fullPath && this.$router.push(item.path);
+            //     // }else{
+            //     //     this.$router.push('/');
+            //     // }
+            //     // let index = 0
+            //     // this.tagsList.map((item, i) => {
+            //     //   if (item.name == name) {
+            //     //     index = i
+            //     //   }
+            //     // })
+            //     // const delItem = this.tagsList.splice(index, 1)[0];
+            //     // // console.log(delItem, index)
+            //     // const item = this.tagsList[index] ? this.tagsList[index] : this.tagsList[index - 1];
+            //     // if (item) {
+            //     //     delItem.path === this.$route.fullPath && this.$router.push(item.path);
+            //     // }else{
+            //     //     this.$router.push('/');
+            //     // }
+            //     // this.setTagsList(this.tagsList)
+            // },
             // 关闭全部标签
-            closeAll(){
-                this.tagsList = [];
-                this.$router.push('/');
-            },
-            // 关闭其他标签
-            closeOther(){
-                const curItem = this.tagsList.filter(item => {
-                    return item.path === this.$route.fullPath;
-                })
-                this.tagsList = curItem;
-            },
+            // closeAll(){
+            //     // this.tagsList = [];
+            //     this.setTagsList([])
+            //     this.$router.push('/');
+            // },
+            // // 关闭其他标签
+            // closeOther(){
+            //     const curItem = this.tagsList.filter(item => {
+            //         return item.path === this.$route.fullPath;
+            //     })
+            //     // this.tagsList = curItem;
+            //     this.setTagsList(curItem)
+            // },
             // 设置标签
             setTags(route){
-                const isExist = this.tagsList.some(item => {
-                    if (item.name == route.name) {
-                        item.path = route.fullPath
-                    }
-                    return item.name === route.name;
-                })
-                if(!isExist){
-                    if(this.tagsList.length >= 8){
-                        this.tagsList.shift();
-                    }
-                    this.tagsList.push({
-                        title: route.meta.title,
-                        path: route.fullPath,
-                        name: route.name
-                    })
-                }
+                this.setTagsList(route)
                 bus.$emit('tags', this.tagsList);
             },
             handleTags(command){
                 command === 'other' ? this.closeOther() : this.closeAll();
-            }
-        },
-        computed: {
-            showTags() {
-                return this.tagsList.length > 0;
             }
         },
         watch:{

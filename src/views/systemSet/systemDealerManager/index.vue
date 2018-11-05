@@ -23,11 +23,19 @@
         <el-table-column prop="ProvinceName" label="省份" sortable ></el-table-column>
         <el-table-column prop="CityName" label="城市" sortable ></el-table-column>
         <el-table-column prop="DealerGroup" label="经销商集团" sortable ></el-table-column>
-        <el-table-column prop="StatusName" label="状态" sortable ></el-table-column>
+        <el-table-column prop="StatusName" label="状态" sortable width=150 >
+          <template slot-scope="scope">
+              <el-switch
+              v-model="scope.row.StatusCode"
+              @change="handleChangeDealerStatus(scope.$index, scope.row)"
+              active-color="#13ce66" inactive-color="#ff4949"
+              active-text="启用" inactive-text="停用"
+              :active-value="101" :inactive-value="102"></el-switch>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" width="180" align="center">
             <template slot-scope="scope">
                 <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                <el-button type="text" icon="el-icon-error" class="red" @click="handleDelete(scope.$index, scope.row)">停用</el-button>
             </template>
         </el-table-column>
     </el-table>
@@ -64,7 +72,8 @@ export default {
                 "CityID": "110100",
                 "CityName": "北京",
                 "DealerGroup": "北京经销商集团",
-                "Status": 101
+                "StatusCode":101,
+                "StatusName":"启用"
             }],
             selectList: [{
                 label: 'CBU',
@@ -119,6 +128,19 @@ export default {
         },
         search() {
 
+        },
+        async handleChangeDealerStatus (index, data) {
+          try {
+             const response = await BMW.ChangeDealerStatus({
+               "DealerID":data.DealerID,
+               "Status": data.StatusCode
+             })
+             if (response.Code != 200) {
+               this.tableList[index].StatusCode = data.StatusCode == 101 ? 102 : 101
+             }
+          } catch (error) {
+              console.log(error)
+          }
         }
     },
     components: { //定义组件

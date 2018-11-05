@@ -231,7 +231,8 @@ import {
     BMW
 } from '@/networks/api'
 import {
-    mapState
+    mapState,
+    mapMutations
 } from 'vuex'
 export default {
     name: 'orderDetail',
@@ -298,6 +299,9 @@ export default {
         ])
     },
     methods: {
+      ...mapMutations([
+        'closeTags'
+      ]),
         handleDatePicker(val) {
             console.log(this.detailData.VehicleFirstRegDate, val)
             let now = new Date()
@@ -437,6 +441,7 @@ export default {
             this.$alert('操作完成，返回订单列表', '提示', {
                 confirmButtonText: '确定',
                 callback: action => {
+                    this.closeTags(this.$route.name)
                     this.$router.push({
                         name: 'orderList'
                     })

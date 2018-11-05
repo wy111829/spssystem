@@ -25,7 +25,7 @@
         <el-table-column prop="DealerGroup" label="经销商集团" sortable ></el-table-column>
         <el-table-column label="审批策略" width="280" align="center" sortable >
             <template slot-scope="scope">
-                <el-radio-group v-model="scope.row.ApproveMethod" @change="handleRadioChange(scope.row.DealerID,scope.row.ApproveMethod)">
+                <el-radio-group v-model="scope.row.ApproveMethod" @change="handleRadioChange(scope.$index, scope.row)">
                     <el-radio label="AutoApprove">永远同意</el-radio>
                     <el-radio label="ManualApprove">逐单审核</el-radio>
                 </el-radio-group>
@@ -74,12 +74,15 @@ export default {
 
             }
         },
-        async changeApprovePolicy(DealerID,ApproveMethod){
+        async changeApprovePolicy(index, data){
             try{
                 const response = await RegionManagers.SetDealerApprovePolicy({
-                    "DealerID":DealerID,
-                    "ApproveMethod":ApproveMethod
+                    "DealerID":data.DealerID,
+                    "ApproveMethod":data.ApproveMethod
                 })
+                if (response.Code != 200) {
+                  this.tableList[index].ApproveMethod = data.ApproveMethod == 'AutoApprove' ? 'ManualApprove' : 'AutoApprove'
+                }
             }catch(error){
                 console.log(error)
             }
