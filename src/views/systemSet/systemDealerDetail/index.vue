@@ -17,12 +17,14 @@
             <el-form-item label="登录名：" prop="LoginName">
                 <el-input v-model="Dealer.LoginName" clearable></el-input>
             </el-form-item>
-            <el-form-item label="密码：" prop="Password">
-                <el-input v-model="Dealer.Password" type="Password" clearable></el-input>
-            </el-form-item>
-            <el-form-item label="密码确认：" prop="Passwordagain">
-                <el-input v-model="Dealer.Passwordagain" type="Password" clearable></el-input>
-            </el-form-item>
+            <template v-if="Dealer.DealerID == 0">
+              <el-form-item label="密码：" prop="Password">
+                  <el-input v-model="Dealer.Password" type="Password" clearable></el-input>
+              </el-form-item>
+              <el-form-item label="密码确认：" prop="Passwordagain">
+                  <el-input v-model="Dealer.Passwordagain" type="Password" clearable></el-input>
+              </el-form-item>
+            </template>
             <el-form-item label="经销商集团：" prop="DealerGroup">
                 <el-input v-model="Dealer.DealerGroup" clearable></el-input>
             </el-form-item>
@@ -49,10 +51,23 @@
             </el-form-item>
             <el-form-item label="状态：" prop="Status">
                 <el-radio-group v-model="Dealer.Status">
-                    <el-radio label="1">启用</el-radio>
-                    <el-radio label="0">停用</el-radio>
+                    <el-radio :label="101">启用</el-radio>
+                    <el-radio :label="102">停用</el-radio>
                 </el-radio-group>
             </el-form-item>
+            <template v-if="Dealer.DealerID != 0">
+              <el-form-item label="修改密码：" >
+                  <el-checkbox v-model="pswCheck" ></el-checkbox>
+              </el-form-item>
+              <template v-if="pswCheck">
+                <el-form-item label="密码：" prop="Password">
+                    <el-input v-model="Dealer.Password" type="Password" clearable></el-input>
+                </el-form-item>
+                <el-form-item label="密码确认：" prop="Passwordagain">
+                    <el-input v-model="Dealer.Passwordagain" type="Password" clearable></el-input>
+                </el-form-item>
+              </template>
+            </template>
             <el-row class="text-center">
                 <el-form-item>
                     <el-button type="primary" @click="submitForm('Dealer')">保存</el-button>
@@ -71,7 +86,7 @@ import {mapState,mapMutations} from 'vuex'
 export default {
     data() { //选项 / 数据
         var validatePass = (rule, value, callback) => {
-            if (value === '') {
+            if (value === '' || value=== undefined || value.trim() == '') {
                 callback(new Error('请输入密码'))
             } else {
                 if (this.Dealer.Passwordagain !== '') {
@@ -81,7 +96,7 @@ export default {
             }
         }
         var validatePass2 = (rule, value, callback) => {
-            if (value === '') {
+            if (value === '' || value=== undefined || value.trim() == '') {
                 callback(new Error('请再次输入密码'))
             } else if (value !== this.Dealer.Password) {
                 callback(new Error('两次输入密码不一致!'))
@@ -105,7 +120,8 @@ export default {
                 "DealerGroup":"",
                 "Status":'',
                 "LoginName":"",
-                "MailBox":""
+                "MailBox":"",
+                Password: ''
             },
             rules: {
                 CBU: [{
@@ -218,13 +234,14 @@ export default {
                 ],
                 Status: [{
                     required: true,
-                    message: '请填写活动形式',
+                    message: '请选择状态',
                     trigger: 'blur'
                 }]
             },
             area: [],
             ProvinceIDList: [],
-            CityIDList: []
+            CityIDList: [],
+            pswCheck: false
         }
     },
     methods: { //事件处理器
@@ -299,10 +316,26 @@ export default {
                 }
             })
         },
+        async CreateOrUpdateDealer() {
+          try {
+            const response = await BMW.CreateOrUpdateDealer({
+              Operation: this.Dealer.DealerID ? 'Update' : 'Create',
+              Dealer: this.Dealer
+            })
+            console.log(response)
+            if (response.Code == 200) {
+
+            }
+          } catch (error) {
+            console.log(error)
+          }
+        },
         submitForm(formName) {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    alert('submit!');
+                    alert('submit!')
+                    console.log(this)
+                    this.CreateOrUpdateDealer()
                 } else {
                     console.log('error submit!!');
                     return false;

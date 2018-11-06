@@ -7,5 +7,6 @@ export default {
     GetDealerInfo:({DealerID}, config ={}) => axios.get('GetDealerInfo?DealerID=' + DealerID, config),
     GetRMList: (config = {}) => axios.get('GetRMList', config),
     ChangeRMStatus:(data = {}, config = {}) => axios.post('ChangeRMStatus', data, config),
-    GetRMInfo:({DealerID}, config ={}) => axios.get('GetRMInfo?UserID=' + UserID, config),
+    GetRMInfo:({UserID}, config ={}) => axios.get('GetRMInfo?UserID=' + UserID, config),
+    CreateOrUpdateDealer: (data ={}, config ={}) => axios.post('CreateOrUpdateDealer', data, config)
 }

@@ -484,7 +484,7 @@ Mock.mock(/GetDealerInfo([\w|\?\S*]+)/, 'get', {
         "ProvinceName":"北京",
         "CityID":"110100",
         "CityName":"北京",
-        "DealerGroup":"",
+        "DealerGroup":"88888",
         "Status":101,
         "LoginName":"Zhangsan",
         "MailBox":"Test@Test.com"

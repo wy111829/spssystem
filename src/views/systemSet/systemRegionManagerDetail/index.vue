@@ -23,6 +23,17 @@
                     <el-radio :label="102">停用</el-radio>
                 </el-radio-group>
             </el-form-item>
+            <el-form-item label="修改密码：" prop="pswCheck">
+                <el-checkbox v-model="pswCheck"></el-checkbox>
+            </el-form-item>
+            <template v-if="pswCheck">
+              <el-form-item label="密码：" prop="Password">
+                  <el-input v-model="Data.Password" type="Password" clearable></el-input>
+              </el-form-item>
+              <el-form-item label="密码确认：" prop="Passwordagain">
+                  <el-input v-model="Passwordagain" type="Password" clearable></el-input>
+              </el-form-item>
+            </template>
             <el-row class="text-center">
                 <el-form-item>
                     <el-button type="primary" @click="submitForm('')">保存</el-button>
@@ -50,16 +61,22 @@ export default {
                 "MailBox":"Test@Test.com",
                 "Mobile":"13900000000",
                 "Status":101
-            }
+            },
+            Passwordagain: '999',
+            pswCheck: false,
+            // rules: {
+            //   RegionName
+            // }
         }
     },
     methods:{
-        async GetDealerInfo() {
+        async GetRMInfo() {
             try {
                 const response = await BMW.GetRMInfo({
                     UserID: this.Data.UserID
                 })
                 this.Data = response.Data
+                this.Data.Password = '9+99'
                 // console.log(this.detailData)
             } catch (error) {
                 console.log(error)
@@ -67,7 +84,8 @@ export default {
         },
     },
     created() {
-        this.GetDealerInfo()
+      console.log(this.Data, this.pswCheck)
+        this.GetRMInfo()
     }
 }
 </script>
