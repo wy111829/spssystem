@@ -11,29 +11,24 @@
                 <el-button slot="append" icon="el-icon-search"></el-button>
             </el-input>
         </div>
-        <router-link to="/systemNewDealer" class="button">
+        <router-link to="/systemDealerDetail" class="button">
             <el-button type="primary" class="newOrderButton">新建经销商</el-button>
         </router-link>
     </div>
     <el-table :data="tableList" class="table" ref="multipleTable" @sort-change="handleSortChange">
-        <el-table-column prop="CBU" label="CBU" sortable ></el-table-column>
-        <el-table-column prop="CKD" label="CKD" sortable ></el-table-column>
-        <el-table-column prop="ShortName" label="经销商名称（简称）" sortable ></el-table-column>
+        <el-table-column prop="CBU" label="CBU" sortable></el-table-column>
+        <el-table-column prop="CKD" label="CKD" sortable></el-table-column>
+        <el-table-column prop="ShortName" label="经销商名称（简称）" sortable></el-table-column>
         <el-table-column prop="RegionName" label="地区"></el-table-column>
-        <el-table-column prop="ProvinceName" label="省份" sortable ></el-table-column>
-        <el-table-column prop="CityName" label="城市" sortable ></el-table-column>
-        <el-table-column prop="DealerGroup" label="经销商集团" sortable ></el-table-column>
-        <el-table-column prop="StatusName" label="状态" sortable width=150 >
-          <template slot-scope="scope">
-              <el-switch
-              v-model="scope.row.StatusCode"
-              @change="handleChangeDealerStatus(scope.$index, scope.row)"
-              active-color="#13ce66" inactive-color="#ff4949"
-              active-text="启用" inactive-text="停用"
-              :active-value="101" :inactive-value="102"></el-switch>
-          </template>
+        <el-table-column prop="ProvinceName" label="省份" sortable></el-table-column>
+        <el-table-column prop="CityName" label="城市" sortable></el-table-column>
+        <el-table-column prop="DealerGroup" label="经销商集团" sortable></el-table-column>
+        <el-table-column prop="StatusName" label="状态" sortable width=150>
+            <template slot-scope="scope">
+                <el-switch v-model="scope.row.StatusCode" @change="handleChangeDealerStatus(scope.$index, scope.row)" active-color="#13ce66" inactive-color="#ff4949" active-text="启用" inactive-text="停用" :active-value="101" :inactive-value="102"></el-switch>
+            </template>
         </el-table-column>
-        <el-table-column label="操作" width="180" align="center">
+        <el-table-column label="操作" align="center">
             <template slot-scope="scope">
                 <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
             </template>
@@ -72,8 +67,8 @@ export default {
                 "CityID": "110100",
                 "CityName": "北京",
                 "DealerGroup": "北京经销商集团",
-                "StatusCode":101,
-                "StatusName":"启用"
+                "StatusCode": 101,
+                "StatusName": "启用"
             }],
             selectList: [{
                 label: 'CBU',
@@ -106,9 +101,18 @@ export default {
         },
         handleSortChange(obj) {
             console.log(obj)
-            this.SortType = obj.order == 'ascending'? 'ASC' : obj.order == 'descending' ? 'DESC' : null
+            this.SortType = obj.order == 'ascending' ? 'ASC' : obj.order == 'descending' ? 'DESC' : null
             this.SortField = obj.prop
             this.getData()
+        },
+        handleEdit(index, data) {
+            console.log(index, data)
+            this.$router.push({
+                name: 'systemDealerDetail',
+                params: {
+                    id: data.DealerID
+                }
+            });
         },
         async getData() {
             try {
@@ -122,25 +126,25 @@ export default {
                 })
                 this.TotalNumber = response.Data.TotalNumber
                 this.tableList = response.Data.Dealers
-            } catch (error){
+            } catch (error) {
                 console.log(error)
             }
         },
         search() {
 
         },
-        async handleChangeDealerStatus (index, data) {
-          try {
-             const response = await BMW.ChangeDealerStatus({
-               "DealerID":data.DealerID,
-               "Status": data.StatusCode
-             })
-             if (response.Code != 200) {
-               this.tableList[index].StatusCode = data.StatusCode == 101 ? 102 : 101
-             }
-          } catch (error) {
-              console.log(error)
-          }
+        async handleChangeDealerStatus(index, data) {
+            try {
+                const response = await BMW.ChangeDealerStatus({
+                    "DealerID": data.DealerID,
+                    "Status": data.StatusCode
+                })
+                if (response.Code != 200) {
+                    this.tableList[index].StatusCode = data.StatusCode == 101 ? 102 : 101
+                }
+            } catch (error) {
+                console.log(error)
+            }
         }
     },
     components: { //定义组件

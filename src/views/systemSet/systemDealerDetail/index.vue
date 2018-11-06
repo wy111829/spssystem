@@ -66,6 +66,8 @@
 
 <script>
 import areaData from '@/defined/area.js'
+import {BMW} from '@/networks/api'
+import {mapState,mapMutations} from 'vuex'
 export default {
     data() { //选项 / 数据
         var validatePass = (rule, value, callback) => {
@@ -89,19 +91,21 @@ export default {
         }
         return {
             Dealer: {
-                CBU: '',
-                CKD: '',
-                FullName: '',
-                ShortName: '',
-                LoginName: '',
-                Password: '',
-                Passwordagain: '',
-                RegionID: '',
-                ProvinceID: '',
-                CityID: '',
-                DealerGroup: '',
-                MailBox: '',
-                Status: 0,
+                "DealerID":'',
+                "CBU":"",
+                "CKD":"",
+                "FullName":"",
+                "ShortName":"",
+                "RegionID":"",
+                "RegionName":"",
+                "ProvinceID":"",
+                "ProvinceName":"",
+                "CityID":"",
+                "CityName":"",
+                "DealerGroup":"",
+                "Status":'',
+                "LoginName":"",
+                "MailBox":""
             },
             rules: {
                 CBU: [{
@@ -304,13 +308,34 @@ export default {
                     return false;
                 }
             })
-        }
+        },
+        async GetDealerInfo() {
+            try {
+                const response = await BMW.GetDealerInfo({
+                    DealerID: this.Dealer.DealerID
+                })
+                this.Dealer = response.Data
+                // console.log(this.detailData)
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        routeChange() {
+            this.Dealer.DealerID = this.$route.params.id ? this.$route.params.id : 0
+            console.log(this.Dealer.DealerID)
+            if (this.Dealer.DealerID) {
+                this.GetDealerInfo()
+            }
+        },
     },
     components: { //定义组件
 
     },
+    watch: {
+        '$route': 'routeChange'
+    },
     created() { //生命周期函数
-        console.log(areaData)
+        this.routeChange()
         this.initAreaFun(areaData)
     }
 }

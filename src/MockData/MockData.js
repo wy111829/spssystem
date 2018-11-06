@@ -417,6 +417,12 @@ Mock.mock(/BMWApproveOrder/, 'post', {
     "Code":200
 })
 
+// 区域经理-设置经销商审批策略
+Mock.mock(/SetDealerApprovePolicy/, 'post', {
+    "Code": 300,
+    "Message":"错误信息"
+})
+
 //BMW-获取经销商列表
 Mock.mock(/GetDealerList/, 'post', {
     "Code":200,
@@ -460,12 +466,74 @@ Mock.mock(/GetDealerList/, 'post', {
 
 // BMW-经销商状态修改
 Mock.mock(/ChangeDealerStatus/, 'post', {
-  "Code": 300,
-  "Message":"错误信息"
+    "Code": 200,
 })
 
-// 区域经理-设置经销商审批策略
-Mock.mock(/SetDealerApprovePolicy/, 'post', {
-  "Code": 300,
-  "Message":"错误信息"
+//BMW-获取经销商详细信息
+Mock.mock(/GetDealerInfo([\w|\?\S*]+)/, 'get', {
+    "Code": 200,
+    "Data":{
+        "DealerID":122122,
+        "CBU":"36153",
+        "CKD":"36161",
+        "FullName":"DAT中国有限公司",
+        "ShortName":"DAT中国",
+        "RegionID":"100004",
+        "RegionName":"北区",
+        "ProvinceID":"110000",
+        "ProvinceName":"北京",
+        "CityID":"110100",
+        "CityName":"北京",
+        "DealerGroup":"",
+        "Status":101,
+        "LoginName":"Zhangsan",
+        "MailBox":"Test@Test.com"
+    }
+})
+
+//BMW-获取区域经理列表
+Mock.mock(/GetRMList/, 'get', {
+    "Code": 200,
+    "Data": {
+        "TotalNumber":5,
+        "RegionManagers":[
+            {
+                "UserID":15,
+                "RegionID":"100001",
+                "RegionName":"东区",
+                "Name":"张无忌",
+                "LoginName":"zhangwuji",
+                "MailBox":"Test@Test.com",
+                "Mobile":"13900000000",
+                "StatusCode":101,
+                "StatusName":"启用"
+            },
+            {
+                "UserID":16,
+                "RegionID":"100002",
+                "RegionName":"南区",
+                "Name":"乔峰",
+                "LoginName":"qiaofeng",
+                "MailBox":"Test@Test.com",
+                "Mobile":"13900000000",
+                "StatusCode":101,
+                "StatusName":"启用"
+            }
+        ]
+    }
+})
+
+//BMW-获取区域经理详细信息
+Mock.mock(/GetRMInfo([\w|\?\S*]+)/, 'get', {
+    "Code":200,
+    "Data":{
+        "UserID":2,
+        "RegionID":"100001",
+        "RegionName":"东区",
+        "Name":"张无忌",
+        "LoginName":"zhangwuji",
+        "MailBox":"Test@Test.com",
+        "Mobile":"13900000000",
+        "Status":101
+    }
 })

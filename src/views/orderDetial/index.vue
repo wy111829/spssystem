@@ -186,7 +186,7 @@
             <div class="form-box-neworder text-center">
                 <el-button type="primary" @click="handleSaveOrder">保存但不提交</el-button>
                 <el-button type="primary" @click="handleSubmitOrder">保存并提交</el-button>
-                <el-button>取消</el-button>
+                <el-button @click="handleGoBack">取消</el-button>
                 <el-button type="danger" @click="handleDeleteOrder">删除</el-button>
             </div>
         </div>
@@ -204,7 +204,7 @@
                     </el-form-item>
                     <el-button type="primary" @click="handleApproved('Approved')">通过</el-button>
                     <el-button type="danger" @click="handleApproved('Rejected')">不通过</el-button>
-                    <el-button>退出</el-button>
+                    <el-button @click="handleGoBack">退出</el-button>
                 </el-form>
             </div>
             <div class="form-box-neworder">
@@ -441,14 +441,16 @@ export default {
             this.$alert('操作完成，返回订单列表', '提示', {
                 confirmButtonText: '确定',
                 callback: action => {
-                    this.closeTags(this.$route.name)
-                    this.$router.push({
-                        name: 'orderList'
-                    })
+                    this.handleGoBack()
                 }
             })
         },
-
+        handleGoBack() {
+            this.closeTags(this.$route.name)
+            this.$router.push({
+                name: 'orderList'
+            })
+        }
     },
     watch: {
         '$route': 'routeChange'

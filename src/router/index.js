@@ -104,6 +104,13 @@ export default new Router({
                 },
                 {
 
+                    path: '/systemRegionManagerDetail/:id?',
+                    component: resolve => require(['@/views/systemSet/systemRegionManagerDetail'], resolve),
+                    meta: { title: '区域经理详情', permission: true, keepAlive: true  },
+                    name: 'systemRegionManagerDetail'
+                },
+                {
+
                     path: '/systemUnableParts',
                     component: resolve => require(['@/views/systemSet/systemUnableParts'], resolve),
                     meta: { title: '不可订货的配件', permission: true, keepAlive: true  },
@@ -111,10 +118,10 @@ export default new Router({
                 },
                 {
 
-                    path: '/systemNewDealer',
-                    component: resolve => require(['@/views/systemSet/systemNewDealer'], resolve),
-                    meta: { title: '新建经销商', permission: true , keepAlive: true },
-                    name: 'systemNewDealer'
+                    path: '/systemDealerDetail/:id?',
+                    component: resolve => require(['@/views/systemSet/systemDealerDetail'], resolve),
+                    meta: { title: '经销商详情', permission: true , keepAlive: false },
+                    name: 'systemDealerDetail'
                 },
                 {
                     path: '/404',

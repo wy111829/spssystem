@@ -218,7 +218,6 @@ export default {
                     "RowOffset": this.RowOffset,
                     "RowCount": this.RowCount
                 })
-                console.log('订单列表', response)
                 this.TotalNumber = response.Data.TotalNumber
                 this.Orders = response.Data.Orders
             } catch (error) {
@@ -236,7 +235,6 @@ export default {
         ]),
     },
     created() {
-        console.log(12312312,this.UserRole)
         this.getData()
     }
 }
