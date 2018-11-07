@@ -44,15 +44,6 @@ export default {
                 "StatusCode": 101,
                 "StatusName": "启用"
             }, ],
-            newInfo: {
-                Name: "",
-                role: "",
-                emailaddress: "",
-                Mobile: "",
-                stat: ""
-
-            },
-            dialogFormVisible: false,
         }
     },
     methods: { //事件处理器

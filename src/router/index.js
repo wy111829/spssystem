@@ -69,6 +69,13 @@ export default new Router({
                 },
                 {
 
+                    path: '/systemEmailAdressDetail/:id?',
+                    component: resolve => require(['@/views/systemSet/systemEmailAdressDetail'], resolve),
+                    meta: { title: '邮件地址', keepAlive: false  },
+                    name: 'systemEmailAdressDetail'
+                },
+                {
+
                     path: '/systemEmailTemList',
                     component: resolve => require(['@/views/systemSet/systemEmailTemList'], resolve),
                     meta: { title: '邮件模板管理', keepAlive: true  },
@@ -92,7 +99,7 @@ export default new Router({
 
                     path: '/systemPswd',
                     component: resolve => require(['@/views/systemSet/systemPswd'], resolve),
-                    meta: { title: '系统消息', permission: true, keepAlive: true  },
+                    meta: { title: '修改密码', permission: true, keepAlive: true  },
                     name: 'systemPswd'
                 },
                 {
@@ -106,7 +113,7 @@ export default new Router({
 
                     path: '/systemRegionManagerDetail/:id?',
                     component: resolve => require(['@/views/systemSet/systemRegionManagerDetail'], resolve),
-                    meta: { title: '区域经理详情', permission: true, keepAlive: true  },
+                    meta: { title: '区域经理详情', permission: true, keepAlive: false  },
                     name: 'systemRegionManagerDetail'
                 },
                 {

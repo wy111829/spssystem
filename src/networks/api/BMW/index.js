@@ -7,6 +7,12 @@ export default {
     GetDealerInfo:({DealerID}, config ={}) => axios.get('GetDealerInfo?DealerID=' + DealerID, config),
     GetRMList: (config = {}) => axios.get('GetRMList', config),
     ChangeRMStatus:(data = {}, config = {}) => axios.post('ChangeRMStatus', data, config),
+    CreateOrUpdateDealer: (data ={}, config ={}) => axios.post('CreateOrUpdateDealer', data, config),
     GetRMInfo:({UserID}, config ={}) => axios.get('GetRMInfo?UserID=' + UserID, config),
-    CreateOrUpdateDealer: (data ={}, config ={}) => axios.post('CreateOrUpdateDealer', data, config)
+    UpdateRM:(data = {}, config = {}) => axios.post('UpdateRM', data, config),
+    GetUnAvailablePartList:(data = {}, config = {}) =>axios.post('GetUnAvailablePartList',data, config),
+    GetMailAddressList:(config = {}) =>axios.get('GetMailAddressList',config),
+    ChangeMailAddressStatus:(data = {}, config = {}) => axios.post('ChangeMailAddressStatus', data, config),
+    GetMailAddressInfo:({MailBoxCode}, config ={}) => axios.get('GetMailAddressInfo?MailBoxCode=' + MailBoxCode,config),
+    UpdateMailAddress:(data ={}, config ={}) => axios.post('UpdateMailAddress', data, config),
 }

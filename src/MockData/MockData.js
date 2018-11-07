@@ -523,6 +523,11 @@ Mock.mock(/GetRMList/, 'get', {
     }
 })
 
+//BMW-区域经理状态修改
+Mock.mock(/ChangeRMStatus/, 'post', {
+    "Code": 200,
+})
+
 //BMW-获取区域经理详细信息
 Mock.mock(/GetRMInfo([\w|\?\S*]+)/, 'get', {
     "Code":200,
@@ -536,4 +541,85 @@ Mock.mock(/GetRMInfo([\w|\?\S*]+)/, 'get', {
         "Mobile":"13900000000",
         "Status":101
     }
+})
+
+//BMW-新建/修改经销商
+Mock.mock(/CreateOrUpdateDealer/, 'post', {
+    "Code": 200
+})
+
+//BMW-修改区域经理
+Mock.mock(/UpdateRM/, 'post', {
+    "Code": 200
+})
+
+//BMW-不可订货配件清单获取
+Mock.mock(/GetUnAvailablePartList/, 'post', {
+    "Code": 200,
+    "Data":{
+        "TotalNumber":120,
+        "SpareParts":[
+            {
+                "ID":1021,
+                "PartNumber":"83190301639",
+                "PartName":"螺栓",
+                "Price":2.56
+            },
+            {
+                "ID":1221,
+                "PartNumber":"83422409985",
+                "PartName":"密封条",
+                "Price":182.91
+            }
+        ]
+    }
+
+})
+
+//BMW-获取邮件地址列表
+Mock.mock(/GetMailAddressList/, 'get', {
+    "Code":200,
+    "Data":{
+        "TotalNumber":2,
+        "MailAddresses":[
+            {
+                "MailBoxCode":"BodyPaint",
+                "MailBoxName":"宝马钣喷业务组",
+                "MailBox":"body-paint@list.bmw.com",
+                "StatusCode":101,
+                "StatusName":"启用"
+            },
+            {
+                "MailBoxCode":"Logistics",
+                "MailBoxName":"宝马物流部",
+                "MailBox":"logistics@bmw.com",
+                "StatusCode":102,
+                "StatusName":"停用"
+            }
+        ]
+    }
+
+})
+
+//BMW-邮件地址状态修改
+Mock.mock(/ChangeMailAddressStatus/, 'post', {
+    "Code": 300,
+    "Message":"错误信息"
+})
+
+//BMW-获取邮件地址详细信息
+Mock.mock(/GetMailAddressInfo([\w|\?\S*]+)/, 'get', {
+    "Code":200,
+    "Data":{
+        "MailBoxCode":"BodyPaint",
+        "MailBoxName":"宝马钣喷业务组",
+        "MailBox":"body-paint@list.bmw.com",
+        "StatusCode":101,
+        "StatusName":"启用"
+    }
+})
+
+//BMW-邮件地址修改
+Mock.mock(/UpdateMailAddress/, 'post', {
+    "Code": 200
 })

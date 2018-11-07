@@ -71,7 +71,7 @@
             <el-row class="text-center">
                 <el-form-item>
                     <el-button type="primary" @click="submitForm('Dealer')">保存</el-button>
-                    <el-button type="info">取消</el-button>
+                    <el-button type="info" @click="handleGoBack">取消</el-button>
                 </el-form-item>
             </el-row>
         </el-form>
@@ -130,8 +130,8 @@ export default {
                         trigger: 'blur'
                     },
                     {
-                        min: 3,
-                        max: 5,
+                        min: 1,
+                        max: 100,
                         message: '长度小于100个字',
                         trigger: 'blur'
                     }
@@ -245,6 +245,9 @@ export default {
         }
     },
     methods: { //事件处理器
+        ...mapMutations([
+          'closeTags'
+        ]),
         RegionIDChange(RegionID) {
             console.log('RegionIDChange', RegionID)
             this.ProvinceIDList = []
@@ -308,23 +311,14 @@ export default {
             console.log('处理后', arr)
             this.area = arr
         },
-        openalert(msg) {
-            this.$alert(msg, '提示', {
-                confirmButtonText: '确定',
-                callback: action => {
-
-                }
-            })
-        },
         async CreateOrUpdateDealer() {
           try {
             const response = await BMW.CreateOrUpdateDealer({
               Operation: this.Dealer.DealerID ? 'Update' : 'Create',
               Dealer: this.Dealer
             })
-            console.log(response)
             if (response.Code == 200) {
-
+                this.alertDialog()
             }
           } catch (error) {
             console.log(error)
@@ -333,11 +327,10 @@ export default {
         submitForm(formName) {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    alert('submit!')
                     console.log(this)
                     this.CreateOrUpdateDealer()
                 } else {
-                    console.log('error submit!!');
+                    alert('error submit!!');
                     return false;
                 }
             })
@@ -360,6 +353,20 @@ export default {
                 this.GetDealerInfo()
             }
         },
+        alertDialog() {
+            this.$alert('操作完成，返回经销商列表', '提示', {
+                confirmButtonText: '确定',
+                callback: action => {
+                    this.handleGoBack()
+                }
+            })
+        },
+        handleGoBack() {
+            this.closeTags(this.$route.name)
+            this.$router.push({
+                name: 'systemDealerManager'
+            })
+        }
     },
     components: { //定义组件
 

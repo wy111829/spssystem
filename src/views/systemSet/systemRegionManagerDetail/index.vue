@@ -1,7 +1,7 @@
 <template>
 <div class="main-container">
     <div class="RMDetail">
-        <el-form :model="Data" class="inline-form el-row" label-width="150px">
+        <el-form ref="Data" :model="Data" class="inline-form el-row" label-width="150px" :rules="rules">
             <el-form-item label="地区：" prop="RegionName">
                 <el-input v-model="Data.RegionName" disabled></el-input>
             </el-form-item>
@@ -31,13 +31,13 @@
                   <el-input v-model="Data.Password" type="Password" clearable></el-input>
               </el-form-item>
               <el-form-item label="密码确认：" prop="Passwordagain">
-                  <el-input v-model="Passwordagain" type="Password" clearable></el-input>
+                  <el-input v-model="Data.Passwordagain" type="Password" clearable></el-input>
               </el-form-item>
             </template>
             <el-row class="text-center">
                 <el-form-item>
-                    <el-button type="primary" @click="submitForm('')">保存</el-button>
-                    <el-button type="info">取消</el-button>
+                    <el-button type="primary" @click="submitForm('Data')">保存</el-button>
+                    <el-button type="info" @click="handleGoBack">取消</el-button>
                 </el-form-item>
             </el-row>
         </el-form>
@@ -51,6 +51,25 @@ import {BMW} from '@/networks/api'
 import {mapState,mapMutations} from 'vuex'
 export default {
     data() {
+        var validatePass = (rule, value, callback) => {
+            if (value === '' || value=== undefined || value.trim() == '') {
+                callback(new Error('请输入密码'))
+            } else {
+                if (this.Data.Passwordagain !== '') {
+                    this.$refs.Data.validateField('Passwordagain')
+                }
+                callback()
+            }
+        }
+        var validatePass2 = (rule, value, callback) => {
+            if (value === '' || value=== undefined || value.trim() == '') {
+                callback(new Error('请再次输入密码'))
+            } else if (value !== this.Data.Password) {
+                callback(new Error('两次输入密码不一致!'))
+            } else {
+                callback()
+            }
+        }
         return{
             Data: {
                 "UserID":2,
@@ -60,28 +79,73 @@ export default {
                 "LoginName":"zhangwuji",
                 "MailBox":"Test@Test.com",
                 "Mobile":"13900000000",
-                "Status":101
+                "Status":101,
+                Password:'',
             },
-            Passwordagain: '999',
             pswCheck: false,
-            // rules: {
-            //   RegionName
-            // }
+            rules: {
+                Password: [{
+                    required: true,
+                    validator: validatePass,
+                    trigger: 'blur'
+                }],
+                Passwordagain: [{
+                    required: true,
+                    validator: validatePass2,
+                    trigger: 'blur'
+                }],
+            }
         }
     },
     methods:{
+        ...mapMutations([
+          'closeTags'
+        ]),
+        async UpdateRM (){
+            try {
+                const response = await BMW.UpdateRM(this.Data)
+                if (response.Code == 200) {
+                    this.alertDialog()
+                }
+            } catch (e) {
+                console.log(e)
+            }
+        },
+        submitForm(formName) {
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    this.UpdateRM()
+                } else {
+                    alert('error submit!!');
+                    return false;
+                }
+            })
+        },
         async GetRMInfo() {
             try {
                 const response = await BMW.GetRMInfo({
                     UserID: this.Data.UserID
                 })
                 this.Data = response.Data
-                this.Data.Password = '9+99'
                 // console.log(this.detailData)
             } catch (error) {
                 console.log(error)
             }
         },
+        alertDialog() {
+            this.$alert('操作完成，返回区域经理列表', '提示', {
+                confirmButtonText: '确定',
+                callback: action => {
+                    this.handleGoBack()
+                }
+            })
+        },
+        handleGoBack() {
+            this.closeTags(this.$route.name)
+            this.$router.push({
+                name: 'systemRegionalManger'
+            })
+        }
     },
     created() {
       console.log(this.Data, this.pswCheck)

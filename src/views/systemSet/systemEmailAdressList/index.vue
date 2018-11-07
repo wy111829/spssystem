@@ -1,19 +1,17 @@
 <template>
 <div class="main-container">
-    <div class="handle-input">
-        <el-input placeholder="请输入邮箱名称进行查询" v-model="input5" class="input-with-select">
-            <el-button slot="append" icon="el-icon-search"></el-button>
-        </el-input>
-    </div>
     <!-- <el-button type="primary" class="newOrderButton" @click="dialogFormVisible=true">新建邮箱地址</el-button> -->
-    <el-table :data="tableList" class="table" ref="multipleTable">
-        <el-table-column prop="email" label="邮箱"></el-table-column>
-        <el-table-column prop="role" label="角色"></el-table-column>
-        <el-table-column prop="state" label="状态"></el-table-column>
+    <el-table :data="MailAddresses" class="table" ref="multipleTable">
+        <el-table-column prop="MailBox" label="邮箱"></el-table-column>
+        <el-table-column prop="MailBoxName" label="使用人"></el-table-column>
+        <el-table-column prop="StatusName" label="状态">
+            <template slot-scope="scope">
+                <el-switch v-model="scope.row.StatusCode" @change="ChangeMailAddressStatus(scope.$index, scope.row)" active-color="#13ce66" inactive-color="#ff4949" active-text="启用" inactive-text="停用" :active-value="101" :inactive-value="102"></el-switch>
+            </template>
+        </el-table-column>
         <el-table-column label="操作" width="180" align="center">
             <template slot-scope="scope">
                 <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                <el-button type="text" icon="el-icon-error" class="red" @click="handleDelete(scope.$index, scope.row)">停用</el-button>
             </template>
         </el-table-column>
     </el-table>
@@ -44,20 +42,20 @@
 </template>
 
 <script>
+import {
+    BMW
+} from '@/networks/api'
 export default {
     data() { //选项 / 数据
         return {
-            tableList: [{
-                    email: "body-paint@list.bmw.com",
-                    role: "BMW body paint team",
-                    state: "Available"
-                },
-                {
-                    email: "logistics@bmw.com",
-                    role: "BMW Logistics team",
-                    state: "Available"
-                },
-            ],
+            TotalNumber: 2,
+            MailAddresses: [{
+                "MailBoxCode":"BodyPaint",
+                "MailBoxName":"宝马钣喷业务组",
+                "MailBox":"body-paint@list.bmw.com",
+                "StatusCode":101,
+                "StatusName":"启用"
+            }],
             newInfo: {
                 emailaddress: '',
                 role: '',
@@ -67,13 +65,43 @@ export default {
         }
     },
     methods: { //事件处理器
-
+        handleEdit(index, data) {
+            console.log(index, data)
+            this.$router.push({
+                name: 'systemEmailAdressDetail',
+                params:{
+                    id: data.MailBoxCode
+                }
+            });
+        },
+        async ChangeMailAddressStatus(index, data) {
+            try {
+                const response = await BMW.ChangeMailAddressStatus({
+                    "MailBoxCode": data.MailBoxCode,
+                    "StatusCode": data.StatusCode
+                })
+                if (response.Code != 200) {
+                    this.MailAddresses[index].StatusCode = data.StatusCode == 101 ? 102 : 101
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        async getData(){
+            try {
+                const response = await BMW.GetMailAddressList()
+                this.TotalNumber = response.Data.TotalNumber
+                this.MailAddresses = response.Data.MailAddresses
+            } catch (error) {
+                console.log(error)
+            }
+        }
     },
     components: { //定义组件
 
     },
     created() { //生命周期函数
-
+        this.getData()
     }
 }
 </script>

@@ -1,44 +1,92 @@
 <template>
     <div class="main-container">
-        <div class="handle-input">
-            <el-input placeholder="Typing parts descrition to search" v-model="input5" class="input-with-select">
-                <el-button slot="append" icon="el-icon-search"></el-button>
-            </el-input>
+        <div class="search-box">
+            <div class="sort-select">
+                <el-select v-model="SearchField" placeholder="--请选择要查询的字段--" style="width:200px">
+                    <el-option v-for="(item, index) in selectList" :key="index" :label="item.label" :value="item.value"></el-option>
+                </el-select>
+            </div>
+            <div class="handle-input">
+                <el-input placeholder="Typing dealer name to search" v-model="SearchValue" class="input-with-select">
+                    <el-button slot="append" icon="el-icon-search"></el-button>
+                </el-input>
+            </div>
+            <el-button type="primary" class="newOrderButton">导入不可订购配件清单</el-button>
+            <el-table :data="SpareParts" class="table" ref="multipleTable" @sort-change="handleSortChange">
+                <el-table-column prop="PartNumber" label="零件号" sortable ></el-table-column>
+                <el-table-column prop="PartName" label="零件名称" sortable></el-table-column>
+                <el-table-column prop="Price" label="单价" sortable></el-table-column>
+            </el-table>
+            <div class="pagination">
+                <el-pagination background @current-change="handleCurrentChange" layout="prev, pager, next" :total="1000">
+                </el-pagination>
+            </div>
         </div>
-        <el-button type="primary" class="newOrderButton">导入</el-button>
-        <el-table :data="tableList" class="table" ref="multipleTable">
-            <el-table-column prop="partsNum" label="零件号"></el-table-column>
-            <el-table-column prop="partsName" label="零件名称"></el-table-column>
-            <el-table-column prop="unitprice" label="单价"></el-table-column>
-        </el-table>
     </div>
 </template>
 
 <script>
+import {
+    BMW
+} from '@/networks/api'
 export default {
     data() { //选项 / 数据
         return {
-            tableList: [{
-                    partsNum: "83190301421",
-                    partsName: "lube oil",
-                    unitprice: "82.56",
-                },
-                {
-                    partsNum: "83190301639",
-                    partsName: "螺栓",
-                    unitprice: "2.56",
-                },
-            ],
+            SearchField: null,
+            SearchValue: '',
+            SortField: null,
+            SortType: null,
+            TotalNumber: 0,
+            RowOffset: 0,
+            RowCount: 6,
+            SpareParts: [{
+                "ID":1021,
+                "PartNumber":"83190301639",
+                "PartName":"螺栓",
+                "Price":2.56
+            }],
+            selectList: [{
+                label: '零件号',
+                value: 'PartNumber'
+            },{
+                label: '零件名称',
+                value: 'PartName'
+            }]
         }
     },
     methods: { //事件处理器
-
+        handleCurrentChange(val) {
+            this.RowOffset = val;
+            this.getData();
+        },
+        handleSortChange(obj) {
+            console.log(obj)
+            this.SortType = obj.order == 'ascending' ? 'ASC' : obj.order == 'descending' ? 'DESC' : null
+            this.SortField = obj.prop
+            this.getData()
+        },
+        async getData() {
+            try {
+                const response = await BMW.GetUnAvailablePartList({
+                    "SearchField": this.SearchField,
+                    "SearchValue": this.SearchValue,
+                    "SortField": this.SortField,
+                    "SortType": this.SortType,
+                    "RowOffset": this.RowOffset,
+                    "RowCount": this.RowCount
+                })
+                this.TotalNumber = response.Data.TotalNumber
+                this.SpareParts = response.Data.SpareParts
+            } catch (error) {
+                console.log(error)
+            }
+        },
     },
     components: { //定义组件
 
     },
     created() { //生命周期函数
-
+        this.getData()
     }
 }
 </script>
@@ -47,6 +95,21 @@ export default {
 .main-container {
     background-color: #fff;
     padding: 10px;
+    .search-box {
+        padding: 10px 0;
+    }
+    .handle-box {
+        margin-bottom: 20px;
+    }
+
+    .handle-select {
+        width: 120px;
+    }
+    .sort-select {
+        width: 200px;
+        margin: 10px;
+        display: inline-block;
+    }
     .handle-input {
         width: 300px;
         margin: 10px;

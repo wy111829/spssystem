@@ -299,9 +299,9 @@ export default {
         ])
     },
     methods: {
-      ...mapMutations([
-        'closeTags'
-      ]),
+        ...mapMutations([
+            'closeTags'
+        ]),
         handleDatePicker(val) {
             console.log(this.detailData.VehicleFirstRegDate, val)
             let now = new Date()
@@ -386,7 +386,7 @@ export default {
 
         async handleApproved(val) { //审批 - 区域经理或BMW
             try {
-                if (this.UserRole == 'RegionManager'){
+                if (this.UserRole == 'RegionManager') {
                     const response = await RegionManagers.RMApproveOrder({
                         "OrderID": this.detailData.OrderID,
                         "Result": val,
@@ -395,7 +395,7 @@ export default {
                     if (response.Code == 200) {
                         this.alertDialog()
                     }
-                }else if (this.UserRole == 'BMW-BP') {
+                } else if (this.UserRole == 'BMW-BP') {
                     const response = await BMW.BMWApproveOrder({
                         "OrderID": this.detailData.OrderID,
                         "Result": val,

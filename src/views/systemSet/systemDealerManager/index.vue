@@ -100,13 +100,11 @@ export default {
             this.getData();
         },
         handleSortChange(obj) {
-            console.log(obj)
             this.SortType = obj.order == 'ascending' ? 'ASC' : obj.order == 'descending' ? 'DESC' : null
             this.SortField = obj.prop
             this.getData()
         },
         handleEdit(index, data) {
-            console.log(index, data)
             this.$router.push({
                 name: 'systemDealerDetail',
                 params: {
@@ -129,9 +127,6 @@ export default {
             } catch (error) {
                 console.log(error)
             }
-        },
-        search() {
-
         },
         async handleChangeDealerStatus(index, data) {
             try {
