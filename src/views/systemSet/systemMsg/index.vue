@@ -65,10 +65,6 @@ export default {
         ])
     },
     methods: {
-        goMessageDetail(data) {
-            this.GetSysMessage(data)
-            this.dialogFormVisible = true
-        },
         handleCurrentChange(val) {
             this.RowOffset = val
             this.GetSysMessageList()
@@ -104,13 +100,14 @@ export default {
                 console.log(error)
             }
         },
-        async GetSysMessage(data) {
+        async goMessageDetail(data) {
             try {
                 const response = await General.GetSysMessage({
                     ID : data.ID
                 })
                 this.MessageDetail = response.Data.MessageContent
                 this.MessageDetailPublishDate = response.Data.PublishDate
+                this.dialogFormVisible = true
             } catch (error) {
                 console.log(error)
             }

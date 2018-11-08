@@ -503,11 +503,11 @@ Mock.mock(/GetDealerInfo([\w|\?\S*]+)/, 'get', {
         "CKD":"36161",
         "FullName":"DAT中国有限公司",
         "ShortName":"DAT中国",
-        "RegionID":"100004",
-        "RegionName":"北区",
-        "ProvinceID":"110000",
+        "RegionID":100001,
+        "RegionName":"北区999",
+        "ProvinceID":370000,
         "ProvinceName":"北京",
-        "CityID":"110100",
+        "CityID":370100,
         "CityName":"北京",
         "DealerGroup":"88888",
         "Status":101,
@@ -674,41 +674,41 @@ Mock.mock(/GetRegionProvCityList/, 'get', {
     "Data":{
         "Regions":[
             {
-                "ID":"100001",
+                "ID":100001,
                 "Name":"东区",
                 "Provinces":[
                     {
-                        "ID":"370000",
+                        "ID":370000,
                         "Name":"山东",
                         "Cities":[
                             {
-                                "ID":"370100",
+                                "ID":370100,
                                 "Name":"济南"
                             },
                             {
-                                "ID":"370200",
+                                "ID":370200,
                                 "Name":"青岛"
                             },
                             {
-                                "ID":"370600",
+                                "ID":370600,
                                 "Name":"烟台"
                             }
                         ]
                     },
                     {
-                        "ID":"320000",
+                        "ID":320000,
                         "Name":"江苏",
                         "Cities":[
                             {
-                                "ID":"320100",
+                                "ID":320100,
                                 "Name":"南京"
                             },
                             {
-                                "ID":"320500",
+                                "ID":320500,
                                 "Name":"苏州"
                             },
                             {
-                                "ID":"320200",
+                                "ID":320200,
                                 "Name":"无锡"
                             }
                         ]
@@ -716,41 +716,41 @@ Mock.mock(/GetRegionProvCityList/, 'get', {
                 ]
             },
             {
-                "ID":"100002",
+                "ID":100002,
                 "Name":"南区",
                 "Provinces":[
                     {
-                        "ID":"430000",
+                        "ID":430000,
                         "Name":"湖南",
                         "Cities":[
                             {
-                                "ID":"430100",
+                                "ID":430100,
                                 "Name":"长沙"
                             },
                             {
-                                "ID":"430400",
+                                "ID":430400,
                                 "Name":"衡阳"
                             },
                             {
-                                "ID":"430200",
+                                "ID":430200,
                                 "Name":"株洲"
                             }
                         ]
                     },
                     {
-                        "ID":"440000",
+                        "ID":440000,
                         "Name":"广东",
                         "Cities":[
                             {
-                                "ID":"440100",
+                                "ID":440100,
                                 "Name":"广州"
                             },
                             {
-                                "ID":"440300",
+                                "ID":440300,
                                 "Name":"深圳"
                             },
                             {
-                                "ID":"440400",
+                                "ID":440400,
                                 "Name":"珠海"
                             }
                         ]

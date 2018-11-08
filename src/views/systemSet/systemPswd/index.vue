@@ -26,6 +26,7 @@
 <script>
 import {General} from '@/networks/api'
 import {mapState,mapMutations} from 'vuex'
+import {hex_sha1} from '@/utils/sha1'
 export default {
     data() { //选项 / 数据
         var validatePass = (rule, value, callback) => {
@@ -100,8 +101,8 @@ export default {
         async ChangePassword(){
             try {
                 const response = await General.ChangePassword({
-                    OldPassword:this.Data.OldPassword,
-                    NewPassword:this.Data.NewPassword
+                    OldPassword: hex_sha1(this.Data.OldPassword),
+                    NewPassword: hex_sha1(this.Data.NewPassword)
                 })
                 if (response.Code == 200) {
                     this.alertDialog()

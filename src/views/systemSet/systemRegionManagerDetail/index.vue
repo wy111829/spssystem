@@ -49,6 +49,7 @@
 <script>
 import {BMW} from '@/networks/api'
 import {mapState,mapMutations} from 'vuex'
+import {hex_sha1} from '@/utils/sha1'
 export default {
     data() {
         var validatePass = (rule, value, callback) => {
@@ -114,6 +115,11 @@ export default {
         submitForm(formName) {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
+                  if (this.Data.Password) {
+                    this.Data.Password = hex_sha1(this.Data.Password)
+                    this.Data.Passwordagain = hex_sha1(this.Data.Passwordagain)
+                  }
+                  console.log(this.Data)
                     this.UpdateRM()
                 } else {
                     alert('error submit!!');

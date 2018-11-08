@@ -142,14 +142,20 @@ export default {
     }
 }
 </script>
-<style scoped>
+<style lang="less" scoped>
 .header {
     position: relative;
     box-sizing: border-box;
     width: 100%;
     height: 70px;
+    // line-height: 70px;
     font-size: 22px;
     color: #fff;
+}
+.header:after{
+  content:'';
+  display: block;
+  clear: both;
 }
 
 .collapse-btn {
@@ -171,7 +177,11 @@ export default {
 }
 
 .header-user-con {
-    display: flex;
+  display: -webkit-box;  /* 老版本语法: Safari, iOS, Android browser, older WebKit browsers. */
+  display: -moz-box;     /* 老版本语法: Firefox (buggy) */
+  display: -ms-flexbox;  /* 混合版本语法: IE 10 */
+  display: -webkit-flex; /* 新版本语法: Chrome 21+ */
+  display: flex;         /* 新版本语法: Opera 12.1, Firefox 22+ */
     height: 70px;
     align-items: center;
 }
@@ -185,8 +195,10 @@ export default {
 .btn-bell,
 .btn-fullscreen {
     position: relative;
+    display: inline-block;
     width: 30px;
     height: 30px;
+    line-height: 30px;
     text-align: center;
     border-radius: 15px;
     cursor: pointer;
@@ -209,17 +221,23 @@ export default {
 
 .user-name {
     margin-left: 10px;
+    display: inline-block;
 }
 
 .user-avator {
     margin-left: 20px;
+    display: inline-block;
+    // vertical-align: middle;
+    height: 70px;
+    line-height: 70px;
 }
 
 .user-avator img {
-    display: block;
+    // display: block;
     width: 40px;
     height: 40px;
     border-radius: 50%;
+    vertical-align: middle;
 }
 
 .el-dropdown-link {

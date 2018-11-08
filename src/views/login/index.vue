@@ -23,6 +23,8 @@
 
 <script>
 import {General} from '@/networks/api'
+import {hex_sha1} from '@/utils/sha1'
+console.log(hex_sha1)
 import '@/MockData/MockData'
     export default {
         data: function(){
@@ -54,12 +56,12 @@ import '@/MockData/MockData'
               try {
                 const response = await General.Login({
                   UserName: this.ruleForm.username,
-                  Password: this.ruleForm.password
+                  Password: hex_sha1(this.ruleForm.password)
                 })
                 console.log(response)
                 this.$router.push('/orderList')
               } catch (error) {
-
+                  console.log(error)
               }
             }
         },
