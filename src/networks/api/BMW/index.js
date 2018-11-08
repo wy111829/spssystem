@@ -15,4 +15,7 @@ export default {
     ChangeMailAddressStatus:(data = {}, config = {}) => axios.post('ChangeMailAddressStatus', data, config),
     GetMailAddressInfo:({MailBoxCode}, config ={}) => axios.get('GetMailAddressInfo?MailBoxCode=' + MailBoxCode,config),
     UpdateMailAddress:(data ={}, config ={}) => axios.post('UpdateMailAddress', data, config),
+    CreateSysMessage:(data = {}, config = {}) => axios.post('CreateSysMessage', data, config),
+    DeleteSysMessage:(data = {}, config = {}) => axios.post('DeleteSysMessage', data, config),
+    GetRegionProvCityList:(config = {}) => axios.get('GetRegionProvCityList', config),
 }

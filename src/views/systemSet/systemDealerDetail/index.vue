@@ -29,20 +29,20 @@
                 <el-input v-model="Dealer.DealerGroup" clearable></el-input>
             </el-form-item>
             <el-form-item label="区域： " prop="RegionID">
-                <el-select v-model="Dealer.RegionID" @change="RegionIDChange" clearable placeholder="请选择">
+                <el-select v-model="Dealer.RegionName" @change="RegionIDChange" clearable placeholder="请选择">
                     <el-option v-for="(item, index) in area" :key="item.id" :label="item.name" :value="item.id">
                     </el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="省份：" prop="ProvinceID">
-                <el-select v-model="Dealer.ProvinceID" @change="ProvinceIDChange" clearable placeholder="请选择">
-                    <el-option v-for="(item, index) in ProvinceIDList" :key="item.id" :label="item.name" :value="item.id">
+                <el-select v-model="Dealer.ProvinceName" @change="ProvinceIDChange" clearable placeholder="请选择">
+                    <el-option v-for="(item, index) in ProvinceIDList" :key="item.ID" :label="item.Name" :value="item.ID">
                     </el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="城市：" prop="CityID">
-                <el-select v-model="Dealer.CityID" clearable placeholder="请选择">
-                    <el-option v-for="(item, index) in CityIDList" :key="item.id" :label="item.name" :value="item.id">
+                <el-select v-model="Dealer.CityName" clearable placeholder="请选择">
+                    <el-option v-for="(item, index) in CityIDList" :key="item.ID" :label="item.Name" :value="item.ID">
                     </el-option>
                 </el-select>
             </el-form-item>
@@ -80,7 +80,7 @@
 </template>
 
 <script>
-import areaData from '@/defined/area.js'
+// import areaData from '@/defined/area.js'
 import {BMW} from '@/networks/api'
 import {mapState,mapMutations} from 'vuex'
 export default {
@@ -123,6 +123,7 @@ export default {
                 "MailBox":"",
                 Password: ''
             },
+            areaData:[],
             rules: {
                 CBU: [{
                         required: true,
@@ -249,7 +250,6 @@ export default {
           'closeTags'
         ]),
         RegionIDChange(RegionID) {
-            console.log('RegionIDChange', RegionID)
             this.ProvinceIDList = []
             this.CityIDList = []
             this.Dealer.ProvinceID = ''
@@ -259,6 +259,7 @@ export default {
                     this.ProvinceIDList = item.child
                 }
             })
+            console.log(this.ProvinceIDList)
         },
         ProvinceIDChange(ProvinceID) {
             console.log('ProvinceIDChange', ProvinceID)
@@ -267,45 +268,46 @@ export default {
             this.area.map((item) => {
                 if (item.id == this.Dealer.RegionID) {
                     item.child.map((citem) => {
-                        if (citem.id == ProvinceID) {
-                            this.CityIDList = citem.child
+                        if (citem.ID == ProvinceID) {
+                            this.CityIDList = citem.Cities
                         }
                     })
                 }
             })
+            console.log(this.CityIDList)
         },
         initAreaFun(areaData) {
             var arr = []
-            for (var index in areaData) {
-                // console.log('区---------------',index, areaData[index])
+            for (var index in areaData){
+                console.log('区---------------',index, areaData[index])
                 var item = areaData[index]
                 var child = []
-                if (item.child) {
-                    for (var pindex in item.child) {
-                        var pitem = item.child[pindex]
-                        // console.log('省-----------', pindex, pitem)
+                if (item.Provinces) {
+                    for (var pindex in item.Provinces) {
+                        var pitem = item.Provinces[pindex]
+                        console.log('省-----------', pindex, pitem)
                         var pchild = []
-                        if (pitem.child) {
-                            for (var cindex in pitem.child) {
-                                var citem = pitem.child[cindex]
-                                // console.log('市----------', cindex, citem)
+                        if (pitem.Cities) {
+                            for (var cindex in pitem.Cities) {
+                                var citem = pitem.Cities[cindex]
+                                console.log('市----------', cindex, citem)
                                 pchild.push({
-                                    id: citem.id,
-                                    name: citem.name
+                                    id: citem.ID,
+                                    name: citem.Name
                                 })
                             }
                         }
                         child.push({
-                            id: pitem.id,
-                            name: pitem.name,
-                            child: pchild
+                            id: pitem.ID,
+                            name: pitem.Name,
+                            child: pitem.Cities
                         })
                     }
                 }
                 arr.push({
-                    id: item.id,
-                    name: item.name,
-                    child: child
+                    id: item.ID,
+                    name: item.Name,
+                    child: item.Provinces
                 })
             }
             console.log('处理后', arr)
@@ -346,9 +348,18 @@ export default {
                 console.log(error)
             }
         },
+        async GetRegionProvCityList() {
+            try {
+                const response = await BMW.GetRegionProvCityList()
+                this.areaData = response.Data.Regions
+                console.log(this.areaData)
+                this.initAreaFun(this.areaData)
+            } catch (error) {
+                console.log(error)
+            }
+        },
         routeChange() {
             this.Dealer.DealerID = this.$route.params.id ? this.$route.params.id : 0
-            console.log(this.Dealer.DealerID)
             if (this.Dealer.DealerID) {
                 this.GetDealerInfo()
             }
@@ -376,7 +387,7 @@ export default {
     },
     created() { //生命周期函数
         this.routeChange()
-        this.initAreaFun(areaData)
+        this.GetRegionProvCityList()
     }
 }
 </script>

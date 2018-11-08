@@ -15,15 +15,15 @@
             </div>
             <!-- 消息中心 -->
             <div class="btn-bell">
-                <el-tooltip effect="dark" :content="message?`有${message}条未读消息`:`消息中心`" placement="bottom">
+                <el-tooltip effect="dark" content="消息中心" placement="bottom">
                     <router-link to="/systemMsg">
                         <i class="el-icon-bell"></i>
                     </router-link>
                 </el-tooltip>
-                <span class="btn-bell-badge" v-if="message"></span>
+                <!-- <span class="btn-bell-badge" v-if="message"></span> -->
             </div>
             <!-- 用户头像 -->
-            <div class="user-avator"><img src="/static/img/img.jpg"></div>
+            <div class="user-avator"><img src="/static/img/u478.png"></div>
             <!-- 用户名下拉菜单 -->
             <el-dropdown class="user-name" trigger="click" @command="handleCommand">
                 <span class="el-dropdown-link">
@@ -45,7 +45,8 @@
 </template>
 <script>
 import bus from '../common/bus'
-import { mapState} from 'vuex'
+import {General} from '@/networks/api'
+import { mapState,mapMutations} from 'vuex'
 export default {
     data() {
         return {
@@ -70,6 +71,7 @@ export default {
         handleCommand(command) {
             if (command == 'loginout') {
                 localStorage.removeItem('ms_username')
+                this.Logout()
                 this.$router.push('/login');
             }
         },
@@ -105,12 +107,27 @@ export default {
             }
             this.fullscreen = !this.fullscreen;
         },
+        ...mapMutations([
+          'closeTags',
+          'closeAll'
+        ]),
         resizeFun() {
             if (window.innerWidth < 750) {
 
                 bus.$emit('collapse', true);
             } else {
                 bus.$emit('collapse', false);
+            }
+        },
+        async Logout() {
+            try{
+                const response = await General.Logout()
+                if(response.Code == 200){
+                    this.closeAll(this.$route.name)
+                    this.$alert('已退出登录')
+                }
+            } catch(error){
+                console.log(error)
             }
         }
     },

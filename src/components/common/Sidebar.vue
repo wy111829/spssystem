@@ -1,7 +1,7 @@
 <template>
     <div class="sidebar">
         <el-menu class="sidebar-el-menu" :router="true" :default-active="onRoutes" :collapse="collapse" background-color="#324157"
-            text-color="#bfcbd9" active-text-color="#20a0ff" unique-opened router>
+            text-color="#bfcbd9" active-text-color="#20a0ff" unique-opened>
             <template v-for="item in items">
                 <template v-if="item.subs&&item.role.includes(UserRole)">
                     <el-submenu  v-if="item.role.includes(UserRole)" :index="item.index" :key="item.index">

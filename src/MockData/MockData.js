@@ -383,12 +383,37 @@ Mock.mock(/ImportOrderInfo/, 'post', {
 
 })
 
-//获取当前系统消息
-Mock.mock(/GetCurrentSysMessage/, 'get',{
+//获取系统消息列表
+Mock.mock(/GetSysMessageList/, 'post',{
     "Code":200,
     "Data":{
-        "MessageContent":"这是一条用于测试的系统消息。"
+        "TotalNumber":120,
+        "Messages":[
+            {
+                "ID":23,
+                "MessageContent":"这是一条测试消息。",
+                "PublishDate":"2018-10-19 14:23:38"
+            },
+            {
+                "ID":22,
+                "MessageContent":"这是一条测试消息。",
+                "PublishDate":"2018-09-19 14:23:38"
+            }
+        ]
     }
+
+})
+
+
+//获取系统消息
+Mock.mock(/GetSysMessage([\w|\?\S*]+)/, 'get',{
+    "Code":200,
+    "Data":{
+        "ID":23,
+        "MessageContent":"这是一条用于测试的系统消息。",
+        "PublishDate":"2018-10-21 15:30:27"
+    }
+
 })
 
 //订单创建、修改
@@ -544,9 +569,9 @@ Mock.mock(/GetRMInfo([\w|\?\S*]+)/, 'get', {
 })
 
 //BMW-新建/修改经销商
-Mock.mock(/CreateOrUpdateDealer/, 'post', {
-    "Code": 200
-})
+// Mock.mock(/CreateOrUpdateDealer/, 'post', {
+//     "Code": 200
+// })
 
 //BMW-修改区域经理
 Mock.mock(/UpdateRM/, 'post', {
@@ -622,4 +647,117 @@ Mock.mock(/GetMailAddressInfo([\w|\?\S*]+)/, 'get', {
 //BMW-邮件地址修改
 Mock.mock(/UpdateMailAddress/, 'post', {
     "Code": 200
+})
+
+//BMW-新建系统消息
+Mock.mock(/CreateSysMessage/, 'post', {
+    "Code": 200
+})
+
+//BMW-删除系统消息
+Mock.mock(/DeleteSysMessage/, 'post', {
+    "Code": 200
+})
+
+//用户密码修改
+Mock.mock(/ChangePassword/, 'post', {
+    "Code": 200
+})
+
+//退出登录
+Mock.mock(/Logout/, 'get', {
+    "Code": 200
+})
+
+Mock.mock(/GetRegionProvCityList/, 'get', {
+    "Code": 200,
+    "Data":{
+        "Regions":[
+            {
+                "ID":"100001",
+                "Name":"东区",
+                "Provinces":[
+                    {
+                        "ID":"370000",
+                        "Name":"山东",
+                        "Cities":[
+                            {
+                                "ID":"370100",
+                                "Name":"济南"
+                            },
+                            {
+                                "ID":"370200",
+                                "Name":"青岛"
+                            },
+                            {
+                                "ID":"370600",
+                                "Name":"烟台"
+                            }
+                        ]
+                    },
+                    {
+                        "ID":"320000",
+                        "Name":"江苏",
+                        "Cities":[
+                            {
+                                "ID":"320100",
+                                "Name":"南京"
+                            },
+                            {
+                                "ID":"320500",
+                                "Name":"苏州"
+                            },
+                            {
+                                "ID":"320200",
+                                "Name":"无锡"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "ID":"100002",
+                "Name":"南区",
+                "Provinces":[
+                    {
+                        "ID":"430000",
+                        "Name":"湖南",
+                        "Cities":[
+                            {
+                                "ID":"430100",
+                                "Name":"长沙"
+                            },
+                            {
+                                "ID":"430400",
+                                "Name":"衡阳"
+                            },
+                            {
+                                "ID":"430200",
+                                "Name":"株洲"
+                            }
+                        ]
+                    },
+                    {
+                        "ID":"440000",
+                        "Name":"广东",
+                        "Cities":[
+                            {
+                                "ID":"440100",
+                                "Name":"广州"
+                            },
+                            {
+                                "ID":"440300",
+                                "Name":"深圳"
+                            },
+                            {
+                                "ID":"440400",
+                                "Name":"珠海"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+
 })

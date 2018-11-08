@@ -92,14 +92,21 @@ export default new Router({
 
                     path: '/systemMsg',
                     component: resolve => require(['@/views/systemSet/systemMsg'], resolve),
-                    meta: { title: '系统消息', keepAlive: true  },
+                    meta: { title: '系统消息', keepAlive: false  },
                     name: 'systemMsg'
+                },
+                {
+
+                    path: '/systemMsgNew',
+                    component: resolve => require(['@/views/systemSet/systemMsgNew'], resolve),
+                    meta: { title: '新建系统消息', keepAlive: true  },
+                    name: 'systemMsgNew'
                 },
                 {
 
                     path: '/systemPswd',
                     component: resolve => require(['@/views/systemSet/systemPswd'], resolve),
-                    meta: { title: '修改密码', permission: true, keepAlive: true  },
+                    meta: { title: '修改密码', permission: true, keepAlive: false  },
                     name: 'systemPswd'
                 },
                 {
