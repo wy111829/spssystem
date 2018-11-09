@@ -444,8 +444,7 @@ Mock.mock(/BMWApproveOrder/, 'post', {
 
 // 区域经理-设置经销商审批策略
 Mock.mock(/SetDealerApprovePolicy/, 'post', {
-    "Code": 300,
-    "Message":"错误信息"
+    "Code": 200
 })
 
 //BMW-获取经销商列表
@@ -504,7 +503,7 @@ Mock.mock(/GetDealerInfo([\w|\?\S*]+)/, 'get', {
         "FullName":"DAT中国有限公司",
         "ShortName":"DAT中国",
         "RegionID":100001,
-        "RegionName":"北区999",
+        "RegionName":"北区",
         "ProvinceID":370000,
         "ProvinceName":"北京",
         "CityID":370100,
@@ -569,9 +568,9 @@ Mock.mock(/GetRMInfo([\w|\?\S*]+)/, 'get', {
 })
 
 //BMW-新建/修改经销商
-// Mock.mock(/CreateOrUpdateDealer/, 'post', {
-//     "Code": 200
-// })
+Mock.mock(/CreateOrUpdateDealer/, 'post', {
+    "Code": 200
+})
 
 //BMW-修改区域经理
 Mock.mock(/UpdateRM/, 'post', {
@@ -669,6 +668,7 @@ Mock.mock(/Logout/, 'get', {
     "Code": 200
 })
 
+//获取区域省份城市列表
 Mock.mock(/GetRegionProvCityList/, 'get', {
     "Code": 200,
     "Data":{

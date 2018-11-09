@@ -18,12 +18,12 @@
                 <el-input v-model="Dealer.LoginName" clearable></el-input>
             </el-form-item>
             <template v-if="Dealer.DealerID == 0">
-              <el-form-item label="密码：" prop="Password">
-                  <el-input v-model="Dealer.Password" type="Password" clearable></el-input>
-              </el-form-item>
-              <el-form-item label="密码确认：" prop="Passwordagain">
-                  <el-input v-model="Dealer.Passwordagain" type="Password" clearable></el-input>
-              </el-form-item>
+                <el-form-item label="密码：" prop="Password">
+                    <el-input v-model="Dealer.Password" type="Password" clearable></el-input>
+                </el-form-item>
+                <el-form-item label="密码确认：" prop="Passwordagain">
+                    <el-input v-model="Dealer.Passwordagain" type="Password" clearable></el-input>
+                </el-form-item>
             </template>
             <el-form-item label="经销商集团：" prop="DealerGroup">
                 <el-input v-model="Dealer.DealerGroup" clearable></el-input>
@@ -56,17 +56,17 @@
                 </el-radio-group>
             </el-form-item>
             <template v-if="Dealer.DealerID != 0">
-              <el-form-item label="修改密码：" >
-                  <el-checkbox v-model="pswCheck" ></el-checkbox>
-              </el-form-item>
-              <template v-if="pswCheck">
-                <el-form-item label="密码：" prop="Password">
-                    <el-input v-model="Dealer.Password" type="Password" clearable></el-input>
+                <el-form-item label="修改密码：">
+                    <el-checkbox v-model="pswCheck"></el-checkbox>
                 </el-form-item>
-                <el-form-item label="密码确认：" prop="Passwordagain">
-                    <el-input v-model="Dealer.Passwordagain" type="Password" clearable></el-input>
-                </el-form-item>
-              </template>
+                <template v-if="pswCheck">
+                    <el-form-item label="密码：" prop="Password">
+                        <el-input v-model="Dealer.Password" type="Password" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item label="密码确认：" prop="Passwordagain">
+                        <el-input v-model="Dealer.Passwordagain" type="Password" clearable></el-input>
+                    </el-form-item>
+                </template>
             </template>
             <el-row class="text-center">
                 <el-form-item>
@@ -81,14 +81,20 @@
 
 <script>
 // import areaData from '@/defined/area.js'
-import {BMW} from '@/networks/api'
-import {mapState,mapMutations} from 'vuex'
-import {hex_sha1} from '@/utils/sha1'
-console.log(hex_sha1)
+import {
+    BMW
+} from '@/networks/api'
+import {
+    mapState,
+    mapMutations
+} from 'vuex'
+import {
+    hex_sha1
+} from '@/utils/sha1'
 export default {
     data() { //选项 / 数据
         var validatePass = (rule, value, callback) => {
-            if (value === '' || value=== undefined || value.trim() == '') {
+            if (value === '' || value === undefined || value.trim() == '') {
                 callback(new Error('请输入密码'))
             } else {
                 if (this.Dealer.Passwordagain !== '') {
@@ -98,7 +104,7 @@ export default {
             }
         }
         var validatePass2 = (rule, value, callback) => {
-            if (value === '' || value=== undefined || value.trim() == '') {
+            if (value === '' || value === undefined || value.trim() == '') {
                 callback(new Error('请再次输入密码'))
             } else if (value !== this.Dealer.Password) {
                 callback(new Error('两次输入密码不一致!'))
@@ -108,24 +114,24 @@ export default {
         }
         return {
             Dealer: {
-                // "DealerID":'',
-                // "CBU":"",
-                // "CKD":"",
-                // "FullName":"",
-                // "ShortName":"",
-                // "RegionID":"",
-                // "RegionName":"",
-                // "ProvinceID":"",
-                // "ProvinceName":"",
-                // "CityID":"",
-                // "CityName":"",
-                // "DealerGroup":"",
-                // "Status":'',
-                // "LoginName":"",
-                // "MailBox":"",
-                // Password: ''
+                "DealerID": '',
+                "CBU": "",
+                "CKD": "",
+                "FullName": "",
+                "ShortName": "",
+                "RegionID": "",
+                "RegionName": "",
+                "ProvinceID": "",
+                "ProvinceName": "",
+                "CityID": "",
+                "CityName": "",
+                "DealerGroup": "",
+                "Status": '',
+                "LoginName": "",
+                "MailBox": "",
+                Password: ''
             },
-            areaData:[],
+            areaData: [],
             rules: {
                 CBU: [{
                         required: true,
@@ -249,7 +255,7 @@ export default {
     },
     methods: { //事件处理器
         ...mapMutations([
-          'closeTags'
+            'closeTags'
         ]),
         RegionIDChange(RegionID) {
             this.ProvinceIDList = []
@@ -262,59 +268,61 @@ export default {
                     this.ProvinceIDList = item.Provinces
                 }
             })
-            console.log(this.ProvinceIDList)
         },
         ProvinceIDChange(ProvinceID) {
-            console.log('ProvinceIDChange', ProvinceID)
             this.CityIDList = []
             this.Dealer.CityID = ''
             this.ProvinceIDList.map((item) => {
                 if (item.ID == ProvinceID) {
-                  this.Dealer.ProvinceName = item.Name
-                  this.CityIDList = item.Cities
+                    this.Dealer.ProvinceName = item.Name
+                    this.CityIDList = item.Cities
                 }
             })
-            console.log(this.CityIDList)
         },
         CityIDChange(CtiyID) {
-          this.CityIDList.map((item) => {
-            if (item.ID == CtiyID) {
-              this.Dealer.CityName = item.Name
-            }
-          })
+            this.CityIDList.map((item) => {
+                if (item.ID == CtiyID) {
+                    this.Dealer.CityName = item.Name
+                }
+            })
         },
         initAreaFun() {
-          this.area.map((item) => {
-              if (item.ID == this.Dealer.RegionID) {
-                  this.ProvinceIDList = item.Provinces
-                  item.Provinces.map((citem) => {
-                      if (citem.ID == this.Dealer.ProvinceID) {
-                          this.CityIDList = citem.Cities
-                      }
-                  })
-              }
-          })
+            this.area.map((item) => {
+                if (item.ID == this.Dealer.RegionID) {
+                    this.ProvinceIDList = item.Provinces
+                    item.Provinces.map((citem) => {
+                        if (citem.ID == this.Dealer.ProvinceID) {
+                            this.CityIDList = citem.Cities
+                        }
+                    })
+                }
+            })
         },
         async CreateOrUpdateDealer() {
-          try {
-            const response = await BMW.CreateOrUpdateDealer({
-              Operation: this.Dealer.DealerID ? 'Update' : 'Create',
-              Dealer: this.Dealer
-            })
-            if (response.Code == 200) {
-                this.alertDialog()
+            if (!this.pswCheck){
+                this.$delete(this.Dealer,'Password'),
+                this.$delete(this.Dealer,'Passwordagain')
             }
-          } catch (error) {
-            console.log(error)
-          }
+            try {
+                const response = await BMW.CreateOrUpdateDealer({
+                    Operation: this.Dealer.DealerID ? 'Update' : 'Create',
+                    Dealer: this.Dealer
+                })
+                if (response.Code == 200) {
+                    this.alertDialog()
+                }
+            } catch (error) {
+                console.log(error)
+            }
         },
         submitForm(formName) {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
                     if (this.Dealer.Password) {
-                      this.Dealer.Password = hex_sha1(this.Dealer.Password)
-                      this.Dealer.Passwordagain = hex_sha1(this.Dealer.Passwordagain)
+                        this.Dealer.Password = hex_sha1(this.Dealer.Password)
+                        this.Dealer.Passwordagain = hex_sha1(this.Dealer.Passwordagain)
                     }
+                    console.log(this.Dealer)
                     this.CreateOrUpdateDealer()
                 } else {
                     alert('error submit!!');
@@ -329,7 +337,6 @@ export default {
                 })
                 this.Dealer = response.Data
                 this.initAreaFun()
-                console.log(response)
             } catch (error) {
                 console.log(error)
             }
@@ -338,7 +345,6 @@ export default {
             try {
                 const response = await BMW.GetRegionProvCityList()
                 this.area = response.Data.Regions
-                console.log(this.area)
                 this.initAreaFun()
             } catch (error) {
                 console.log(error)
@@ -372,12 +378,12 @@ export default {
         '$route': 'routeChange'
     },
     async created() { //生命周期函数
-      try {
-        await this.GetRegionProvCityList()
-        this.routeChange()
-      } catch (error) {
+        try {
+            await this.GetRegionProvCityList()
+            this.routeChange()
+        } catch (error) {
 
-      }
+        }
     }
 }
 </script>

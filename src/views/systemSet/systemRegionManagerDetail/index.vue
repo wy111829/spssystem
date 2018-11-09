@@ -27,12 +27,12 @@
                 <el-checkbox v-model="pswCheck"></el-checkbox>
             </el-form-item>
             <template v-if="pswCheck">
-              <el-form-item label="密码：" prop="Password">
-                  <el-input v-model="Data.Password" type="Password" clearable></el-input>
-              </el-form-item>
-              <el-form-item label="密码确认：" prop="Passwordagain">
-                  <el-input v-model="Data.Passwordagain" type="Password" clearable></el-input>
-              </el-form-item>
+                <el-form-item label="密码：" prop="Password">
+                    <el-input v-model="Data.Password" type="Password" clearable></el-input>
+                </el-form-item>
+                <el-form-item label="密码确认：" prop="Passwordagain">
+                    <el-input v-model="Data.Passwordagain" type="Password" clearable></el-input>
+                </el-form-item>
             </template>
             <el-row class="text-center">
                 <el-form-item>
@@ -47,13 +47,20 @@
 </template>
 
 <script>
-import {BMW} from '@/networks/api'
-import {mapState,mapMutations} from 'vuex'
-import {hex_sha1} from '@/utils/sha1'
+import {
+    BMW
+} from '@/networks/api'
+import {
+    mapState,
+    mapMutations
+} from 'vuex'
+import {
+    hex_sha1
+} from '@/utils/sha1'
 export default {
     data() {
         var validatePass = (rule, value, callback) => {
-            if (value === '' || value=== undefined || value.trim() == '') {
+            if (value === '' || value === undefined || value.trim() == '') {
                 callback(new Error('请输入密码'))
             } else {
                 if (this.Data.Passwordagain !== '') {
@@ -63,7 +70,7 @@ export default {
             }
         }
         var validatePass2 = (rule, value, callback) => {
-            if (value === '' || value=== undefined || value.trim() == '') {
+            if (value === '' || value === undefined || value.trim() == '') {
                 callback(new Error('请再次输入密码'))
             } else if (value !== this.Data.Password) {
                 callback(new Error('两次输入密码不一致!'))
@@ -71,17 +78,17 @@ export default {
                 callback()
             }
         }
-        return{
+        return {
             Data: {
-                "UserID":2,
-                "RegionID":"100001",
-                "RegionName":"东区",
-                "Name":"张无忌",
-                "LoginName":"zhangwuji",
-                "MailBox":"Test@Test.com",
-                "Mobile":"13900000000",
-                "Status":101,
-                Password:'',
+                "UserID": 2,
+                "RegionID": "100001",
+                "RegionName": "东区",
+                "Name": "张无忌",
+                "LoginName": "zhangwuji",
+                "MailBox": "Test@Test.com",
+                "Mobile": "13900000000",
+                "Status": 101,
+                Password: '',
             },
             pswCheck: false,
             rules: {
@@ -98,11 +105,11 @@ export default {
             }
         }
     },
-    methods:{
+    methods: {
         ...mapMutations([
-          'closeTags'
+            'closeTags'
         ]),
-        async UpdateRM (){
+        async UpdateRM() {
             try {
                 const response = await BMW.UpdateRM(this.Data)
                 if (response.Code == 200) {
@@ -113,13 +120,17 @@ export default {
             }
         },
         submitForm(formName) {
+            if (!this.pswCheck){
+                this.$delete(this.Data,'Password'),
+                this.$delete(this.Data,'Passwordagain')
+            }
             this.$refs[formName].validate((valid) => {
                 if (valid) {
-                  if (this.Data.Password) {
-                    this.Data.Password = hex_sha1(this.Data.Password)
-                    this.Data.Passwordagain = hex_sha1(this.Data.Passwordagain)
-                  }
-                  console.log(this.Data)
+                    if (this.Data.Password) {
+                        this.Data.Password = hex_sha1(this.Data.Password)
+                        this.Data.Passwordagain = hex_sha1(this.Data.Passwordagain)
+                    }
+                    console.log(this.Data)
                     this.UpdateRM()
                 } else {
                     alert('error submit!!');
@@ -154,14 +165,14 @@ export default {
         }
     },
     created() {
-      console.log(this.Data, this.pswCheck)
+        console.log(this.Data, this.pswCheck)
         this.GetRMInfo()
     }
 }
 </script>
 
 <style lang="less">
-.RMDetail{
+.RMDetail {
     max-width: 700px;
     margin: 0 auto;
 }

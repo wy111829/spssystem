@@ -88,7 +88,6 @@ export default {
             }
         },
         handleRadioChange(DealerID,ApproveMethod){
-            console.log(DealerID,ApproveMethod);
             this.changeApprovePolicy(DealerID,ApproveMethod)
         },
         handleCurrentChange(val) {
@@ -96,7 +95,6 @@ export default {
             this.getData();
         },
         handleSortChange(obj) {
-            console.log(obj)
             this.SortType = obj.order == 'ascending'? 'ASC' : obj.order == 'descending' ? 'DESC' : null
             this.SortField = obj.prop
             this.getData()

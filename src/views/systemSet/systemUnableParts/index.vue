@@ -7,7 +7,7 @@
                 </el-select>
             </div>
             <div class="handle-input">
-                <el-input placeholder="Typing dealer name to search" v-model="SearchValue" class="input-with-select">
+                <el-input placeholder="请输入要查询的字段" v-model="SearchValue" class="input-with-select" :disabled="!SearchField">
                     <el-button slot="append" icon="el-icon-search"></el-button>
                 </el-input>
             </div>

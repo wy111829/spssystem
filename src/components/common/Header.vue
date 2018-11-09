@@ -30,12 +30,6 @@
                     {{UserName}} <i class="el-icon-caret-bottom"></i>
                 </span>
                 <el-dropdown-menu slot="dropdown">
-                    <!-- <a href="http://blog.gdfengshuo.com/about/" target="_blank">
-                            <el-dropdown-item>关于作者</el-dropdown-item>
-                        </a>
-                        <a href="https://github.com/lin-xin/vue-manage-system" target="_blank">
-                            <el-dropdown-item>项目仓库</el-dropdown-item>
-                        </a> -->
                     <el-dropdown-item divided command="loginout">退出登录</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
@@ -52,7 +46,7 @@ export default {
         return {
             collapse: false,
             fullscreen: false,
-            name: 'linxin',
+            name: '',
             message: 2
         }
     },
@@ -72,7 +66,6 @@ export default {
             if (command == 'loginout') {
                 localStorage.removeItem('ms_username')
                 this.Logout()
-                this.$router.push('/login');
             }
         },
         // 侧边栏折叠
@@ -125,6 +118,7 @@ export default {
                 if(response.Code == 200){
                     this.closeAll(this.$route.name)
                     this.$alert('已退出登录')
+                    this.$router.push('/login');
                 }
             } catch(error){
                 console.log(error)
