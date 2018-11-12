@@ -299,10 +299,6 @@ export default {
             })
         },
         async CreateOrUpdateDealer() {
-            if (!this.pswCheck){
-                this.$delete(this.Dealer,'Password'),
-                this.$delete(this.Dealer,'Passwordagain')
-            }
             try {
                 const response = await BMW.CreateOrUpdateDealer({
                     Operation: this.Dealer.DealerID ? 'Update' : 'Create',
@@ -316,6 +312,10 @@ export default {
             }
         },
         submitForm(formName) {
+            if (!this.pswCheck){
+                this.$delete(this.Dealer,'Password'),
+                this.$delete(this.Dealer,'Passwordagain')
+            }
             this.$refs[formName].validate((valid) => {
                 if (valid) {
                     if (this.Dealer.Password) {

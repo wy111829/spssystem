@@ -24,7 +24,7 @@
                 </el-radio-group>
             </el-form-item>
             <el-form-item label="修改密码：" prop="pswCheck">
-                <el-checkbox v-model="pswCheck"></el-checkbox>
+                <el-checkbox v-model="pswCheck" ></el-checkbox>
             </el-form-item>
             <template v-if="pswCheck">
                 <el-form-item label="密码：" prop="Password">

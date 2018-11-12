@@ -239,7 +239,7 @@ export default {
     data: function() {
         return {
             Result: '', // 审批结果 “Approved”：通过 “Rejected”：不通过
-            Comment: '',
+            Comment: '', //审核备注
             detailData: {
                 DATECode: "",
                 FZA: 0,
