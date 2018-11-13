@@ -180,9 +180,20 @@
                 <div class="form-title">
                     附件
                 </div>
-                <el-upload class="upload-demo" action="/BigAccident/Action/FileUpload" :on-preview="handlePreview" :on-remove="handleRemove" :file-list="fileList" list-type="picture">
+                <el-upload class="upload-demo" action="/BigAccident/Action/FileUpload" :show-file-list="false" :headers="{'content-type': 'multipart/form-data'}" :on-preview="handlePreview" :on-remove="handleRemove" :on-success="handleFileUploadSuccess">
                     <el-button size="small" type="primary">点击上传</el-button>
                 </el-upload>
+                <div class="">
+                    <div class="" v-for="(item, index) in detailData.Attachments" :key="index">
+                        <i class="el-icon-close" @click="handleRemoveFile(index, item.DownloadFileName)"></i>
+                        <div v-if="isImg(item.FileName)" class="">
+                            <img :src="item.DownloadFileName"/> {{item.FileName}}
+                        </div>
+                        <div v-else  class="">
+                            <a :href="item.DownloadFileName">{{item.FileName}}</a>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="form-box-neworder text-center">
                 <el-button type="primary" @click="handleSaveOrder">保存但不提交</el-button>
@@ -298,6 +309,9 @@ export default {
         ...mapMutations([
             'closeTags'
         ]),
+        isImg (filename) {
+            return true
+        },
         handleDatePicker(val) {
             console.log(this.detailData.VehicleFirstRegDate, val)
             let now = new Date()
@@ -321,15 +335,38 @@ export default {
         handleRemove(file, fileList) {
             console.log(file, fileList);
         },
+        async handleRemoveFile(index, filename) { // 附件删除
+            try{
+                console.log(index, filename)
+                const response = await Dealer.FileDelete({
+                    DownloadFileName: filename
+                })
+                if (response.Code == 200) {
+                    this.detailData.Attachments.splice(index, 1)
+                }
+            } catch (error) {
+                console.log(error)
+            }
+
+        },
+        handleFileUploadSuccess(res, file) { //  附件上传成功
+            console.log(res, file)
+            if (res.Code == 200) {
+                this.detailData.Attachments.push({
+                    FileName: res.Data.FileName,
+                    DownloadFileName: res.Data.DownloadFileName,
+                    FileSize: file.size,
+                    UploadDate: new Date()
+                })
+            }
+        },
         handlePreview(file) {
             console.log(file);
         },
         handleExceed(files, fileList) {
             this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
         },
-        beforeRemove(file, fileList) {
-            return this.$confirm(`确定移除 ${ file.name }？`);
-        },
+
         onSubmit() {
 
         },

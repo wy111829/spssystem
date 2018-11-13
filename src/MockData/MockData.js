@@ -759,5 +759,18 @@ Mock.mock(/GetRegionProvCityList/, 'get', {
             }
         ]
     }
+})
 
+//附件上传
+Mock.mock(/FileUpload/, 'post', {
+    "Code": 200,
+    "Data":{
+        "FileName":"TestPic2.PNG",
+        "DownloadFileName":"92f9b43b-4f2b-4b69-98e9-84d23ae38ae2_TestPic2.PNG"
+    }
+})
+
+//附件删除
+Mock.mock(/FileDelete/, 'post', {
+    "Code": 200,
 })

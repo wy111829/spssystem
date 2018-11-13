@@ -16,8 +16,8 @@ export default {
 <style lang="less" scoped>
 .footer {
     box-sizing: border-box;
-    width: 100vw;
-    height: 50px;
+    width: 100%;
+    height: 80px;
     font-size: 13px;
     color: #fff;
     background-color: rgb(50, 65, 87);

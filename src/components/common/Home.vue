@@ -6,17 +6,18 @@
             <v-tags></v-tags>
             <div class="content">
                 <transition name="move" mode="out-in">
-                    <div>
+                    <div class="conent-box">
                         <keep-alive>
                             <router-view v-if="$route.meta.keepAlive"></router-view>
                         </keep-alive>
                         <router-view v-if="!$route.meta.keepAlive"></router-view>
+                        <v-foot></v-foot>
                     </div>
                 </transition>
             </div>
         </div>
     </div>
-    <!-- <v-foot></v-foot> -->
+
 </template>
 
 <script>
