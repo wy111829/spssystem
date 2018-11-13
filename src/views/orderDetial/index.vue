@@ -180,8 +180,9 @@
                 <div class="form-title">
                     附件
                 </div>
-                <el-form class="inline-form el-row" lebel-width="150px">
-                </el-form>
+                <el-upload class="upload-demo" action="/BigAccident/Action/FileUpload" :on-preview="handlePreview" :on-remove="handleRemove" :file-list="fileList" list-type="picture">
+                    <el-button size="small" type="primary">点击上传</el-button>
+                </el-upload>
             </div>
             <div class="form-box-neworder text-center">
                 <el-button type="primary" @click="handleSaveOrder">保存但不提交</el-button>
@@ -281,14 +282,9 @@ export default {
                 VehicleMSRP: null,
                 VehicleOwner: "",
             },
-            fileList: [{
-                    name: 'food.jpeg',
-                    url: ''
-                },
-                {
-                    name: 'food2.jpeg',
-                    url: ''
-                }
+            fileList:[
+                {name: 'img1.jpeg', url: ''},
+                {name: 'img2.jpeg', url: ''}
             ],
         }
     },

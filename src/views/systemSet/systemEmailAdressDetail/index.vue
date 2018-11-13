@@ -2,8 +2,8 @@
 <div class="main-container">
     <div class="EmailDetail">
         <el-form ref="Data" :model="Data" class="inline-form el-row" label-width="150px" :rules="rules">
-            <el-form-item label="使用人" prop="MailBoxCode">
-                <el-input v-model="Data.MailBoxCode" disabled></el-input>
+            <el-form-item label="使用人" prop="MailBoxName">
+                <el-input v-model="Data.MailBoxName" disabled></el-input>
             </el-form-item>
             <el-form-item label="邮箱" prop="MailBox">
                 <el-input v-model="Data.MailBox" clearable></el-input>
@@ -33,8 +33,10 @@ export default {
         return{
             Data:{
                 "MailBoxCode":"BodyPaint",
+                "MailBoxName":"宝马钣喷业务组",
                 "MailBox":"body-paint@list.bmw.com",
-                "StatusCode":101
+                "StatusCode":101,
+                "StatusName":"启用"
             },
             rules: {
                 MailBox: [{

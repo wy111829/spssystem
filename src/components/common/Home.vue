@@ -16,12 +16,14 @@
             </div>
         </div>
     </div>
+    <!-- <v-foot></v-foot> -->
 </template>
 
 <script>
     import vHead from './Header.vue';
     import vSidebar from './Sidebar.vue';
     import vTags from './Tags.vue';
+    import vFoot from './Footer.vue';
     import bus from './bus';
     import {mapState, mapActions} from 'vuex'
     export default {
@@ -38,7 +40,7 @@
            ])
         },
         components:{
-            vHead, vSidebar, vTags
+            vHead, vSidebar, vTags,vFoot
         },
         methods: {
             ...mapActions([

@@ -94,6 +94,7 @@ export default {
                 this.TotalNumber = response.Data.TotalNumber
                 this.Messages = response.Data.Messages
                 this.Messages.forEach((item,index)=>{
+                    //控制消息列表消息内容字数
                     item.MessageContent = item.MessageContent.substring(0,15)
                 })
             } catch (error) {
