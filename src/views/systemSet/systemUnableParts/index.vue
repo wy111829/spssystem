@@ -1,5 +1,8 @@
 <template>
     <div class="main-container">
+        <el-upload class="ImportList" action="/BigAccident/Action/ImportUnAvailablePart" :show-file-list="false" :headers="{'content-type': 'multipart/form-data'}" :on-success="handleFileUploadSuccess">
+            <el-button type="primary">导入不可订购配件清单</el-button>
+        </el-upload>
         <div class="search-box">
             <div class="sort-select">
                 <el-select v-model="SearchField" placeholder="--请选择要查询的字段--" style="width:200px">
@@ -11,7 +14,7 @@
                     <el-button slot="append" icon="el-icon-search"></el-button>
                 </el-input>
             </div>
-            <el-button type="primary" class="newOrderButton">导入不可订购配件清单</el-button>
+            <!-- <el-button type="primary" class="newOrderButton">导入不可订购配件清单</el-button> -->
             <el-table :data="SpareParts" class="table" ref="multipleTable" @sort-change="handleSortChange">
                 <el-table-column prop="PartNumber" label="零件号" sortable ></el-table-column>
                 <el-table-column prop="PartName" label="零件名称" sortable></el-table-column>
@@ -65,6 +68,12 @@ export default {
             this.SortField = obj.prop
             this.getData()
         },
+        handleFileUploadSuccess (res,file)  {
+            console.log(res,file)
+            if(res.Code == 200) {
+                this.getData()
+            }
+        },
         async getData() {
             try {
                 const response = await BMW.GetUnAvailablePartList({
@@ -93,6 +102,9 @@ export default {
 
 <style lang="less">
 .main-container {
+    .ImportList{
+        margin: 10px;
+    }
     background-color: #fff;
     padding: 10px;
     .search-box {

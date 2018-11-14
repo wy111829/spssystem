@@ -17,10 +17,10 @@ export default {
 .footer {
     box-sizing: border-box;
     width: 100%;
-    height: 80px;
+    height: 70px;
     font-size: 13px;
-    color: #fff;
-    background-color: rgb(50, 65, 87);
+    color: #c0c4cc;
+    background-color:#f0f0f0;
     text-align: center;
     span {
         display: inline-block;

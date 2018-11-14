@@ -264,13 +264,13 @@ Mock.mock(/GetOrderInfo([\w|\?\S*]+)/, 'get', {
         "Attachments":[
             {
                 "FileName":"TestPic1.PNG",
-                "DownloadFileName":"89m9b43b-4f2b-4b69-98e9-84d23ae38ae2_TestPic2.PNG",
+                "DownloadFileName":"/static/img/test.jpg",
                 "FileSize":6000,
                 "UploadDate":"2018-10-19 14:23:38"
             },
             {
-                "FileName":"TestPic2.PNG",
-                "DownloadFileName":"92f9b43b-4f2b-4b69-98e9-84d23ae38ae2_TestPic2.PNG",
+                "FileName":"TestPic2.pdf",
+                "DownloadFileName":"92f9b43b-4f2b-4b69-98e9-84d23ae38ae2_TestPic2.pdf",
                 "FileSize":6000,
                 "UploadDate":"2018-10-19 14:27:38"
             }
@@ -772,5 +772,10 @@ Mock.mock(/FileUpload/, 'post', {
 
 //附件删除
 Mock.mock(/FileDelete/, 'post', {
+    "Code": 200,
+})
+
+//BMW-不可订货配件清单导入
+Mock.mock(/ImportUnAvailablePart/, 'post', {
     "Code": 200,
 })

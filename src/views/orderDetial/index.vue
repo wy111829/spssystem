@@ -180,18 +180,22 @@
                 <div class="form-title">
                     附件
                 </div>
-                <el-upload class="upload-demo" action="/BigAccident/Action/FileUpload" :show-file-list="false" :headers="{'content-type': 'multipart/form-data'}" :on-preview="handlePreview" :on-remove="handleRemove" :on-success="handleFileUploadSuccess">
+                <el-upload action="/BigAccident/Action/FileUpload" :show-file-list="false" :headers="{'content-type': 'multipart/form-data'}" :on-success="handleFileUploadSuccess" v-bind:disabled="detailData.Attachments.length >20">
                     <el-button size="small" type="primary">点击上传</el-button>
+                    <div slot="tip" class="el-upload__tip">附件上传数量不能超过20个</div>
                 </el-upload>
-                <div class="">
-                    <div class="" v-for="(item, index) in detailData.Attachments" :key="index">
-                        <i class="el-icon-close" @click="handleRemoveFile(index, item.DownloadFileName)"></i>
-                        <div v-if="isImg(item.FileName)" class="">
-                            <img :src="item.DownloadFileName"/> {{item.FileName}}
+                <div class="Attachments">
+                    <div class="AttachmentItem" v-for="(item, index) in detailData.Attachments" :key="index">
+                        <div v-if="isImg(item.FileName)" class="AttachmentContent">
+                            <img :src="item.DownloadFileName"/>
+                            <!-- {{item.FileName}} -->
                         </div>
-                        <div v-else  class="">
-                            <a :href="item.DownloadFileName">{{item.FileName}}</a>
+                        <div v-else  class="AttachmentContent">
+                            <a :href="item.DownloadFileName">
+                                {{item.FileName}}
+                            </a>
                         </div>
+                        <el-button class="removeAttachmentItem" type="text" icon="el-icon-delete" @click="handleRemoveFile(index, item.DownloadFileName)" style="color:#ff4949">删除</el-button>
                     </div>
                 </div>
             </div>
@@ -207,6 +211,17 @@
             <div class="form-box-neworder">
                 <div class="form-title">
                     附件
+                </div>
+                <div class="Attachments">
+                    <div class="AttachmentItem" v-for="(item, index) in detailData.Attachments" :key="index">
+                        <div v-if="isImg(item.FileName)" class="AttachmentContent">
+                            <img :src="item.DownloadFileName"/>
+                            <!-- {{item.FileName}} -->
+                        </div>
+                        <div v-else  class="AttachmentContent">
+                            <a :href="item.DownloadFileName">{{item.FileName}}</a>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="form-box-neworder text-center">
@@ -310,7 +325,12 @@ export default {
             'closeTags'
         ]),
         isImg (filename) {
-            return true
+            let fileType = filename.substring(filename.indexOf(".") + 1).toUpperCase();
+            if (fileType == "PNG" || fileType == "JPG" || fileType == "JPEG" || fileType == "GIF"){
+                return true
+            } else {
+                return false
+            }
         },
         handleDatePicker(val) {
             console.log(this.detailData.VehicleFirstRegDate, val)
@@ -359,12 +379,6 @@ export default {
                     UploadDate: new Date()
                 })
             }
-        },
-        handlePreview(file) {
-            console.log(file);
-        },
-        handleExceed(files, fileList) {
-            this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
         },
 
         onSubmit() {
@@ -525,5 +539,21 @@ export default {
 }
 div.small-label {
     height: 33px;
+}
+.Attachments{
+    margin:20px 10px;
+    .AttachmentItem{
+        position: relative;
+        margin: 20px;
+        .AttachmentContent{
+            display: inline-block;
+            width: 80%;
+        }
+        .removeAttachmentItem{
+            position: absolute;
+            top:50%;
+            transform: translateY(-50%);
+        }
+    }
 }
 </style>
