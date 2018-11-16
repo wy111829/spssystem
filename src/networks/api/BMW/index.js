@@ -10,7 +10,7 @@ export default {
     CreateOrUpdateDealer: (data ={}, config ={}) => axios.post('CreateOrUpdateDealer', data, config),
     GetRMInfo:({UserID}, config ={}) => axios.get('GetRMInfo?UserID=' + UserID, config),
     UpdateRM:(data = {}, config = {}) => axios.post('UpdateRM', data, config),
-    GetUnAvailablePartList:(data = {}, config = {}) =>axios.post('GetUnAvailablePartList',data, config),
+    GetUnOrderablePartList:(data = {}, config = {}) =>axios.post('GetUnOrderablePartList',data, config),
     GetMailAddressList:(config = {}) =>axios.get('GetMailAddressList',config),
     ChangeMailAddressStatus:(data = {}, config = {}) => axios.post('ChangeMailAddressStatus', data, config),
     GetMailAddressInfo:({MailBoxCode}, config ={}) => axios.get('GetMailAddressInfo?MailBoxCode=' + MailBoxCode,config),

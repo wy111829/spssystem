@@ -180,17 +180,17 @@
                 <div class="form-title">
                     附件
                 </div>
-                <el-upload action="/BigAccident/Action/FileUpload" :show-file-list="false" :headers="{'content-type': 'multipart/form-data'}" :on-success="handleFileUploadSuccess" v-bind:disabled="detailData.Attachments.length >20">
+                <el-upload action="/BigAccident/Action/FileUpload" :show-file-list="false" :headers="{'content-type': 'multipart/form-data'}" :on-success="handleFileUploadSuccess" v-bind:disabled="detailData.Attachments&&detailData.Attachments.length >20">
                     <el-button size="small" type="primary">点击上传</el-button>
                     <div slot="tip" class="el-upload__tip">附件上传数量不能超过20个</div>
                 </el-upload>
                 <div class="Attachments">
                     <div class="AttachmentItem" v-for="(item, index) in detailData.Attachments" :key="index">
                         <div v-if="isImg(item.FileName)" class="AttachmentContent">
-                            <img :src="item.DownloadFileName"/>
+                            <img :src="item.DownloadFileName" />
                             <!-- {{item.FileName}} -->
                         </div>
-                        <div v-else  class="AttachmentContent">
+                        <div v-else class="AttachmentContent">
                             <a :href="item.DownloadFileName">
                                 {{item.FileName}}
                             </a>
@@ -215,10 +215,10 @@
                 <div class="Attachments">
                     <div class="AttachmentItem" v-for="(item, index) in detailData.Attachments" :key="index">
                         <div v-if="isImg(item.FileName)" class="AttachmentContent">
-                            <img :src="item.DownloadFileName"/>
+                            <img :src="item.DownloadFileName" />
                             <!-- {{item.FileName}} -->
                         </div>
-                        <div v-else  class="AttachmentContent">
+                        <div v-else class="AttachmentContent">
                             <a :href="item.DownloadFileName">{{item.FileName}}</a>
                         </div>
                     </div>
@@ -268,50 +268,42 @@ export default {
             Result: '', // 审批结果 “Approved”：通过 “Rejected”：不通过
             Comment: '', //审核备注
             detailData: {
-                DATECode: "",
-                FZA: 0,
-                HST: 0,
-                HT: 0,
-                UT: 0,
-                MyClaimID: "",
+                OrderID: null,
+                MyClaimID: null,
                 ReferenceNumber: "",
-                AccidentBrief: "",
-                ApplicationLogs: [],
-                Attachments: [],
-                CaseStatus: "",
-                ChurnReason: "",
-                ChurnTo: "",
-                ContractID: null,
-                HasAdditionalLabor: false,
-                InsuranceNumber: "",
-                InsuredAmount: null,
+                VehicleOwner: "",
+                PlateNumber: "",
+                VIN: "",
+                DATECode: "",
+                FZA: null,
+                HST: null,
+                HT: null,
+                UT: null,
+                SubModelID: null,
+                SubModel: "",
+                VehicleFirstRegDate: "",
+                VehicleAge: null,
+                InsurerID: null,
                 Insurer: "",
                 InsurerContactPerson: "",
-                IsCustomerChurned: false,
-                IsManufacturerPaint: true,
-                LaborCostTotal: null,
-                OrderID: 0,
-                PlateNumber: "",
-                ReferenceNumber: "",
-                RepairCostTotal: null,
-                RetentionActions: "",
-                SparePartCostTotal: null,
-                SpareParts: [],
-                Status: "",
-                StatusCode: null,
-                SubModelID: 0,
-                SubModelName: "",
-                VIN: "",
-                VehicleAge: null,
-                VehicleCurrentPrice: null,
-                VehicleFirstRegDate: "",
+                InsuranceNumber: "",
+                AccidentBrief: "",
                 VehicleMSRP: null,
-                VehicleOwner: "",
-            },
-            fileList:[
-                {name: 'img1.jpeg', url: ''},
-                {name: 'img2.jpeg', url: ''}
-            ],
+                VehicleCurrentPrice: null,
+                RepairCostTotal: null,
+                SparePartCostTotal: null,
+                LaborCostTotal: null,
+                InsuredAmount: null,
+                IsManufacturerPaint: true,
+                HasAdditionalLabor: false,
+                CaseStatus: "",
+                IsCustomerChurned: false,
+                ChurnTo: "",
+                ChurnReason: "",
+                RetentionActions: "",
+                SpareParts: [],
+                Attachments: [],
+            }
         }
     },
     computed: {
@@ -324,9 +316,9 @@ export default {
         ...mapMutations([
             'closeTags'
         ]),
-        isImg (filename) {
+        isImg(filename) {
             let fileType = filename.substring(filename.indexOf(".") + 1).toUpperCase();
-            if (fileType == "PNG" || fileType == "JPG" || fileType == "JPEG" || fileType == "GIF"){
+            if (fileType == "PNG" || fileType == "JPG" || fileType == "JPEG" || fileType == "GIF") {
                 return true
             } else {
                 return false
@@ -356,7 +348,7 @@ export default {
             console.log(file, fileList);
         },
         async handleRemoveFile(index, filename) { // 附件删除
-            try{
+            try {
                 console.log(index, filename)
                 const response = await Dealer.FileDelete({
                     DownloadFileName: filename
@@ -376,9 +368,10 @@ export default {
                     FileName: res.Data.FileName,
                     DownloadFileName: res.Data.DownloadFileName,
                     FileSize: file.size,
-                    UploadDate: new Date()
+                    UploadDate: new Date(file.uid)
                 })
             }
+
         },
 
         onSubmit() {
@@ -479,7 +472,10 @@ export default {
                 const importInfo = await Dealer.ImportOrderInfo({
                     "ReferenceNumber": this.detailData.ReferenceNumber
                 })
-                this.detailData = importInfo.Data
+                // this.detailData = importInfo.Data
+                for (var variable in importInfo.Data) {
+                    this.detailData[variable] = importInfo.Data[variable]
+                }
             } catch (error) {
                 console.log(error)
             }
@@ -540,18 +536,18 @@ export default {
 div.small-label {
     height: 33px;
 }
-.Attachments{
-    margin:20px 10px;
-    .AttachmentItem{
+.Attachments {
+    margin: 20px 10px;
+    .AttachmentItem {
         position: relative;
         margin: 20px;
-        .AttachmentContent{
+        .AttachmentContent {
             display: inline-block;
             width: 80%;
         }
-        .removeAttachmentItem{
+        .removeAttachmentItem {
             position: absolute;
-            top:50%;
+            top: 50%;
             transform: translateY(-50%);
         }
     }

@@ -5,7 +5,7 @@
         <template>
             <el-radio-group v-model="Status" @change="handleRadioChange">
                 <el-radio  :label="null">全部</el-radio>
-                <el-radio  :label="201">待提交</el-radio>
+                <el-radio  :label="201" v-if = "UserRole == 'Administrator'||UserRole == 'Dealer'">待提交</el-radio>
                 <el-radio  :label="202">待区域经理审批</el-radio>
                 <el-radio  :label="203">被区域经理退回</el-radio>
                 <el-radio  :label="204">待宝马审批</el-radio>

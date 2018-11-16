@@ -1,6 +1,6 @@
 <template>
     <div class="main-container">
-        <el-upload class="ImportList" action="/BigAccident/Action/ImportUnAvailablePart" :show-file-list="false" :headers="{'content-type': 'multipart/form-data'}" :on-success="handleFileUploadSuccess">
+        <el-upload class="ImportList" action="/BigAccident/Action/ImportUnOrderablePart" :show-file-list="false" :headers="{'content-type': 'multipart/form-data'}" :on-success="handleFileUploadSuccess">
             <el-button type="primary">导入不可订购配件清单</el-button>
         </el-upload>
         <div class="search-box">
@@ -76,7 +76,7 @@ export default {
         },
         async getData() {
             try {
-                const response = await BMW.GetUnAvailablePartList({
+                const response = await BMW.GetUnOrderablePartList({
                     "SearchField": this.SearchField,
                     "SearchValue": this.SearchValue,
                     "SortField": this.SortField,

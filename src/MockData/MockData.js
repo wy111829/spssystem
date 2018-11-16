@@ -578,7 +578,7 @@ Mock.mock(/UpdateRM/, 'post', {
 })
 
 //BMW-不可订货配件清单获取
-Mock.mock(/GetUnAvailablePartList/, 'post', {
+Mock.mock(/GetUnOrderablePartList/, 'post', {
     "Code": 200,
     "Data":{
         "TotalNumber":120,
@@ -776,6 +776,6 @@ Mock.mock(/FileDelete/, 'post', {
 })
 
 //BMW-不可订货配件清单导入
-Mock.mock(/ImportUnAvailablePart/, 'post', {
+Mock.mock(/ImportUnOrderablePart/, 'post', {
     "Code": 200,
 })
