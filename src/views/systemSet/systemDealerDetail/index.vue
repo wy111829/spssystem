@@ -2,6 +2,9 @@
 <div class="newDealer-container main-container">
     <div class="form-box-newdealer">
         <el-form class="inline-form el-row" ref="Dealer" :model="Dealer" :rules="rules" label-width="150px">
+            <el-form-item label="DAT客户编号：" prop="CustomerNumber">
+                <el-input v-model="Dealer.CustomerNumber" clearable></el-input>
+            </el-form-item>
             <el-form-item label="CBU：" prop="CBU">
                 <el-input v-model="Dealer.CBU" clearable></el-input>
             </el-form-item>
@@ -114,6 +117,7 @@ export default {
         }
         return {
             Dealer: {
+                "CustomerNumber":'',
                 "DealerID": '',
                 "CBU": "",
                 "CKD": "",
@@ -133,6 +137,18 @@ export default {
             },
             areaData: [],
             rules: {
+                CustomerNumber: [{
+                        required: true,
+                        message: '请输入DAT客户编号',
+                        trigger: 'blur'
+                    },
+                    {
+                        min: 1,
+                        max: 100,
+                        message: '长度小于100个字',
+                        trigger: 'blur'
+                    }
+                ],
                 CBU: [{
                         required: true,
                         message: '请输入CBU',

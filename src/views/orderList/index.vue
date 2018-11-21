@@ -179,7 +179,7 @@ export default {
     },
     methods: {
         handleRadioChange(val) {
-            console.log(val)
+            //console.log(val)
             this.getData()
         },
         handleSearch(val) {
@@ -189,7 +189,7 @@ export default {
             }
         },
         handleSortChange(obj) {
-            console.log(obj)
+            //console.log(obj)
             this.SortType = obj.order == 'ascending'? 'ASC' : obj.order == 'descending' ? 'DESC' : null
             this.SortField = obj.prop
             this.getData()
@@ -199,7 +199,7 @@ export default {
             this.getData();
         },
         handleEdit(index, data) {
-            console.log(index, data)
+            //console.log(index, data)
             this.$router.push({
                 name: 'orderDetial',
                 params: {

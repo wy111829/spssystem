@@ -8,7 +8,7 @@ export default {
     GetRMList: (config = {}) => axios.get('GetRMList', config),
     ChangeRMStatus:(data = {}, config = {}) => axios.post('ChangeRMStatus', data, config),
     CreateOrUpdateDealer: (data ={}, config ={}) => axios.post('CreateOrUpdateDealer', data, config),
-    GetRMInfo:({UserID}, config ={}) => axios.get('GetRMInfo?UserID=' + UserID, config),
+    GetRMInfo:({ID}, config ={}) => axios.get('GetRMInfo?ID=' + ID, config),
     UpdateRM:(data = {}, config = {}) => axios.post('UpdateRM', data, config),
     GetUnOrderablePartList:(data = {}, config = {}) =>axios.post('GetUnOrderablePartList',data, config),
     GetMailAddressList:(config = {}) =>axios.get('GetMailAddressList',config),

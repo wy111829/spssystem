@@ -34,7 +34,7 @@ export default {
         return {
             TotalNumber: 5,
             RegionManagers: [{
-                "UserID": 15,
+                "ID": 15,
                 "RegionID": "100001",
                 "RegionName": "东区",
                 "Name": "张无忌",
@@ -52,7 +52,7 @@ export default {
             this.$router.push({
                 name: 'systemRegionManagerDetail',
                 params: {
-                    id: data.UserID
+                    id: data.ID
                 }
             });
         },
@@ -70,7 +70,7 @@ export default {
             console.log(data)
             try {
                 const response = await BMW.ChangeRMStatus({
-                    "UserID": data.UserID,
+                    "ID": data.ID,
                     "Status": data.StatusCode
                 })
                 if (response.Code != 200) {

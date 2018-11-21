@@ -12,10 +12,10 @@
                 <el-input v-model="Data.LoginName"></el-input>
             </el-form-item>
             <el-form-item label="邮箱：" prop="MailBox">
-                <el-input v-model="Data.MailBox"></el-input>
+                <el-input v-model="Data.MailBox" clearable></el-input>
             </el-form-item>
             <el-form-item label="手机：" prop="Mobile">
-                <el-input v-model="Data.Mobile"></el-input>
+                <el-input v-model="Data.Mobile" clearable></el-input>
             </el-form-item>
             <el-form-item label="状态：" prop="Status">
                 <el-radio-group v-model="Data.Status">
@@ -80,13 +80,13 @@ export default {
         }
         return {
             Data: {
-                "UserID": 2,
+                "ID": 2,
                 "RegionID": "100001",
                 "RegionName": "东区",
                 "Name": "张无忌",
                 "LoginName": "zhangwuji",
                 "MailBox": "Test@Test.com",
-                "Mobile": "13900000000",
+                "Mobile": 13900000000,
                 "Status": 101,
                 Password: '',
             },
@@ -102,6 +102,28 @@ export default {
                     validator: validatePass2,
                     trigger: 'blur'
                 }],
+                MailBox: [{
+                        //required: true,
+                        message: '请输入邮箱地址',
+                        trigger: 'blur'
+                    },
+                    {
+                        type: 'email',
+                        message: '请输入正确的邮箱地址',
+                        trigger: ['blur', 'change']
+                    }
+                ],
+                // Mobile:[{
+                //         required: true,
+                //         message: '请输入手机号码',
+                //         trigger: 'blur'
+                //     },
+                //     {
+                //         type: 'number',
+                //         message: '请输入正确的手机号码',
+                //         trigger: ['blur', 'change']
+                //     }
+                // ]
             }
         }
     },
@@ -141,7 +163,7 @@ export default {
         async GetRMInfo() {
             try {
                 const response = await BMW.GetRMInfo({
-                    UserID: this.Data.UserID
+                    ID: this.Data.ID
                 })
                 this.Data = response.Data
                 // console.log(this.detailData)

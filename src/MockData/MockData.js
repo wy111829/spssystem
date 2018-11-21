@@ -498,6 +498,7 @@ Mock.mock(/GetDealerInfo([\w|\?\S*]+)/, 'get', {
     "Code": 200,
     "Data":{
         "DealerID":122122,
+        "CustomerNumber":"3550002",
         "CBU":"36153",
         "CKD":"36161",
         "FullName":"DAT中国有限公司",
@@ -522,7 +523,7 @@ Mock.mock(/GetRMList/, 'get', {
         "TotalNumber":5,
         "RegionManagers":[
             {
-                "UserID":15,
+                "ID":15,
                 "RegionID":"100001",
                 "RegionName":"东区",
                 "Name":"张无忌",
@@ -533,7 +534,7 @@ Mock.mock(/GetRMList/, 'get', {
                 "StatusName":"启用"
             },
             {
-                "UserID":16,
+                "ID":16,
                 "RegionID":"100002",
                 "RegionName":"南区",
                 "Name":"乔峰",
@@ -556,7 +557,7 @@ Mock.mock(/ChangeRMStatus/, 'post', {
 Mock.mock(/GetRMInfo([\w|\?\S*]+)/, 'get', {
     "Code":200,
     "Data":{
-        "UserID":2,
+        "ID":2,
         "RegionID":"100001",
         "RegionName":"东区",
         "Name":"张无忌",
