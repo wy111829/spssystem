@@ -30,19 +30,18 @@
     </div>
     <el-table :data="Orders" class="table" ref="multipleTable" @sort-change="handleSortChange" :default-sort="{prop: 'CreateDate', order: 'descending'}">
         <el-table-column v-for="(item, index) in tableList" :key="index" v-if="item.role.includes(UserRole)"   :prop="item.prop" :label="item.label" :sortable="item.sortable" width="100px"></el-table-column>
-        <el-table-column prop="RepairCostTotal" label="本次维修价格"></el-table-column>
-        <el-table-column label="占实际价值比">
+        <el-table-column prop="RepairCostTotal" label="本次维修价格" sortable></el-table-column>
+        <el-table-column label="占实际价值比" sortable >
             <template slot-scope="scope">
               {{Math.round(scope.row.RepairCostTotal/scope.row.VehicleCurrentPrice*10000)/100 + '%'}}
           </template>
         </el-table-column>
-        <el-table-column prop="SparePartCostTotal" label="配件费用"></el-table-column>
-        <el-table-column label="配件占比">
+        <el-table-column prop="SparePartCostTotal" label="配件费用" sortable></el-table-column>
+        <el-table-column label="配件占比" sortable>
             <template slot-scope="scope">
               {{Math.round(scope.row.SparePartCostTotal/scope.row.RepairCostTotal*10000)/100 + '%'}}
           </template>
         </el-table-column>
-        <el-table-column prop="Status" label="状态"></el-table-column>
         <el-table-column label="操作" align="center">
             <template slot-scope="scope">
                 <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
@@ -117,11 +116,12 @@ export default {
                 role:  ['Dealer','Administrator']
             },{
                 label: '保险公司',
-                value: 'Insurer',
+                value: 'InsurerName',
                 role:  ['Dealer', 'RegionManager','Administrator']
             },{
                 label: '车型',
                 value: 'SubModel',
+                sortable: true,
                 role:  ['Dealer','Administrator']
             }],
             tableList: [{
@@ -165,13 +165,18 @@ export default {
                 sortable: true,
                 role:  ['Dealer','Administrator']
             },{
-                prop: 'SubModel',
+                prop: 'SubModelName',
                 label: '车型',
                 sortable: true,
                 role:  ['Dealer','Administrator']
             },{
-                prop: 'Insurer',
+                prop: 'InsurerName',
                 label: '保险公司',
+                sortable: true,
+                role:  ['Dealer', 'RegionManager','Administrator']
+            },{
+                prop: 'StatusName',
+                label: '状态',
                 sortable: true,
                 role:  ['Dealer', 'RegionManager','Administrator']
             }]

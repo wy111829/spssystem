@@ -110,28 +110,28 @@
             </div>
             <el-form class="inline-form el-row" label-width="150px">
                 <el-form-item label="新车销售价：" class="el-col el-col-12 el-col-xs-24">
-                    <el-input v-model="detailData.VehicleMSRP"></el-input>
+                    <el-input v-model="detailData.VehicleMSRP" type="number"></el-input>
                 </el-form-item>
                 <el-form-item label="车辆实际价值：" class="el-col el-col-12 el-col-xs-24">
-                    <el-input v-model="detailData.VehicleCurrentPrice"></el-input>
+                    <el-input v-model="detailData.VehicleCurrentPrice" type="number"></el-input>
                 </el-form-item>
                 <el-form-item label="本次维修报价：" class="el-col el-col-12 el-col-xs-24">
-                    <el-input v-model="detailData.RepairCostTotal"></el-input>
+                    <el-input v-model="detailData.RepairCostTotal" type="number"></el-input>
                 </el-form-item>
                 <el-form-item label="实际价值占比：" class="el-col el-col-12 el-col-xs-24">
-                    <el-input disabled :value="detailData.VehicleCurrentPrice?Math.round(detailData.RepairCostTotal/detailData.VehicleCurrentPrice*10000)/100 + '%': ''"></el-input>
+                    <el-input readonly ref="Repair_CurrentPrice_PCT" :value="detailData.VehicleCurrentPrice?Math.round(detailData.RepairCostTotal/detailData.VehicleCurrentPrice*10000)/100 + '%': ''"></el-input>
                 </el-form-item>
                 <el-form-item label="配件费用：" class="el-col el-col-12 el-col-xs-24">
-                    <el-input v-model="detailData.SparePartCostTotal"></el-input>
+                    <el-input v-model="detailData.SparePartCostTotal" type="number"></el-input>
                 </el-form-item>
                 <el-form-item label="配件占比：" class="el-col el-col-12 el-col-xs-24">
-                    <el-input disabled :value="detailData.RepairCostTotal?Math.round(detailData.SparePartCostTotal/detailData.RepairCostTotal*10000)/100 + '%':''"></el-input>
+                    <el-input readonly ref="Part_Repair_PCT" :value="detailData.RepairCostTotal?Math.round(detailData.SparePartCostTotal/detailData.RepairCostTotal*10000)/100 + '%':''"></el-input>
                 </el-form-item>
                 <el-form-item label="工时及其他：" class="el-col el-col-12 el-col-xs-24">
-                    <el-input v-model="detailData.LaborCostTotal"></el-input>
+                    <el-input v-model="detailData.LaborCostTotal" type="number"></el-input>
                 </el-form-item>
                 <el-form-item label="保险公司估损金额：" class="el-col el-col-12 el-col-xs-24">
-                    <el-input v-model="detailData.InsuredAmount"></el-input>
+                    <el-input v-model="detailData.InsuredAmount" type="number"></el-input>
                 </el-form-item>
             </el-form>
         </div>
@@ -291,7 +291,9 @@ export default {
                 VehicleMSRP: null,
                 VehicleCurrentPrice: null,
                 RepairCostTotal: null,
+                Repair_CurrentPrice_PCT:"",
                 SparePartCostTotal: null,
+                Part_Repair_PCT:"",
                 LaborCostTotal: null,
                 InsuredAmount: null,
                 IsManufacturerPaint: true,
@@ -378,13 +380,16 @@ export default {
 
         },
         async handleSaveOrder() { // 保存并不提交-经销商
-            // 验证字段、
+            //将计算后的占比传入
+            this.detailData.Repair_CurrentPrice_PCT = parseFloat(this.$refs.Repair_CurrentPrice_PCT.value).toFixed(1)
+            this.detailData.Part_Repair_PCT = parseFloat(this.$refs.Part_Repair_PCT.value).toFixed(1)
             try {
                 const response = await Dealer.SaveOrder({
                     "Operation": this.detailData.OrderID ? 'Update' : 'Create',
                     "Order": this.detailData
                 })
                 if (response.Code == 200) {
+                    //console.log(this.detailData)
                     this.alertDialog()
                 }
             } catch (error) {
@@ -392,6 +397,9 @@ export default {
             }
         },
         async handleSubmitOrder() { // 保存并提交-经销商
+            //将计算后的占比传入
+            this.detailData.Repair_CurrentPrice_PCT = parseFloat(this.$refs.Repair_CurrentPrice_PCT.value).toFixed(1)
+            this.detailData.Part_Repair_PCT = parseFloat(this.$refs.Part_Repair_PCT.value).toFixed(1)
             try {
                 const response = await Dealer.SaveOrder({
                     "Operation": this.detailData.OrderID ? 'Update' : 'Create',
