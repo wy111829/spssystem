@@ -28,7 +28,7 @@ import {
 import {
     hex_sha1
 } from '@/utils/sha1'
-import '@/MockData/MockData'
+//import '@/MockData/MockData'
 export default {
     data: function() {
         return {
@@ -62,13 +62,13 @@ export default {
         async goLogin() {
             try {
                 const response = await General.Login({
-                    UserName: this.ruleForm.username,
+                    LoginName: this.ruleForm.username,
                     Password: hex_sha1(this.ruleForm.password)
                 })
                 if (response.Code == 200){
                     this.$router.push('/orderList')
                 }else {
-                    this.$alert('用户名或密码错误', '提示')
+                    //this.$alert('用户名或密码错误', '提示')
                 }
             } catch (error) {
                 console.log(error)

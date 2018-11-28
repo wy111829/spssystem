@@ -5,7 +5,7 @@ const portUrl = '/BigAccident/Action/'
 
 // 设置全局请求前缀
 axios.defaults.baseURL = portUrl
-
+axios.defaults.withCredentials = true
 axios.interceptors.response.use((response) => {
     // console.log('=====axios--response====', response)
     if (response.data.Code == 200) {
