@@ -180,20 +180,23 @@
                 <div class="form-title">
                     附件
                 </div>
-                <el-upload action="/BigAccident/Action/FileUpload" :show-file-list="false" :headers="{'content-type': 'multipart/form-data'}" :on-success="handleFileUploadSuccess" v-bind:disabled="detailData.Attachments&&detailData.Attachments.length >20">
+                <!-- <el-upload action="/BigAccident/Action/FileUpload" :show-file-list="false" :headers="{'content-type': 'multipart/form-data','X-Requested-With':'XMLHttpRequest'}" :on-success="handleFileUploadSuccess" v-bind:disabled="detailData.Attachments&&detailData.Attachments.length >20">
                     <el-button size="small" type="primary">点击上传</el-button>
                     <div slot="tip" class="el-upload__tip">附件上传数量不能超过20个</div>
+                </el-upload> -->
+                <el-upload action="/FileUpload" :http-request="uploadSectionFile" :show-file-list="false" v-bind:disabled="detailData.Attachments&&detailData.Attachments.length >20">
+                    <el-button type="primary">点击上传</el-button>
+                    <div slot="tip" class="el-upload__tip">附件上传数量不能超过20个</div>
                 </el-upload>
+
                 <div class="Attachments">
                     <div class="AttachmentItem" v-for="(item, index) in detailData.Attachments" :key="index">
                         <div v-if="isImg(item.FileName)" class="AttachmentContent">
-                            <img :src="item.DownloadFileName" />
+                            <img :src="ServerUrl+'BigAccident/Action/FileDownLoad?filename='+ item.DownloadFileName" />
                             <!-- {{item.FileName}} -->
                         </div>
                         <div v-else class="AttachmentContent">
-                            <a :href="item.DownloadFileName">
-                                {{item.FileName}}
-                            </a>
+                            <a :href="ServerUrl+'BigAccident/Action/FileDownLoad?filename='+ item.DownloadFileName">{{item.FileName}}</a>
                         </div>
                         <el-button class="removeAttachmentItem" type="text" icon="el-icon-delete" @click="handleRemoveFile(index, item.DownloadFileName)" style="color:#ff4949">删除</el-button>
                     </div>
@@ -215,11 +218,11 @@
                 <div class="Attachments">
                     <div class="AttachmentItem" v-for="(item, index) in detailData.Attachments" :key="index">
                         <div v-if="isImg(item.FileName)" class="AttachmentContent">
-                            <img :src="item.DownloadFileName" />
+                            <img :src="ServerUrl+'BigAccident/Action/FileDownLoad?filename='+ item.DownloadFileName" />
                             <!-- {{item.FileName}} -->
                         </div>
                         <div v-else class="AttachmentContent">
-                            <a :href="item.DownloadFileName">{{item.FileName}}</a>
+                            <a :href="ServerUrl+'BigAccident/Action/FileDownLoad?filename='+ item.DownloadFileName">{{item.FileName}}</a>
                         </div>
                     </div>
                 </div>
@@ -261,6 +264,7 @@ import {
     mapState,
     mapMutations
 } from 'vuex'
+import axios from 'axios'
 export default {
     name: 'orderDetail',
     data: function() {
@@ -270,7 +274,7 @@ export default {
             detailData: {
                 OrderID: null,
                 MyClaimID: null,
-                ReferenceNumber: "",
+                ReferenceNumber: "DAT2018-0705-170545392",
                 VehicleOwner: "",
                 PlateNumber: "",
                 VIN: "",
@@ -291,9 +295,9 @@ export default {
                 VehicleMSRP: null,
                 VehicleCurrentPrice: null,
                 RepairCostTotal: null,
-                Repair_CurrentPrice_PCT:"",
+                Repair_CurrentPrice_PCT: "",
                 SparePartCostTotal: null,
-                Part_Repair_PCT:"",
+                Part_Repair_PCT: "",
                 LaborCostTotal: null,
                 InsuredAmount: null,
                 IsManufacturerPaint: true,
@@ -311,7 +315,8 @@ export default {
     computed: {
         ...mapState([
             'UserName',
-            'UserRole'
+            'UserRole',
+            'ServerUrl'
         ])
     },
     methods: {
@@ -363,22 +368,39 @@ export default {
             }
 
         },
-        handleFileUploadSuccess(res, file) { //  附件上传成功
-            console.log(res, file)
-            if (res.Code == 200) {
-                this.detailData.Attachments.push({
-                    FileName: res.Data.FileName,
-                    DownloadFileName: res.Data.DownloadFileName,
-                    FileSize: file.size,
-                    UploadDate: new Date(file.uid)
-                })
+        handleFileUploadSuccess(Data) { //  附件上传成功
+            this.detailData.Attachments.push({
+                FileName: Data.FileName,
+                DownloadFileName: Data.DownloadFileName,
+            })
+        },
+
+        async uploadSectionFile(f) {
+            console.log(f.file)
+            let param = new FormData(); //创建form对象
+            param.append('file',f.file);//通过append向form对象添加数据
+            let config = {
+                headers:{'Content-Type':'multipart/form-data'}
+            };  //添加请求头
+            // console.log(f.action,param,config)
+            // axios.post(f.action,param,config)//上传图片
+            // .then(function(res){
+            //     console.log(res)
+            // })
+            // .catch(function (err){
+            //     console.log(err)
+            // })
+            try {
+                const response = await Dealer.FileUpload(param,config)
+                console.log(response)
+                if(response.Code == 200) {
+                    this.handleFileUploadSuccess(response.Data)
+                }
+            } catch (error) {
+                console.log(error)
             }
-
         },
 
-        onSubmit() {
-
-        },
         async handleSaveOrder() { // 保存并不提交-经销商
             //将计算后的占比传入
             this.detailData.Repair_CurrentPrice_PCT = parseFloat(this.$refs.Repair_CurrentPrice_PCT.value).toFixed(1)

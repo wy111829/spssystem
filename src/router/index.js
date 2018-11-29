@@ -57,14 +57,14 @@ export default new Router({
                 {
                     path: '/systemDealerManager',
                     component: resolve => require(['@/views/systemSet/systemDealerManager'], resolve),
-                    meta: { title: '经销商管理', keepAlive: true  },
+                    meta: { title: '经销商管理', keepAlive: false  },
                     name: 'systemDealerManager'
                 },
                 {
 
                     path: '/systemEmailAdressList',
                     component: resolve => require(['@/views/systemSet/systemEmailAdressList'], resolve),
-                    meta: { title: '邮件地址管理', keepAlive: true  },
+                    meta: { title: '邮件地址管理', keepAlive: false  },
                     name: 'systemEmailAdressList'
                 },
                 {
@@ -113,7 +113,7 @@ export default new Router({
 
                     path: '/systemRegionalManger',
                     component: resolve => require(['@/views/systemSet/systemRegionalManger'], resolve),
-                    meta: { title: '区域经理管理', permission: true, keepAlive: true  },
+                    meta: { title: '区域经理管理', permission: true, keepAlive: false  },
                     name: 'systemRegionalManger'
                 },
                 {

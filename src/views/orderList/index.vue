@@ -92,15 +92,15 @@ export default {
             TotalNumber: 0,
             selectList: [{
                 label: '区域',
-                value: 'RegionID',
+                value: 'RegionName',
                 role:  ['BMW-BP','Administrator']
             },{
                 label: '省份',
-                value: 'ProvinceID',
+                value: 'ProvinceName',
                 role:  ['RegionManager', 'BMW-BP','Administrator']
             },{
                 label: '城市',
-                value: 'CityID',
+                value: 'CityName',
                 role:  ['RegionManager', 'BMW-BP','Administrator']
             },{
                 label: '经销商名称',
@@ -114,13 +114,15 @@ export default {
                 label: 'VIN码',
                 value: 'VIN',
                 role:  ['Dealer','Administrator']
-            },{
-                label: '保险公司',
-                value: 'InsurerName',
-                role:  ['Dealer', 'RegionManager','Administrator']
-            },{
+            },
+            // {
+            //     label: '保险公司',
+            //     value: 'InsurerName',
+            //     role:  ['Dealer', 'RegionManager','Administrator']
+            // },
+            {
                 label: '车型',
-                value: 'SubModel',
+                value: 'SubModelName',
                 sortable: true,
                 role:  ['Dealer','Administrator']
             }],

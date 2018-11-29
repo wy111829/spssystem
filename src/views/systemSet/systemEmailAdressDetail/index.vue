@@ -1,12 +1,12 @@
 <template>
 <div class="main-container">
     <div class="EmailDetail">
-        <el-form ref="Data" :model="Data" class="inline-form el-row" label-width="150px" :rules="rules">
+        <el-form ref="Data" :model="Data" class="inline-form el-row" label-width="150px">
             <el-form-item label="使用人" prop="MailBoxName">
                 <el-input v-model="Data.MailBoxName" disabled></el-input>
             </el-form-item>
             <el-form-item label="邮箱" prop="MailBox">
-                <el-input v-model="Data.MailBox" clearable></el-input>
+                <el-input v-model="Data.MailBoxAddress" clearable></el-input>
             </el-form-item>
             <el-form-item label="状态：" prop="StatusCode">
                 <el-radio-group v-model="Data.StatusCode">
@@ -34,7 +34,7 @@ export default {
             Data:{
                 "MailBoxCode":"BodyPaint",
                 "MailBoxName":"宝马钣喷业务组",
-                "MailBox":"body-paint@list.bmw.com",
+                "MailBoxAddress":"body-paint@list.bmw.com",
                 "StatusCode":101,
                 "StatusName":"启用"
             },
@@ -59,7 +59,11 @@ export default {
         ]),
         async UpdateMailAddress (){
             try {
-                const response = await BMW.UpdateMailAddress(this.Data)
+                const response = await BMW.UpdateMailAddress({
+                    "MailBoxCode":this.Data.MailBoxCode,
+                    "MailBox":this.Data.MailBoxAddress,
+                    "StatusCode":this.Data.StatusCode
+                })
                 if (response.Code == 200) {
                     this.alertDialog()
                 }
@@ -76,6 +80,12 @@ export default {
                     return false;
                 }
             })
+        },
+        routeChange() {
+            this.Data.MailBoxCode = this.$route.params.id ? this.$route.params.id : 0
+            if (this.Data.MailBoxCode ) {
+                this.GetMailAddressInfo()
+            }
         },
         async GetMailAddressInfo() {
             try {
@@ -102,8 +112,11 @@ export default {
             })
         }
     },
+    watch: {
+        '$route': 'routeChange'
+    },
     created() {
-        this.GetMailAddressInfo()
+        this.routeChange()
     }
 }
 </script>

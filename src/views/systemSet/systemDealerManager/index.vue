@@ -56,19 +56,19 @@ export default {
             RowOffset: 0,
             RowCount: 6,
             tableList: [{
-                "DealerID": 122121,
-                "CBU": "36133",
-                "CKD": "36131",
-                "ShortName": "北京华德宝",
-                "RegionID": "100004",
-                "RegionName": "北区",
-                "ProvinceID": "110000",
-                "ProvinceName": "北京",
-                "CityID": "110100",
-                "CityName": "北京",
-                "DealerGroup": "北京经销商集团",
-                "StatusCode": 101,
-                "StatusName": "启用"
+                "DealerID": 0,
+                "CBU": "",
+                "CKD": "",
+                "ShortName": "",
+                "RegionID": "",
+                "RegionName": "",
+                "ProvinceID": "",
+                "ProvinceName": "",
+                "CityID": "",
+                "CityName": "",
+                "DealerGroup": "",
+                "StatusCode": 0,
+                "StatusName": ""
             }],
             selectList: [{
                 label: 'CBU',
@@ -132,7 +132,7 @@ export default {
             try {
                 const response = await BMW.ChangeDealerStatus({
                     "DealerID": data.DealerID,
-                    "Status": data.StatusCode
+                    "StatusCode": data.StatusCode
                 })
                 if (response.Code != 200) {
                     this.tableList[index].StatusCode = data.StatusCode == 101 ? 102 : 101

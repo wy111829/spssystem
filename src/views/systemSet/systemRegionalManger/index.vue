@@ -48,7 +48,7 @@ export default {
     },
     methods: { //事件处理器
         handleEdit(index, data) {
-            console.log(index, data)
+            console.log(data.ID)
             this.$router.push({
                 name: 'systemRegionManagerDetail',
                 params: {
@@ -71,7 +71,7 @@ export default {
             try {
                 const response = await BMW.ChangeRMStatus({
                     "ID": data.ID,
-                    "Status": data.StatusCode
+                    "StatusCode": data.StatusCode
                 })
                 if (response.Code != 200) {
                     this.tableList[index].StatusCode = data.StatusCode == 101 ? 102 : 101

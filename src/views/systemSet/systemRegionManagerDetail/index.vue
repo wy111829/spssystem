@@ -17,8 +17,8 @@
             <el-form-item label="手机：" prop="Mobile">
                 <el-input v-model="Data.Mobile" clearable></el-input>
             </el-form-item>
-            <el-form-item label="状态：" prop="Status">
-                <el-radio-group v-model="Data.Status">
+            <el-form-item label="状态：" prop="StatusCode">
+                <el-radio-group v-model="Data.StatusCode">
                     <el-radio :label="101">启用</el-radio>
                     <el-radio :label="102">停用</el-radio>
                 </el-radio-group>
@@ -80,14 +80,14 @@ export default {
         }
         return {
             Data: {
-                "ID": 2,
-                "RegionID": "100001",
-                "RegionName": "东区",
-                "Name": "张无忌",
-                "LoginName": "zhangwuji",
-                "MailBox": "Test@Test.com",
-                "Mobile": 13900000000,
-                "Status": 101,
+                "ID":null,
+                "RegionID": "",
+                "RegionName": "",
+                "Name": "",
+                "LoginName": "",
+                "MailBox": "",
+                "Mobile": 0,
+                "StatusCode": 0,
                 Password: '',
             },
             pswCheck: false,
@@ -171,6 +171,12 @@ export default {
                 console.log(error)
             }
         },
+        routeChange() {
+            this.Data.ID = this.$route.params.id ? this.$route.params.id : 0
+            if (this.Data.ID) {
+                this.GetRMInfo()
+            }
+        },
         alertDialog() {
             this.$alert('操作完成，返回区域经理列表', '提示', {
                 confirmButtonText: '确定',
@@ -186,9 +192,11 @@ export default {
             })
         }
     },
+    watch: {
+        '$route': 'routeChange'
+    },
     created() {
-        console.log(this.Data, this.pswCheck)
-        this.GetRMInfo()
+        this.routeChange()
     }
 }
 </script>

@@ -52,8 +52,8 @@
             <el-form-item label="邮箱：" prop="MailBox">
                 <el-input v-model="Dealer.MailBox" clearable></el-input>
             </el-form-item>
-            <el-form-item label="状态：" prop="Status">
-                <el-radio-group v-model="Dealer.Status">
+            <el-form-item label="状态：" prop="StatusCode">
+                <el-radio-group v-model="Dealer.StatusCode">
                     <el-radio :label="101">启用</el-radio>
                     <el-radio :label="102">停用</el-radio>
                 </el-radio-group>
@@ -130,7 +130,7 @@ export default {
                 "CityID": "",
                 "CityName": "",
                 "DealerGroup": "",
-                "Status": '',
+                "StatusCode": '',
                 "LoginName": "",
                 "MailBox": "",
                 Password: ''
