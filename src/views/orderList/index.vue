@@ -12,6 +12,7 @@
                 <el-radio  :label="205">被宝马退回</el-radio>
                 <el-radio  :label="206">待上传工单和发票</el-radio>
                 <el-radio  :label="207">已完成</el-radio>
+                <el-radio  :label="208">已删除</el-radio>
             </el-radio-group>
         </template>
         <div class="sort-select">
@@ -20,12 +21,12 @@
             </el-select>
         </div>
         <div class="handle-input">
-            <el-input placeholder="VIN search" v-model="SearchValue" :disabled="!SearchField" class="input-with-select">
+            <el-input placeholder="" v-model="SearchValue" :disabled="!SearchField" class="input-with-select">
                 <el-button slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
             </el-input>
         </div>
-        <router-link class="button" to="/orderDetial">
-            <el-button type="primary" class="newOrderButton">新建订单</el-button>
+        <router-link class="button" to="/orderDetial" v-if = "UserRole == 'Dealer'">
+            <el-button type="primary" class="newOrderButton" style="font-size:13px">新建订单</el-button>
         </router-link>
     </div>
     <el-table :data="Orders" class="table" ref="multipleTable" @sort-change="handleSortChange" :default-sort="{prop: 'CreateDate', order: 'descending'}">
@@ -63,12 +64,12 @@ export default {
     data() {
         return {
             Status: 0,
-            SearchField: null,
-            SearchValue: null,
-            SortField: null,
-            SortType: null,
+            SearchField: '',
+            SearchValue: '',
+            SortField: '',
+            SortType: '',
             RowOffset: 0,
-            RowCount: 6,
+            RowCount: 20,
             Orders: [{
                 "OrderID": 122121,
                 "ReferenceNumber": "DAT-20181019152745251",
@@ -278,6 +279,7 @@ export default {
         display: inline-block;
     }
     .table {
+        margin-top: 0;
         width: 100%;
         font-size: 14px;
         .has-gutter {
@@ -287,6 +289,8 @@ export default {
             }
         }
     }
-
+    .el-input--small .el-input__inner {
+        height: 34px;
+    }
 }
 </style>

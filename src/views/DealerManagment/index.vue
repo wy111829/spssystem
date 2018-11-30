@@ -3,15 +3,12 @@
     <div class="search-box">
         <div class="sort-select">
             <el-select v-model="SearchField" placeholder="--请选择要查询的字段--" style="width:200px">
-                <el-option label="车牌号" value="PlateNumber"></el-option>
-                <el-option label="VIN码" value="VIN"></el-option>
-                <el-option label="保险公司" value="Insurer"></el-option>
-                <el-option label="车型" value="SubModel"></el-option>
+                <el-option v-for="(item, index) in selectList" :key="index" :label="item.label" :value="item.value"></el-option>
             </el-select>
         </div>
         <div class="handle-input">
             <el-input placeholder="VIN search" v-model="SearchValue" class="input-with-select">
-                <el-button slot="append" icon="el-icon-search"></el-button>
+                <el-button slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
             </el-input>
         </div>
     </div>
@@ -48,13 +45,35 @@ export default {
     data() {
         return {
             tableList: [],
-            SearchField: null,
-            SearchValue: null,
-            SortField: null,
-            SortType: null,
+            SearchField: '',
+            SearchValue: '',
+            SortField: '',
+            SortType: '',
             RowOffset: 0,
             RowCount: 20,
-            TotalNumber: 0
+            TotalNumber: 0,
+            selectList: [{
+                label: 'CBU',
+                value: 'CBU',
+            }, {
+                label: 'CKD',
+                value: 'CKD',
+            }, {
+                label: '经销商名称',
+                value: 'DealerName',
+            }, {
+                label: '经销商集团',
+                value: 'DealerGroup',
+            }, {
+                label: '省份',
+                value: 'ProvinceName',
+            }, {
+                label: '城市',
+                value: 'CityName',
+            },{
+                label: '审批策略',
+                value: 'ApproveMethod'
+            }]
         }
     },
     methods: {
@@ -85,6 +104,12 @@ export default {
                 }
             }catch(error){
                 console.log(error)
+            }
+        },
+        handleSearch(val) {
+            if (this.SearchValue.trim()) {
+                this.SearchValue = this.SearchValue.trim()
+                this.getData()
             }
         },
         handleRadioChange(DealerID,ApproveMethod){

@@ -2,7 +2,7 @@
 <div class="main-container">
     <!-- <el-button type="primary" class="newOrderButton" @click="dialogFormVisible=true">新建邮箱地址</el-button> -->
     <el-table :data="MailAddresses" class="table" ref="multipleTable">
-        <el-table-column prop="MailBox" label="邮箱"></el-table-column>
+        <el-table-column prop="MailBoxAddress" label="邮箱"></el-table-column>
         <el-table-column prop="MailBoxName" label="使用人"></el-table-column>
         <el-table-column prop="StatusName" label="状态">
             <template slot-scope="scope">
@@ -52,7 +52,7 @@ export default {
             MailAddresses: [{
                 "MailBoxCode":"BodyPaint",
                 "MailBoxName":"宝马钣喷业务组",
-                "MailBox":"body-paint@list.bmw.com",
+                "MailBoxAddress":"body-paint@list.bmw.com",
                 "StatusCode":101,
                 "StatusName":"启用"
             }],

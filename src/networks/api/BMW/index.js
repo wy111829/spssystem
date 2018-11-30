@@ -18,4 +18,5 @@ export default {
     CreateSysMessage:(data = {}, config = {}) => axios.post('CreateSysMessage', data, config),
     DeleteSysMessage:(data = {}, config = {}) => axios.post('DeleteSysMessage', data, config),
     GetRegionProvCityList:(config = {}) => axios.get('GetRegionProvCityList', config),
+    ImportUnOrderablePart: (obj, config = {}) =>axios.post('ImportUnOrderablePart',obj, config)
 }

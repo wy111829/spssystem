@@ -41,13 +41,13 @@
                         title: '订单列表',
                         role: ['Dealer', 'RegionManager', 'BMW-BP','Administrator']
                     },
-                    {
-                        icon: 'el-icon-lx-copy',
-                        name: 'report',
-                        title: '统计分析',
-                        index: '2',
-                        role:  ['Dealer', 'RegionManager', 'BMW-BP','Administrator']
-                    },
+                    // {
+                    //     icon: 'el-icon-lx-copy',
+                    //     name: 'report',
+                    //     title: '统计分析',
+                    //     index: '2',
+                    //     role:  ['Dealer', 'RegionManager', 'BMW-BP','Administrator']
+                    // },
                     {
                         icon: 'el-icon-lx-copy',
                         name: 'DealerManagment',

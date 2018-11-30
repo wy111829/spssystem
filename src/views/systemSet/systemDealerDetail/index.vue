@@ -328,9 +328,11 @@ export default {
             }
         },
         submitForm(formName) {
-            if (!this.pswCheck){
-                this.$delete(this.Dealer,'Password'),
-                this.$delete(this.Dealer,'Passwordagain')
+            if (this.Dealer.DealerID != 0){
+                if (!this.pswCheck){
+                    this.$delete(this.Dealer,'Password'),
+                    this.$delete(this.Dealer,'Passwordagain')
+                }
             }
             this.$refs[formName].validate((valid) => {
                 if (valid) {

@@ -7,8 +7,8 @@
             </el-select>
         </div>
         <div class="handle-input">
-            <el-input placeholder="Typing dealer name to search" v-model="SearchValue" class="input-with-select">
-                <el-button slot="append" icon="el-icon-search"></el-button>
+            <el-input placeholder="" :disabled="!SearchField" v-model="SearchValue" class="input-with-select">
+                <el-button slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
             </el-input>
         </div>
         <router-link to="/systemDealerDetail" class="button">
@@ -18,7 +18,7 @@
     <el-table :data="tableList" class="table" ref="multipleTable" @sort-change="handleSortChange">
         <el-table-column prop="CBU" label="CBU" sortable></el-table-column>
         <el-table-column prop="CKD" label="CKD" sortable></el-table-column>
-        <el-table-column prop="ShortName" label="经销商名称（简称）" sortable></el-table-column>
+        <el-table-column prop="DealerName" label="经销商名称（简称）" sortable></el-table-column>
         <el-table-column prop="RegionName" label="地区"></el-table-column>
         <el-table-column prop="ProvinceName" label="省份" sortable></el-table-column>
         <el-table-column prop="CityName" label="城市" sortable></el-table-column>
@@ -48,10 +48,10 @@ import {
 export default {
     data() { //选项 / 数据
         return {
-            SearchField: null,
+            SearchField: '',
             SearchValue: '',
-            SortField: null,
-            SortType: null,
+            SortField: '',
+            SortType: '',
             TotalNumber: 0,
             RowOffset: 0,
             RowCount: 6,
@@ -59,7 +59,7 @@ export default {
                 "DealerID": 0,
                 "CBU": "",
                 "CKD": "",
-                "ShortName": "",
+                "DealerName": "",
                 "RegionID": "",
                 "RegionName": "",
                 "ProvinceID": "",
@@ -111,6 +111,12 @@ export default {
                     id: data.DealerID
                 }
             });
+        },
+        handleSearch(val) {
+            if (this.SearchValue.trim()) {
+                this.SearchValue = this.SearchValue.trim()
+                this.getData()
+            }
         },
         async getData() {
             try {
@@ -191,6 +197,8 @@ export default {
             }
         }
     }
-
+    .el-input--small .el-input__inner {
+        height: 34px;
+    }
 }
 </style>

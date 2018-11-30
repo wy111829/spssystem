@@ -1,15 +1,15 @@
 <template>
 <div class="login-wrap">
     <div class="ms-login">
-        <div class="ms-title">后台管理系统</div>
+        <div class="ms-title">大事故车配件支持系统</div>
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="0px" class="ms-content">
             <el-form-item prop="username">
-                <el-input v-model="ruleForm.username" placeholder="username">
+                <el-input v-model="ruleForm.username" placeholder="请输入账号">
                     <el-button slot="prepend" icon="el-icon-lx-people"></el-button>
                 </el-input>
             </el-form-item>
             <el-form-item prop="password">
-                <el-input type="password" placeholder="password" v-model="ruleForm.password" @keyup.enter.native="submitForm('ruleForm')">
+                <el-input type="password" placeholder="请输入密码" v-model="ruleForm.password" @keyup.enter.native="submitForm('ruleForm')">
                     <el-button slot="prepend" icon="el-icon-lx-lock"></el-button>
                 </el-input>
             </el-form-item>
@@ -33,8 +33,8 @@ export default {
     data: function() {
         return {
             ruleForm: {
-                username: 'dealertest1',
-                password: 'dealertest1'
+                username: '',
+                password: ''
             },
             rules: {
                 username: [{

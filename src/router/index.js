@@ -33,7 +33,7 @@ export default new Router({
                 {
                     path: '/orderList',
                     component: resolve => require(['@/views/orderList'], resolve),
-                    meta: { title: '订单列表', keepAlive: true  },
+                    meta: { title: '订单列表', keepAlive: false  },
                     name: 'orderList'
                 },
                 {

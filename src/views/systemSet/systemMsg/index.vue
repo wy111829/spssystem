@@ -71,7 +71,6 @@ export default {
         },
         handleDelet(data){
             this.DeleteSysMessage(data)
-            this.GetSysMessageList()
         },
         async DeleteSysMessage(data) {
             try {
@@ -79,6 +78,7 @@ export default {
                     ID : data.ID
                 })
                 if (response.Code == 200) {
+                    this.GetSysMessageList()
                     this.$alert('删除成功')
                 }
             } catch (error) {

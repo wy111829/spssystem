@@ -141,7 +141,7 @@
             </div>
             <el-form class="inline-form el-row" label-width="150px">
                 <el-form-item label="车龄（月）：" class="el-col el-col-12 el-col-xs-24">
-                    <el-input disabled v-model="detailData.VehicleAge"></el-input>
+                    <el-input readonly v-model="detailData.VehicleAge"></el-input>
                 </el-form-item>
                 <el-form-item label="是否流失：" class="el-col el-col-12 el-col-xs-24 small-label">
                     <el-radio-group v-model="detailData.IsCustomerChurned">
@@ -192,11 +192,11 @@
                 <div class="Attachments">
                     <div class="AttachmentItem" v-for="(item, index) in detailData.Attachments" :key="index">
                         <div v-if="isImg(item.FileName)" class="AttachmentContent">
-                            <img :src="ServerUrl+'BigAccident/Action/FileDownLoad?filename='+ item.DownloadFileName" />
+                            <img :src="ServerUrl+'/BigAccident/Action/FileDownLoad?filename='+ item.DownloadFileName" />
                             <!-- {{item.FileName}} -->
                         </div>
                         <div v-else class="AttachmentContent">
-                            <a :href="ServerUrl+'BigAccident/Action/FileDownLoad?filename='+ item.DownloadFileName">{{item.FileName}}</a>
+                            <a :href="ServerUrl+'/BigAccident/Action/FileDownLoad?filename='+ item.DownloadFileName">{{item.FileName}}</a>
                         </div>
                         <el-button class="removeAttachmentItem" type="text" icon="el-icon-delete" @click="handleRemoveFile(index, item.DownloadFileName)" style="color:#ff4949">删除</el-button>
                     </div>
@@ -218,11 +218,11 @@
                 <div class="Attachments">
                     <div class="AttachmentItem" v-for="(item, index) in detailData.Attachments" :key="index">
                         <div v-if="isImg(item.FileName)" class="AttachmentContent">
-                            <img :src="ServerUrl+'BigAccident/Action/FileDownLoad?filename='+ item.DownloadFileName" />
+                            <img :src="ServerUrl+'/BigAccident/Action/FileDownLoad?filename='+ item.DownloadFileName" />
                             <!-- {{item.FileName}} -->
                         </div>
                         <div v-else class="AttachmentContent">
-                            <a :href="ServerUrl+'BigAccident/Action/FileDownLoad?filename='+ item.DownloadFileName">{{item.FileName}}</a>
+                            <a :href="ServerUrl+'/BigAccident/Action/FileDownLoad?filename='+ item.DownloadFileName">{{item.FileName}}</a>
                         </div>
                     </div>
                 </div>
@@ -272,8 +272,8 @@ export default {
             Result: '', // 审批结果 “Approved”：通过 “Rejected”：不通过
             Comment: '', //审核备注
             detailData: {
-                OrderID: null,
-                MyClaimID: null,
+                OrderID: 0,
+                MyClaimID: 0,
                 ReferenceNumber: "DAT2018-0705-170545392",
                 VehicleOwner: "",
                 PlateNumber: "",
@@ -283,23 +283,23 @@ export default {
                 HST: null,
                 HT: null,
                 UT: null,
-                SubModelID: null,
-                SubModel: "",
+                SubModelID: 0,
+                SubModelName: "",
                 VehicleFirstRegDate: "",
-                VehicleAge: null,
-                InsurerID: null,
-                Insurer: "",
+                VehicleAge: 0,
+                InsurerID: 0,
+                InsurerName: "",
                 InsurerContactPerson: "",
                 InsuranceNumber: "",
                 AccidentBrief: "",
-                VehicleMSRP: null,
-                VehicleCurrentPrice: null,
-                RepairCostTotal: null,
-                Repair_CurrentPrice_PCT: "",
-                SparePartCostTotal: null,
-                Part_Repair_PCT: "",
-                LaborCostTotal: null,
-                InsuredAmount: null,
+                VehicleMSRP: 0,
+                VehicleCurrentPrice: 0,
+                RepairCostTotal: 0,
+                Repair_CurrentPrice_PCT: 0,
+                SparePartCostTotal: 0,
+                Part_Repair_PCT: 0,
+                LaborCostTotal: 0,
+                InsuredAmount: 0,
                 IsManufacturerPaint: true,
                 HasAdditionalLabor: false,
                 CaseStatus: "",
@@ -582,4 +582,5 @@ div.small-label {
         }
     }
 }
+
 </style>

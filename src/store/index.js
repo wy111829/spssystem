@@ -14,7 +14,7 @@ const store = new Vuex.Store({
         UserRole: '',
         UserName: '',
         tagsList: [],
-        ServerUrl : 'http://172.18.86.80:8080/'
+        ServerUrl : ''
     },
     mutations: {
         setTagsList: (state, payload) => {
