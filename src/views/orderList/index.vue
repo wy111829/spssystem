@@ -43,6 +43,7 @@
               {{Math.round(scope.row.SparePartCostTotal/scope.row.RepairCostTotal*10000)/100 + '%'}}
           </template>
         </el-table-column>
+        <el-table-column label="状态" sortable prop="StatusName"></el-table-column>
         <el-table-column label="操作" align="center">
             <template slot-scope="scope">
                 <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
@@ -71,24 +72,24 @@ export default {
             RowOffset: 0,
             RowCount: 20,
             Orders: [{
-                "OrderID": 122121,
-                "ReferenceNumber": "DAT-20181019152745251",
-                "CreateDate": "2018-10-19",
-                "RegionID": "100004",
-                "RegionName": "北区",
-                "ProvinceID": "110000",
-                "ProvinceName": "北京",
-                "CityID": "110100",
-                "CityName": "北京",
-                "PlateNumber": "京N88888",
-                "VIN": "LBVPZ1100ASD77412",
-                "SubModel": "520Li",
-                "Insurer": "中国人保",
-                "RepairCostTotal": 10726,
-                "VehicleCurrentPrice": 92000,
-                "SparePartCostTotal": 8000,
-                "StatusCode": 201,
-                "Status": "待提交"
+                "OrderID": 0,
+                "ReferenceNumber": "",
+                "CreateDate": "",
+                "RegionID": "",
+                "RegionName": "",
+                "ProvinceID": "",
+                "ProvinceName": "",
+                "CityID": "",
+                "CityName": "",
+                "PlateNumber": "",
+                "VIN": "",
+                "SubModel": "",
+                "Insurer": "",
+                "RepairCostTotal": 0,
+                "VehicleCurrentPrice": 0,
+                "SparePartCostTotal": 0,
+                "StatusCode": 0,
+                "Status": ""
             }],
             TotalNumber: 0,
             selectList: [{
@@ -175,11 +176,6 @@ export default {
             },{
                 prop: 'InsurerName',
                 label: '保险公司',
-                sortable: true,
-                role:  ['Dealer', 'RegionManager','Administrator']
-            },{
-                prop: 'StatusName',
-                label: '状态',
                 sortable: true,
                 role:  ['Dealer', 'RegionManager','Administrator']
             }]

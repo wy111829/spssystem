@@ -3,7 +3,7 @@
     <div class="RMDetail">
         <el-form ref="Data" :model="Data" class="inline-form el-row" label-width="150px" :rules="rules">
             <el-form-item label="地区：" prop="RegionName">
-                <el-input v-model="Data.RegionName" disabled></el-input>
+                <el-input v-model="Data.RegionName" readonly ></el-input>
             </el-form-item>
             <el-form-item label="区域经理姓名：" prop="Name">
                 <el-input v-model="Data.Name"></el-input>

@@ -7,7 +7,7 @@
             </el-select>
         </div>
         <div class="handle-input">
-            <el-input placeholder="VIN search" v-model="SearchValue" class="input-with-select">
+            <el-input placeholder="" v-model="SearchValue" class="input-with-select" :disabled="!SearchField">
                 <el-button slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
             </el-input>
         </div>

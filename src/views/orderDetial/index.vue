@@ -83,7 +83,7 @@
                 <el-table-column prop="Price" label="单价" sortable show-overflow-tooltip>
                 </el-table-column>
                 <el-table-column label="总价" show-overflow-tooltip>
-                    <template slot-scope="scope">{{scope.row.Quantity*scope.row.Price}}</template>
+                    <template slot-scope="scope">{{scope.row.Price?scope.row.Quantity*scope.row.Price:''}}</template>
                 </el-table-column>
                 <el-table-column prop="IsOrdered" label="订购">
                     <template slot-scope="scope">
@@ -108,11 +108,11 @@
             <div class="form-title">
                 本次维修成本
             </div>
-            <el-form class="inline-form el-row" label-width="150px">
-                <el-form-item label="新车销售价：" class="el-col el-col-12 el-col-xs-24">
+            <el-form class="inline-form el-row" label-width="150px" :rules="rules" ref='detailData' :model="detailData">
+                <el-form-item label="新车销售价：" class="el-col el-col-12 el-col-xs-24" prop="VehicleMSRP">
                     <el-input v-model="detailData.VehicleMSRP" type="number"></el-input>
                 </el-form-item>
-                <el-form-item label="车辆实际价值：" class="el-col el-col-12 el-col-xs-24">
+                <el-form-item label="车辆实际价值：" class="el-col el-col-12 el-col-xs-24" prop="VehicleCurrentPrice">
                     <el-input v-model="detailData.VehicleCurrentPrice" type="number"></el-input>
                 </el-form-item>
                 <el-form-item label="本次维修报价：" class="el-col el-col-12 el-col-xs-24">
@@ -203,8 +203,8 @@
                 </div>
             </div>
             <div class="form-box-neworder text-center">
-                <el-button type="primary" @click="handleSaveOrder">保存但不提交</el-button>
-                <el-button type="primary" @click="handleSubmitOrder">保存并提交</el-button>
+                <el-button type="primary" @click="submitToSaveOrder('detailData')">保存但不提交</el-button>
+                <el-button type="primary" @click="submitToSubmitOrder('detailData')">保存并提交</el-button>
                 <el-button @click="handleGoBack">取消</el-button>
                 <el-button type="danger" @click="handleDeleteOrder">删除</el-button>
             </div>
@@ -274,7 +274,7 @@ export default {
             detailData: {
                 OrderID: 0,
                 MyClaimID: 0,
-                ReferenceNumber: "DAT2018-0705-170545392",
+                ReferenceNumber: "",
                 VehicleOwner: "",
                 PlateNumber: "",
                 VIN: "",
@@ -292,8 +292,8 @@ export default {
                 InsurerContactPerson: "",
                 InsuranceNumber: "",
                 AccidentBrief: "",
-                VehicleMSRP: 0,
-                VehicleCurrentPrice: 0,
+                VehicleMSRP: '',
+                VehicleCurrentPrice: '',
                 RepairCostTotal: 0,
                 Repair_CurrentPrice_PCT: 0,
                 SparePartCostTotal: 0,
@@ -309,6 +309,14 @@ export default {
                 RetentionActions: "",
                 SpareParts: [],
                 Attachments: [],
+            },
+            rules:{
+                VehicleMSRP:[
+                    {required: true, message: '请输入新车销售价',trigger: 'blur'}
+                ],
+                VehicleCurrentPrice:[
+                    {required: true, message: '车辆实际价值',trigger: 'blur'}
+                ]
             }
         }
     },
@@ -453,7 +461,26 @@ export default {
                 console.log(e)
             }
         },
-
+        submitToSaveOrder(formName){
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    this.handleSaveOrder()
+                } else {
+                    alert('error submit!!');
+                    return false;
+                }
+            })
+        },
+        submitToSubmitOrder(formName){
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    this.handleSubmitOrder()
+                } else {
+                    alert('error submit!!');
+                    return false;
+                }
+            })
+        },
         async handleApproved(val) { //审批 - 区域经理或BMW
             try {
                 if (this.UserRole == 'RegionManager') {
