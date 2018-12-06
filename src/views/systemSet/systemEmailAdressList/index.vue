@@ -1,17 +1,17 @@
 <template>
 <div class="main-container">
     <!-- <el-button type="primary" class="newOrderButton" @click="dialogFormVisible=true">新建邮箱地址</el-button> -->
-    <el-table :data="MailAddresses" class="table" ref="multipleTable">
+    <el-table :data="MailAddresses" class="table" ref="multipleTable" @row-click="goMessageDetail">
         <el-table-column prop="MailBoxAddress" label="邮箱"></el-table-column>
         <el-table-column prop="MailBoxName" label="使用人"></el-table-column>
         <el-table-column prop="StatusName" label="状态">
             <template slot-scope="scope">
-                <el-switch v-model="scope.row.StatusCode" @change="ChangeMailAddressStatus(scope.$index, scope.row)" active-color="#13ce66" inactive-color="#ff4949" active-text="启用" inactive-text="停用" :active-value="101" :inactive-value="102"></el-switch>
+                <el-switch v-model="scope.row.StatusCode" @click.native="stopBubble" @change="ChangeMailAddressStatus(scope.$index, scope.row)" active-color="#13ce66" inactive-color="#ff4949" active-text="启用" inactive-text="停用" :active-value="101" :inactive-value="102"></el-switch>
             </template>
         </el-table-column>
         <el-table-column label="操作" width="180" align="center">
             <template slot-scope="scope">
-                <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                <el-button type="text" icon="el-icon-edit" @click="goMessageDetail(scope.row)" @click.native="stopBubble">编辑</el-button>
             </template>
         </el-table-column>
     </el-table>
@@ -65,8 +65,10 @@ export default {
         }
     },
     methods: { //事件处理器
+        stopBubble () {
+            event.stopPropagation()
+        },
         handleEdit(index, data) {
-            console.log(index, data)
             this.$router.push({
                 name: 'systemEmailAdressDetail',
                 params:{

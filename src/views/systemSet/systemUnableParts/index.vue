@@ -18,7 +18,7 @@
                 </el-input>
             </div>
             <!-- <el-button type="primary" class="newOrderButton">导入不可订购配件清单</el-button> -->
-            <el-table :data="SpareParts" class="table" ref="multipleTable" @sort-change="handleSortChange">
+            <el-table :data="SpareParts" class="table" ref="multipleTable" @sort-change="handleSortChange" empty-text='搜索结果为空'>
                 <el-table-column prop="PartNumber" label="零件号" sortable ></el-table-column>
                 <el-table-column prop="PartName" label="零件名称" sortable></el-table-column>
                 <el-table-column prop="Price" label="单价" sortable></el-table-column>

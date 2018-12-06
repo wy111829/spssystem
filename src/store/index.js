@@ -62,7 +62,7 @@ const store = new Vuex.Store({
                 return item.path === router.currentRoute.fullPath;
             })
             state.tagsList = curItem
-        }
+        },
     },
     actions: {
         async GetUserInfo({

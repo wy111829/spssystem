@@ -15,22 +15,22 @@
             <el-button type="primary" class="newOrderButton">新建经销商</el-button>
         </router-link>
     </div>
-    <el-table :data="tableList" class="table" ref="multipleTable" @sort-change="handleSortChange">
+    <el-table :data="tableList" class="table" ref="multipleTable" @sort-change="handleSortChange" empty-text='搜索结果为空' @row-click="goMessageDetail">
         <el-table-column prop="CBU" label="CBU" sortable></el-table-column>
         <el-table-column prop="CKD" label="CKD" sortable></el-table-column>
-        <el-table-column prop="DealerName" label="经销商名称（简称）" sortable></el-table-column>
+        <el-table-column prop="DealerName" label="经销商名称" sortable></el-table-column>
         <el-table-column prop="RegionName" label="地区"></el-table-column>
         <el-table-column prop="ProvinceName" label="省份" sortable></el-table-column>
         <el-table-column prop="CityName" label="城市" sortable></el-table-column>
         <el-table-column prop="DealerGroup" label="经销商集团" sortable></el-table-column>
         <el-table-column prop="StatusName" label="状态" sortable width=150>
-            <template slot-scope="scope">
-                <el-switch v-model="scope.row.StatusCode" @change="handleChangeDealerStatus(scope.$index, scope.row)" active-color="#13ce66" inactive-color="#ff4949" active-text="启用" inactive-text="停用" :active-value="101" :inactive-value="102"></el-switch>
+            <template slot-scope="scope" >
+                <el-switch v-model="scope.row.StatusCode"  @click.native="stopBubble"  @change="handleChangeDealerStatus(scope.$index, scope.row)" active-color="#13ce66" inactive-color="#ff4949" active-text="启用" inactive-text="停用" :active-value="101" :inactive-value="102"></el-switch>
             </template>
         </el-table-column>
         <el-table-column label="操作" align="center">
             <template slot-scope="scope">
-                <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                <el-button type="text" icon="el-icon-edit" @click="goMessageDetail(scope.row)" @click.native="stopBubble">编辑</el-button>
             </template>
         </el-table-column>
     </el-table>
@@ -45,6 +45,7 @@
 import {
     BMW
 } from '@/networks/api'
+import {mapMutations} from 'vuex'
 export default {
     data() { //选项 / 数据
         return {
@@ -95,6 +96,9 @@ export default {
         }
     },
     methods: { //事件处理器
+        stopBubble () {
+            event.stopPropagation()
+        },
         handleCurrentChange(val) {
             this.RowOffset = val;
             this.getData();
@@ -104,15 +108,7 @@ export default {
             this.SortField = obj.prop
             this.getData()
         },
-        handleEdit(index, data) {
-            this.$router.push({
-                name: 'systemDealerDetail',
-                params: {
-                    id: data.DealerID
-                }
-            });
-        },
-        goMessageDetail(data){
+        goMessageDetail(data) {
             this.$router.push({
                 name: 'systemDealerDetail',
                 params: {

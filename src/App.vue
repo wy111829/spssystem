@@ -13,8 +13,4 @@
     .conent-box{
         height: 100%;
     }
-    .el-table__empty-text:before{
-
-        content: "该搜索条件下"
-    }
 </style>

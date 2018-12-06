@@ -32,7 +32,7 @@
             <el-button type="primary" class="newOrderButton" style="font-size:13px">新建订单</el-button>
         </router-link>
     </div>
-    <el-table :data="Orders" class="table" ref="multipleTable" @sort-change="handleSortChange" :default-sort="{prop: 'CreateDate', order: 'descending'}" border @row-click="goMessageDetail">
+    <el-table :data="Orders" class="table" ref="multipleTable" @sort-change="handleSortChange" :default-sort="{prop: 'CreateDate', order: 'descending'}" border @row-click="goMessageDetail" empty-text="搜索结果为空">
         <el-table-column align="center" v-for="(item, index) in tableList" :key="index" v-if="item.role.includes(UserRole)"   :prop="item.prop" :label="item.label" :sortable="item.sortable" resizable :min-width="item.width"></el-table-column>
         <el-table-column prop="RepairCostTotal" label="本次维修价格" sortable min-width="150" align="center"></el-table-column>
         <el-table-column prop="Repair_CurrentPrice_PCT" label="占实际价值比" sortable min-width="150" align="center"></el-table-column>
@@ -51,7 +51,7 @@
         <el-table-column label="状态" sortable prop="StatusName"></el-table-column>
         <el-table-column label="操作" align="center"  fixed="right">
             <template slot-scope="scope">
-                <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                <el-button type="text" icon="el-icon-edit" @click.stop="goMessageDetail(scope.row)" @click.native="stopBubble">编辑</el-button>
             </template>
         </el-table-column>
     </el-table>
@@ -193,6 +193,9 @@ export default {
         }
     },
     methods: {
+        stopBubble () {
+            event.stopPropagation()
+        },
         handleRadioChange(val) {
             //console.log(val)
             this.getData()

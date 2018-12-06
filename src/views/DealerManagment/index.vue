@@ -12,7 +12,7 @@
             </el-input>
         </div>
     </div>
-    <el-table :data="tableList" class="table" ref="multipleTable" @sort-change="handleSortChange">
+    <el-table :data="tableList" class="table" ref="multipleTable" @sort-change="handleSortChange" empty-text='搜索结果为空'>
         <el-table-column prop="CBU" label="CBU" sortable ></el-table-column>
         <el-table-column prop="CKD" label="CKD" sortable ></el-table-column>
         <el-table-column prop="DealerName" label="经销商名称（简称）" sortable ></el-table-column>
