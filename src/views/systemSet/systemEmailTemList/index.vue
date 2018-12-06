@@ -3,7 +3,7 @@
         <router-link class="button" to="/systemEmailTemNew">
             <el-button type="primary" class="newOrderButton">新建</el-button>
         </router-link>
-        <el-table :data="tableList" class="table" ref="multipleTable">
+        <el-table :data="tableList" class="table" ref="multipleTable" @row-click="goMessageDetail">
             <el-table-column prop="emailtemplate" label="邮件模板管理"></el-table-column>
             <el-table-column label="操作" width="180" align="center">
                 <template slot-scope="scope">

@@ -37,16 +37,16 @@
                     <el-input v-model="detailData.PlateNumber"></el-input>
                 </el-form-item>
                 <el-form-item label="车架号：" class="el-col el-col-12 el-col-xs-24">
-                    <el-input v-model="detailData.VIN" readonly></el-input>
+                    <el-input v-model="detailData.VIN" disabled=""></el-input>
                 </el-form-item>
                 <el-form-item label="车型：" class="el-col el-col-12 el-col-xs-24">
-                    <el-input v-model="detailData.SubModelName" readonly></el-input>
+                    <el-input v-model="detailData.SubModelName" disabled></el-input>
                 </el-form-item>
                 <el-form-item label="车辆首次登记日期：" class="el-col el-col-12 el-col-xs-24">
                     <el-date-picker type="date" @change="handleDatePicker" placeholder="选择日期" v-model="detailData.VehicleFirstRegDate" style="width: 100%;"></el-date-picker>
                 </el-form-item>
                 <el-form-item label="保险公司：" class="el-col el-col-12 el-col-xs-24">
-                    <el-input v-model="detailData.InsurerName" readonly></el-input>
+                    <el-input v-model="detailData.InsurerName" disabled></el-input>
                 </el-form-item>
                 <el-form-item label="报案号:" class="el-col el-col-12 el-col-xs-24">
                     <el-input v-model="detailData.InsuranceNumber"></el-input>
@@ -72,15 +72,14 @@
             <div class="form-title">
                 配件明细
             </div>
-            <el-table ref="multipleTable" :data="detailData.SpareParts" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
-                <el-table-column label="配件号" sortable>
-                    <template slot-scope="scope">{{ scope.row.PartNumber }}</template>
+            <el-table ref="multipleTable" :data="detailData.SpareParts" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange" :default-sort = "{prop: 'PartNumber', order: 'descending'}">
+                <el-table-column label="配件号" sortable prop="PartNumber">
                 </el-table-column>
                 <el-table-column prop="PartName" label="配件名称">
                 </el-table-column>
-                <el-table-column prop="Quantity" label="订购数量" show-overflow-tooltip>
+                <el-table-column prop="Quantity" label="订购数量">
                 </el-table-column>
-                <el-table-column prop="Price" label="单价" sortable show-overflow-tooltip>
+                <el-table-column prop="Price" label="单价" sortable >
                 </el-table-column>
                 <el-table-column label="总价" show-overflow-tooltip>
                     <template slot-scope="scope">{{scope.row.Price?scope.row.Quantity*scope.row.Price:''}}</template>
@@ -119,13 +118,13 @@
                     <el-input v-model="detailData.RepairCostTotal" type="number"></el-input>
                 </el-form-item>
                 <el-form-item label="实际价值占比：" class="el-col el-col-12 el-col-xs-24">
-                    <el-input readonly ref="Repair_CurrentPrice_PCT" :value="detailData.VehicleCurrentPrice?Math.round(detailData.RepairCostTotal/detailData.VehicleCurrentPrice*10000)/100 + '%': ''"></el-input>
+                    <el-input disabled ref="Repair_CurrentPrice_PCT" :value="detailData.VehicleCurrentPrice?Math.round(detailData.RepairCostTotal/detailData.VehicleCurrentPrice*10000)/100 + '%': ''"></el-input>
                 </el-form-item>
                 <el-form-item label="配件费用：" class="el-col el-col-12 el-col-xs-24">
                     <el-input v-model="detailData.SparePartCostTotal" type="number"></el-input>
                 </el-form-item>
                 <el-form-item label="配件占比：" class="el-col el-col-12 el-col-xs-24">
-                    <el-input readonly ref="Part_Repair_PCT" :value="detailData.RepairCostTotal?Math.round(detailData.SparePartCostTotal/detailData.RepairCostTotal*10000)/100 + '%':''"></el-input>
+                    <el-input disabled ref="Part_Repair_PCT" :value="detailData.RepairCostTotal?Math.round(detailData.SparePartCostTotal/detailData.RepairCostTotal*10000)/100 + '%':''"></el-input>
                 </el-form-item>
                 <el-form-item label="工时及其他：" class="el-col el-col-12 el-col-xs-24">
                     <el-input v-model="detailData.LaborCostTotal" type="number"></el-input>
@@ -141,7 +140,7 @@
             </div>
             <el-form class="inline-form el-row" label-width="150px">
                 <el-form-item label="车龄（月）：" class="el-col el-col-12 el-col-xs-24">
-                    <el-input readonly v-model="detailData.VehicleAge"></el-input>
+                    <el-input disabled v-model="detailData.VehicleAge"></el-input>
                 </el-form-item>
                 <el-form-item label="是否流失：" class="el-col el-col-12 el-col-xs-24 small-label">
                     <el-radio-group v-model="detailData.IsCustomerChurned">
@@ -157,7 +156,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="流失去向：" class="el-col el-col-12 el-col-xs-24">
-                    <el-select v-model="detailData.ChurnTo" placeholder="请选择流失去向">
+                    <el-select v-model="detailData.ChurnTo" placeholder="请选择流失去向" clearable >
                         <el-option label="其他宝马4S店" value="1"></el-option>
                         <el-option label="综合修理厂" value="2"></el-option>
                         <el-option label="其他" value="3"></el-option>
@@ -272,8 +271,8 @@ export default {
             Result: '', // 审批结果 “Approved”：通过 “Rejected”：不通过
             Comment: '', //审核备注
             detailData: {
-                OrderID: 0,
-                MyClaimID: 0,
+                OrderID: '',
+                MyClaimID: '',
                 ReferenceNumber: "",
                 VehicleOwner: "",
                 PlateNumber: "",
@@ -283,23 +282,23 @@ export default {
                 HST: null,
                 HT: null,
                 UT: null,
-                SubModelID: 0,
+                SubModelID: '',
                 SubModelName: "",
                 VehicleFirstRegDate: "",
-                VehicleAge: 0,
-                InsurerID: 0,
+                VehicleAge: '',
+                InsurerID: '',
                 InsurerName: "",
                 InsurerContactPerson: "",
                 InsuranceNumber: "",
                 AccidentBrief: "",
                 VehicleMSRP: '',
                 VehicleCurrentPrice: '',
-                RepairCostTotal: 0,
-                Repair_CurrentPrice_PCT: 0,
-                SparePartCostTotal: 0,
-                Part_Repair_PCT: 0,
-                LaborCostTotal: 0,
-                InsuredAmount: 0,
+                RepairCostTotal: '',
+                Repair_CurrentPrice_PCT: '',
+                SparePartCostTotal: '',
+                Part_Repair_PCT: '',
+                LaborCostTotal: '',
+                InsuredAmount: '',
                 IsManufacturerPaint: true,
                 HasAdditionalLabor: false,
                 CaseStatus: "",
@@ -608,6 +607,14 @@ div.small-label {
             transform: translateY(-50%);
         }
     }
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
 }
 
 </style>

@@ -23,7 +23,7 @@
         <el-table-column label="审批策略" width="280" align="center" sortable >
             <template slot-scope="scope">
                 <el-radio-group v-model="scope.row.ApproveMethod" @change="handleRadioChange(scope.$index, scope.row)">
-                    <el-radio label="AutoApprove">永远同意</el-radio>
+                    <el-radio label="AutoApprove">自动审核</el-radio>
                     <el-radio label="ManualApprove">逐单审核</el-radio>
                 </el-radio-group>
             </template>
@@ -167,6 +167,8 @@ export default {
             }
         }
     }
-
+    .el-input--small .el-input__inner {
+        height: 34px;
+    }
 }
 </style>

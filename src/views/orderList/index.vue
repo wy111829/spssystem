@@ -15,36 +15,41 @@
                 <el-radio  :label="208">已删除</el-radio>
             </el-radio-group>
         </template>
-        <div class="sort-select">
-            <el-select v-model="SearchField" placeholder="--请选择要查询的字段--" style="width:200px">
-                <el-option v-for="(item, index) in selectList" :key="index" v-if="item.role.includes(UserRole)" :label="item.label" :value="item.value"></el-option>
-            </el-select>
+        <div style="display:inline-block">
+            <div class="sort-select">
+                <el-select v-model="SearchField" placeholder="--请选择要查询的字段--" style="width:200px">
+                    <el-option v-for="(item, index) in selectList" :key="index" v-if="item.role.includes(UserRole)" :label="item.label" :value="item.value"></el-option>
+                </el-select>
+            </div>
+            <div class="handle-input">
+                <el-input placeholder="" v-model="SearchValue" :disabled="!SearchField" class="input-with-select">
+                    <el-button slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
+                </el-input>
+            </div>
         </div>
-        <div class="handle-input">
-            <el-input placeholder="" v-model="SearchValue" :disabled="!SearchField" class="input-with-select">
-                <el-button slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
-            </el-input>
-        </div>
+
         <router-link class="button" to="/orderDetial" v-if = "UserRole == 'Dealer'">
             <el-button type="primary" class="newOrderButton" style="font-size:13px">新建订单</el-button>
         </router-link>
     </div>
-    <el-table :data="Orders" class="table" ref="multipleTable" @sort-change="handleSortChange" :default-sort="{prop: 'CreateDate', order: 'descending'}">
-        <el-table-column v-for="(item, index) in tableList" :key="index" v-if="item.role.includes(UserRole)"   :prop="item.prop" :label="item.label" :sortable="item.sortable" width="100px"></el-table-column>
-        <el-table-column prop="RepairCostTotal" label="本次维修价格" sortable></el-table-column>
-        <el-table-column label="占实际价值比" sortable >
+    <el-table :data="Orders" class="table" ref="multipleTable" @sort-change="handleSortChange" :default-sort="{prop: 'CreateDate', order: 'descending'}" border @row-click="goMessageDetail">
+        <el-table-column align="center" v-for="(item, index) in tableList" :key="index" v-if="item.role.includes(UserRole)"   :prop="item.prop" :label="item.label" :sortable="item.sortable" resizable :min-width="item.width"></el-table-column>
+        <el-table-column prop="RepairCostTotal" label="本次维修价格" sortable min-width="150" align="center"></el-table-column>
+        <el-table-column prop="Repair_CurrentPrice_PCT" label="占实际价值比" sortable min-width="150" align="center"></el-table-column>
+        <!-- <el-table-column label="占实际价值比"  >
             <template slot-scope="scope">
               {{Math.round(scope.row.RepairCostTotal/scope.row.VehicleCurrentPrice*10000)/100 + '%'}}
           </template>
-        </el-table-column>
-        <el-table-column prop="SparePartCostTotal" label="配件费用" sortable></el-table-column>
-        <el-table-column label="配件占比" sortable>
+        </el-table-column> -->
+        <el-table-column prop="SparePartCostTotal" label="配件费用" sortable min-width="130" align="center"></el-table-column>
+        <el-table-column prop="Part_Repair_PCT" label="配件占比" sortable min-width="130" align="center"></el-table-column>
+        <!-- <el-table-column label="配件占比" >
             <template slot-scope="scope">
               {{Math.round(scope.row.SparePartCostTotal/scope.row.RepairCostTotal*10000)/100 + '%'}}
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column label="状态" sortable prop="StatusName"></el-table-column>
-        <el-table-column label="操作" align="center">
+        <el-table-column label="操作" align="center"  fixed="right">
             <template slot-scope="scope">
                 <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
             </template>
@@ -132,17 +137,20 @@ export default {
                 prop: 'CreateDate',
                 label: '创建日期',
                 sortable: true,
-                role:  ['Dealer','Administrator']
+                role:  ['Dealer','Administrator'],
+                width:110
             },{
                 prop: 'PlateNumber',
                 label: '车牌号',
                 sortable: true,
-                role:  ['Dealer','Administrator']
+                role:  ['Dealer','Administrator'],
+                width:100
             },{
                 prop: 'SubmitDate',
                 label: '申请日期',
                 sortable: true,
-                role:  ['RegionManager', 'BMW-BP','Administrator']
+                role:  ['RegionManager', 'BMW-BP','Administrator'],
+                width:110
             },{
                 prop: 'RegionName',
                 label: '区域',
@@ -162,12 +170,14 @@ export default {
                 prop: 'DealerName',
                 label: '经销商名称',
                 sortable: true,
-                role:  ['RegionManager', 'BMW-BP','Administrator']
+                role:  ['RegionManager', 'BMW-BP','Administrator'],
+                width:120
             },{
                 prop: 'VIN',
                 label: 'VIN',
                 sortable: true,
-                role:  ['Dealer','Administrator']
+                role:  ['Dealer','Administrator'],
+                width: 165
             },{
                 prop: 'SubModelName',
                 label: '车型',
@@ -177,7 +187,8 @@ export default {
                 prop: 'InsurerName',
                 label: '保险公司',
                 sortable: true,
-                role:  ['Dealer', 'RegionManager','Administrator']
+                role:  ['Dealer', 'RegionManager','Administrator'],
+                width:120
             }]
         }
     },
@@ -204,6 +215,14 @@ export default {
         },
         handleEdit(index, data) {
             //console.log(index, data)
+            this.$router.push({
+                name: 'orderDetial',
+                params: {
+                    id: data.OrderID
+                }
+            });
+        },
+        goMessageDetail(data){
             this.$router.push({
                 name: 'orderDetial',
                 params: {

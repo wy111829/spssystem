@@ -21,8 +21,8 @@ export default new Router({
     routes: [
         {
             path: '/',
-            redirect: '/orderList',
-            name: 'orderList'
+            redirect: '/login',
+            name: 'login'
         },
         {
             path: '/',

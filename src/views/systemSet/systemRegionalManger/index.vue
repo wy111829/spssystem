@@ -13,12 +13,12 @@
         <el-table-column prop="Mobile" label="电话"></el-table-column>
         <el-table-column prop="StatusName" label="状态">
             <template slot-scope="scope">
-                <el-switch v-model="scope.row.StatusCode" @change="handleChangeDealerStatus(scope.$index, scope.row)" active-color="#13ce66" inactive-color="#ff4949" active-text="启用" inactive-text="停用" :active-value="101" :inactive-value="102"></el-switch>
+                <el-switch v-model="scope.row.StatusCode" @change.stop="handleChangeDealerStatus(scope.$index, scope.row)" active-color="#13ce66" inactive-color="#ff4949" active-text="启用" inactive-text="停用" :active-value="101" :inactive-value="102"></el-switch>
             </template>
         </el-table-column>
         <el-table-column label="操作" width="180" align="center">
             <template slot-scope="scope">
-                <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                <el-button type="text" icon="el-icon-edit" @click.stop="handleEdit(scope.$index, scope.row)">编辑</el-button>
             </template>
         </el-table-column>
     </el-table>
@@ -49,6 +49,14 @@ export default {
     methods: { //事件处理器
         handleEdit(index, data) {
             console.log(data.ID)
+            this.$router.push({
+                name: 'systemRegionManagerDetail',
+                params: {
+                    id: data.ID
+                }
+            });
+        },
+        goMessageDetail(data){
             this.$router.push({
                 name: 'systemRegionManagerDetail',
                 params: {

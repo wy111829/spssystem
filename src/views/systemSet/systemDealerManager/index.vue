@@ -112,6 +112,14 @@ export default {
                 }
             });
         },
+        goMessageDetail(data){
+            this.$router.push({
+                name: 'systemDealerDetail',
+                params: {
+                    id: data.DealerID
+                }
+            });
+        },
         handleSearch(val) {
             if (this.SearchValue.trim()) {
                 this.SearchValue = this.SearchValue.trim()

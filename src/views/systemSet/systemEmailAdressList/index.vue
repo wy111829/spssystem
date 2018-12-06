@@ -74,6 +74,14 @@ export default {
                 }
             });
         },
+        goMessageDetail(data){
+            this.$router.push({
+                name: 'systemEmailAdressDetail',
+                params:{
+                    id: data.MailBoxCode
+                }
+            });
+        },
         async ChangeMailAddressStatus(index, data) {
             try {
                 const response = await BMW.ChangeMailAddressStatus({

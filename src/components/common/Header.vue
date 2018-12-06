@@ -117,7 +117,6 @@ export default {
                 const response = await General.Logout()
                 if(response.Code == 200){
                     this.closeAll(this.$route.name)
-                    this.$alert('已退出登录')
                     this.$router.push('/login');
                 }
             } catch(error){

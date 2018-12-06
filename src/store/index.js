@@ -55,7 +55,7 @@ const store = new Vuex.Store({
         },
         closeAll: (state, payload) => {
             state.tagsList = []
-            router.push('/')
+            router.push('/orderList')
         },
         closeOther: (state, payload) => {
             const curItem = state.tagsList.filter(item => {
