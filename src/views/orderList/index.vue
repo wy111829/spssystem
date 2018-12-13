@@ -72,8 +72,8 @@ export default {
             Status: 0,
             SearchField: '',
             SearchValue: '',
-            SortField: '',
-            SortType: '',
+            SortField: 'CreateDate',
+            SortType: 'DESC',
             RowOffset: 0,
             RowCount: 20,
             Orders: [{
@@ -138,7 +138,7 @@ export default {
                 label: '创建日期',
                 sortable: true,
                 role:  ['Dealer','Administrator'],
-                width:110
+                width:135
             },{
                 prop: 'PlateNumber',
                 label: '车牌号',
@@ -150,7 +150,7 @@ export default {
                 label: '申请日期',
                 sortable: true,
                 role:  ['RegionManager', 'BMW-BP','Administrator'],
-                width:110
+                width:135
             },{
                 prop: 'RegionName',
                 label: '区域',
@@ -177,7 +177,7 @@ export default {
                 label: 'VIN',
                 sortable: true,
                 role:  ['Dealer','Administrator'],
-                width: 165
+                width: 175
             },{
                 prop: 'SubModelName',
                 label: '车型',

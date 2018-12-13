@@ -128,6 +128,9 @@ export default {
         }
     },
     methods: {
+        ...mapMutations([
+            'closeTags'
+        ]),
         async UpdateRM() {
             try {
                 const response = await BMW.UpdateRM(this.Data)

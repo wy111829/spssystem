@@ -73,9 +73,9 @@
                 配件明细
             </div>
             <el-table ref="multipleTable" :data="detailData.SpareParts" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange" :default-sort = "{prop: 'PartNumber', order: 'descending'}">
-                <el-table-column label="配件号" sortable prop="PartNumber">
+                <el-table-column label="配件号" sortable prop="PartNumber" min-width="100">
                 </el-table-column>
-                <el-table-column prop="PartName" label="配件名称">
+                <el-table-column prop="PartName" label="配件名称" min-width="250">
                 </el-table-column>
                 <el-table-column prop="Quantity" label="订购数量">
                 </el-table-column>
@@ -84,7 +84,7 @@
                 <el-table-column label="总价" show-overflow-tooltip>
                     <template slot-scope="scope">{{scope.row.Price?scope.row.Quantity*scope.row.Price:''}}</template>
                 </el-table-column>
-                <el-table-column prop="IsOrdered" label="订购">
+                <el-table-column prop="IsOrdered" label="订购" width="50">
                     <template slot-scope="scope">
                         <el-checkbox v-model="scope.row.IsOrdered"></el-checkbox>
                     </template>
@@ -108,28 +108,28 @@
                 本次维修成本
             </div>
             <el-form class="inline-form el-row" label-width="150px" :rules="rules" ref='detailData' :model="detailData">
-                <el-form-item label="新车销售价：" class="el-col el-col-12 el-col-xs-24" prop="VehicleMSRP">
+                <el-form-item label="新车销售价：" class="el-col-lg-6 el-col-md-12 el-col-xs-24" prop="VehicleMSRP">
                     <el-input v-model="detailData.VehicleMSRP" type="number"></el-input>
                 </el-form-item>
-                <el-form-item label="车辆实际价值：" class="el-col el-col-12 el-col-xs-24" prop="VehicleCurrentPrice">
+                <el-form-item label="车辆实际价值：" class="el-col-lg-6 el-col-md-12 el-col-xs-24" prop="VehicleCurrentPrice">
                     <el-input v-model="detailData.VehicleCurrentPrice" type="number"></el-input>
                 </el-form-item>
-                <el-form-item label="本次维修报价：" class="el-col el-col-12 el-col-xs-24">
+                <el-form-item label="本次维修报价：" class="el-col-lg-6 el-col-md-12 el-col-xs-24">
                     <el-input v-model="detailData.RepairCostTotal" type="number"></el-input>
                 </el-form-item>
-                <el-form-item label="实际价值占比：" class="el-col el-col-12 el-col-xs-24">
+                <el-form-item label="实际价值占比：" class="el-col-lg-6 el-col-md-12 el-col-xs-24">
                     <el-input disabled ref="Repair_CurrentPrice_PCT" :value="detailData.VehicleCurrentPrice?Math.round(detailData.RepairCostTotal/detailData.VehicleCurrentPrice*10000)/100 + '%': ''"></el-input>
                 </el-form-item>
-                <el-form-item label="配件费用：" class="el-col el-col-12 el-col-xs-24">
+                <el-form-item label="配件费用：" class="el-col-lg-6 el-col-md-12 el-col-xs-24">
                     <el-input v-model="detailData.SparePartCostTotal" type="number"></el-input>
                 </el-form-item>
-                <el-form-item label="配件占比：" class="el-col el-col-12 el-col-xs-24">
+                <el-form-item label="配件占比：" class="el-col-lg-6 el-col-md-12 el-col-xs-24">
                     <el-input disabled ref="Part_Repair_PCT" :value="detailData.RepairCostTotal?Math.round(detailData.SparePartCostTotal/detailData.RepairCostTotal*10000)/100 + '%':''"></el-input>
                 </el-form-item>
-                <el-form-item label="工时及其他：" class="el-col el-col-12 el-col-xs-24">
+                <el-form-item label="工时及其他：" class="el-col-lg-6 el-col-md-12 el-col-xs-24">
                     <el-input v-model="detailData.LaborCostTotal" type="number"></el-input>
                 </el-form-item>
-                <el-form-item label="保险公司估损金额：" class="el-col el-col-12 el-col-xs-24">
+                <el-form-item label="保险公司估损金额：" class="el-col-lg-6 el-col-md-12 el-col-xs-24">
                     <el-input v-model="detailData.InsuredAmount" type="number"></el-input>
                 </el-form-item>
             </el-form>
@@ -339,11 +339,10 @@ export default {
             }
         },
         handleDatePicker(val) {
-            console.log(this.detailData.VehicleFirstRegDate, val)
+            console.log(val)
             let now = new Date()
             let cartime = new Date(val)
             let carage = Math.round((now - cartime) / 1000 / 60 / 60 / 24 / 30)
-            console.log(carage)
             this.detailData.VehicleAge = carage
         },
         toggleSelection(rows) {
@@ -600,6 +599,9 @@ div.small-label {
         .AttachmentContent {
             display: inline-block;
             width: 80%;
+            img{
+                max-width: 100%;
+            }
         }
         .removeAttachmentItem {
             position: absolute;
