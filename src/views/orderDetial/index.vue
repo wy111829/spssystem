@@ -1,90 +1,193 @@
 <template>
 <div class="newOrder-container">
     <div class="container">
-        <!-- 经销商 -->
-        <div class="form-box-neworder" v-if="UserRole == 'Dealer'|| UserRole == 'Administrator'">
+        <div class="form-box-neworder">
             <div class="form-title">
-                导入定损单信息
+                基本信息
             </div>
-            <el-form class="inline-form el-row" label-width="300px">
-                <el-form-item label="请输入需导入的定损单单号：" class="el-col el-col-12 el-col-xs-24">
-                    <el-input v-model="detailData.ReferenceNumber" placeholder=""></el-input>
-                </el-form-item>
-                <el-button type="primary" @click="handleImport">导入</el-button>
+            <el-form class="inline-form">
+                <el-row :gutter="20">
+                    <el-col :md="6" :sm="12">
+                        <el-form-item label="事故类型">
+                            <el-radio-group>
+                                <el-radio label="">大事故</el-radio>
+                                <el-radio label="">水淹车</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :md="6" :sm="12">
+                        <el-form-item label="DAT定损单单号">
+                            <el-input v-model="detailData.ReferenceNumber" placeholder="">
+                                <el-button slot="append" @click="handleImport">导入</el-button>
+                            </el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :md="6" :sm="12">
+                        <el-form-item label="经销商CKD代码">
+                            <el-input></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :md="6" :sm="12">
+                        <el-form-item label="经销商名称">
+                            <el-input v-model="detailData.DealerName"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :md="6" :sm="12">
+                        <el-form-item label="车主姓名">
+                            <el-input v-model="detailData.VehicleOwner"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :md="6" :sm="12">
+                        <el-form-item label="车牌号">
+                            <el-input v-model="detailData.PlateNumber"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :md="6" :sm="12">
+                        <el-form-item label="车架号(VIN)">
+                            <el-input v-model="detailData.VIN" disabled=""></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :md="6" :sm="12">
+                        <el-form-item label="主车型名称">
+                            <el-input v-model="detailData.SubModelName" disabled></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :md="6" :sm="12">
+                        <el-form-item label="子车型名称">
+                            <el-input v-model="detailData.SubModelName" disabled></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :md="6" :sm="12">
+                        <el-form-item label="车辆首次登记日期(保修起始时间)">
+                            <el-date-picker type="date" @change="handleDatePicker" placeholder="选择日期" v-model="detailData.VehicleFirstRegDate" style="width: 100%;"></el-date-picker>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :md="6" :sm="12">
+                        <el-form-item label="保险公司：">
+                            <el-input v-model="detailData.InsurerName" disabled></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :md="6" :sm="12">
+                        <el-form-item label="保单号">
+                            <el-input v-model="detailData.InsuranceNumber"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :md="6" :sm="12">
+                        <el-form-item label="车龄">
+                            <el-input v-model="detailData.VehicleAge"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
             </el-form>
-        </div>
-        <!-- 区域经理和bmw -->
-        <div class="form-box-neworder" v-if="UserRole == 'RegionManager' || UserRole == 'BMW-BP' || UserRole == 'Administrator' ">
-            <div class="form-title">
-                经销商信息
-            </div>
-            <el-row class="DealerMessage">
-                <el-col :span="5">经销商名称：{{detailData.DealerName}}</el-col>
-                <el-col :span="5">区域 :{{detailData.RegionName}}</el-col>
-                <el-col :span="5">省份：{{detailData.ProvinceName}}</el-col>
-                <el-col :span="5">城市：{{detailData.CityName}}</el-col>
-            </el-row>
         </div>
         <div class="form-box-neworder">
             <div class="form-title">
-                客户及车辆信息
+                维修成本分析
             </div>
-            <el-form class="inline-form el-row" label-width="150px">
-                <el-form-item label="车主：" class="el-col el-col-12 el-col-xs-24">
-                    <el-input v-model="detailData.VehicleOwner"></el-input>
-                </el-form-item>
-                <el-form-item label="车牌号：" class="el-col el-col-12 el-col-xs-24">
-                    <el-input v-model="detailData.PlateNumber"></el-input>
-                </el-form-item>
-                <el-form-item label="车架号：" class="el-col el-col-12 el-col-xs-24">
-                    <el-input v-model="detailData.VIN" disabled=""></el-input>
-                </el-form-item>
-                <el-form-item label="车型：" class="el-col el-col-12 el-col-xs-24">
-                    <el-input v-model="detailData.SubModelName" disabled></el-input>
-                </el-form-item>
-                <el-form-item label="车辆首次登记日期：" class="el-col el-col-12 el-col-xs-24">
-                    <el-date-picker type="date" @change="handleDatePicker" placeholder="选择日期" v-model="detailData.VehicleFirstRegDate" style="width: 100%;"></el-date-picker>
-                </el-form-item>
-                <el-form-item label="保险公司：" class="el-col el-col-12 el-col-xs-24">
-                    <el-input v-model="detailData.InsurerName" disabled></el-input>
-                </el-form-item>
-                <el-form-item label="报案号:" class="el-col el-col-12 el-col-xs-24">
-                    <el-input v-model="detailData.InsuranceNumber"></el-input>
-                </el-form-item>
-                <el-form-item label="是否厂商喷漆:" class="el-col el-col-12 el-col-xs-24 small-label">
-                    <el-radio-group v-model="detailData.IsManufacturerPaint">
-                        <el-radio :label="true">是</el-radio>
-                        <el-radio :label="false">否</el-radio>
-                    </el-radio-group>
-                </el-form-item>
-                <el-form-item label="是否额外工时支持：" class="el-col el-col-12 el-col-xs-24 small-label">
-                    <el-radio-group v-model="detailData.HasAdditionalLabor">
-                        <el-radio :label="true">是</el-radio>
-                        <el-radio :label="false">否</el-radio>
-                    </el-radio-group>
-                </el-form-item>
-                <el-form-item label="事故描述:" class="el-col el-col-24">
-                    <el-input type="textarea" v-model="detailData.AccidentBrief" :autosize="{minRows:5}"></el-input>
-                </el-form-item>
+            <el-form class="inline-form">
+                <el-row :gutter="20">
+                    <el-col :md="6" :sm="12">
+                        <el-form-item label="配件费用">
+                            <el-input v-model="detailData.SparePartCostTotal" type="number"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :md="6" :sm="12">
+                        <el-form-item label="工时及其他费用">
+                            <el-input v-model="detailData.LaborCostTotal" type="number"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :md="6" :sm="12">
+                        <el-form-item label="维修费用">
+                            <i class="el-icon-info iconInfo" title="=配件费用+工时及其他费用"></i>
+                            <el-input v-model="detailData.RepairCostTotal" type="number"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :md="6" :sm="12">
+                        <el-form-item label="采购零件总额">
+                            <el-input v-model="detailData.DealerName"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :md="6" :sm="12">
+                        <el-form-item label="车损险保额">
+                            <el-input v-model="detailData.VehicleOwner"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :md="6" :sm="12">
+                        <el-form-item label="维修费用/车损险保额">
+                            <!-- <el-popover placement="top-start" trigger="hover" content="=维修费用/车损险保额*100%">
+                                <i class="el-icon-info iconInfo" slot="reference"></i>
+                            </el-popover> -->
+                            <i class="el-icon-info iconInfo" title="=维修费用/车损险保额*100%"></i>
+                            <el-input v-model="detailData.PlateNumber"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :md="6" :sm="12">
+                        <el-form-item label="配件费用/维修费用">
+                            <i class="el-icon-info iconInfo" title="=配件费用/维修费用*100%"></i>
+                            <el-input v-model="detailData.VIN" disabled=""></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :md="6" :sm="12">
+                        <el-form-item label="采购零件总额/配件费用">
+                            <i class="el-icon-info iconInfo" title="=采购零件总额/配件费用*100%"></i>
+                            <el-input v-model="detailData.SubModelName" disabled></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :md="6" :sm="12">
+                        <el-form-item label="配件折扣支持">
+                            <i class="el-icon-info iconInfo" title="=(采购零件总额-增值税)*15%"></i>
+                            <el-input v-model="detailData.SubModelName" disabled></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :md="6" :sm="12">
+                        <el-form-item label="是否购买涉水险">
+                            <el-radio-group>
+                                <el-radio label="">是</el-radio>
+                                <el-radio label="">否</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :md="6" :sm="12">
+                        <el-form-item label="申请额外服务费">
+                            <el-radio-group>
+                                <el-radio label="">是</el-radio>
+                                <el-radio label="">否</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :md="6" :sm="12">
+                        <el-form-item label="额外服务费">
+                            <i class="el-icon-info iconInfo" title="=(采购零件总额-增值税)*10%"></i>
+                            <el-input v-model="detailData.InsuranceNumber"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
             </el-form>
         </div>
         <div class="form-box-neworder">
             <div class="form-title">
-                配件明细
+                零件列表
             </div>
-            <el-table ref="multipleTable" :data="detailData.SpareParts" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange" :default-sort = "{prop: 'PartNumber', order: 'descending'}">
+            <el-table ref="multipleTable" :data="detailData.SpareParts" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange" :default-sort="{prop: 'PartNumber', order: 'descending'}">
+                <el-table-column label="订购类型"></el-table-column>
                 <el-table-column label="配件号" sortable prop="PartNumber" min-width="100">
                 </el-table-column>
-                <el-table-column prop="PartName" label="配件名称" min-width="250">
+                <el-table-column prop="PartName" label="配件名称" min-width="150">
                 </el-table-column>
                 <el-table-column prop="Quantity" label="订购数量">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.Quantity" type="number"></el-input>
+                    </template>
                 </el-table-column>
-                <el-table-column prop="Price" label="单价" sortable >
+                <el-table-column prop="Price" label="单价" sortable>
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.Price" type="number"></el-input>
+                    </template>
                 </el-table-column>
                 <el-table-column label="总价" show-overflow-tooltip>
                     <template slot-scope="scope">{{scope.row.Price?scope.row.Quantity*scope.row.Price:''}}</template>
                 </el-table-column>
-                <el-table-column prop="IsOrdered" label="订购" width="50">
+                <el-table-column prop="IsOrdered" label="是否订购" width="50">
                     <template slot-scope="scope">
                         <el-checkbox v-model="scope.row.IsOrdered"></el-checkbox>
                     </template>
@@ -105,149 +208,76 @@
         </div>
         <div class="form-box-neworder">
             <div class="form-title">
-                本次维修成本
+                相关附件
             </div>
-            <el-form class="inline-form el-row" label-width="150px" :rules="rules" ref='detailData' :model="detailData">
-                <el-form-item label="新车销售价：" class="el-col-lg-6 el-col-md-12 el-col-xs-24" prop="VehicleMSRP">
-                    <el-input v-model="detailData.VehicleMSRP" type="number"></el-input>
-                </el-form-item>
-                <el-form-item label="车辆实际价值：" class="el-col-lg-6 el-col-md-12 el-col-xs-24" prop="VehicleCurrentPrice">
-                    <el-input v-model="detailData.VehicleCurrentPrice" type="number"></el-input>
-                </el-form-item>
-                <el-form-item label="本次维修报价：" class="el-col-lg-6 el-col-md-12 el-col-xs-24">
-                    <el-input v-model="detailData.RepairCostTotal" type="number"></el-input>
-                </el-form-item>
-                <el-form-item label="实际价值占比：" class="el-col-lg-6 el-col-md-12 el-col-xs-24">
-                    <el-input disabled ref="Repair_CurrentPrice_PCT" :value="detailData.VehicleCurrentPrice?Math.round(detailData.RepairCostTotal/detailData.VehicleCurrentPrice*10000)/100 + '%': ''"></el-input>
-                </el-form-item>
-                <el-form-item label="配件费用：" class="el-col-lg-6 el-col-md-12 el-col-xs-24">
-                    <el-input v-model="detailData.SparePartCostTotal" type="number"></el-input>
-                </el-form-item>
-                <el-form-item label="配件占比：" class="el-col-lg-6 el-col-md-12 el-col-xs-24">
-                    <el-input disabled ref="Part_Repair_PCT" :value="detailData.RepairCostTotal?Math.round(detailData.SparePartCostTotal/detailData.RepairCostTotal*10000)/100 + '%':''"></el-input>
-                </el-form-item>
-                <el-form-item label="工时及其他：" class="el-col-lg-6 el-col-md-12 el-col-xs-24">
-                    <el-input v-model="detailData.LaborCostTotal" type="number"></el-input>
-                </el-form-item>
-                <el-form-item label="保险公司估损金额：" class="el-col-lg-6 el-col-md-12 el-col-xs-24">
-                    <el-input v-model="detailData.InsuredAmount" type="number"></el-input>
-                </el-form-item>
-            </el-form>
         </div>
         <div class="form-box-neworder">
             <div class="form-title">
-                其他
+                结算信息
             </div>
-            <el-form class="inline-form el-row" label-width="150px">
-                <el-form-item label="车龄（月）：" class="el-col el-col-12 el-col-xs-24">
-                    <el-input disabled v-model="detailData.VehicleAge"></el-input>
-                </el-form-item>
-                <el-form-item label="是否流失：" class="el-col el-col-12 el-col-xs-24 small-label">
-                    <el-radio-group v-model="detailData.IsCustomerChurned">
-                        <el-radio :label="true">是</el-radio>
-                        <el-radio :label="false">否</el-radio>
-                    </el-radio-group>
-                </el-form-item>
-                <el-form-item label="案件状态：" class="el-col el-col-12 el-col-xs-24">
-                    <el-select v-model="detailData.CaseStatus" placeholder="Please select case status">
-                        <el-option label="自店" value="1"></el-option>
-                        <el-option label="外拓" value="2"></el-option>
-                        <el-option label="推荐" value="3"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="流失去向：" class="el-col el-col-12 el-col-xs-24">
-                    <el-select v-model="detailData.ChurnTo" placeholder="请选择流失去向" clearable >
-                        <el-option label="其他宝马4S店" value="1"></el-option>
-                        <el-option label="综合修理厂" value="2"></el-option>
-                        <el-option label="其他" value="3"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="保险公司联系人：" class="el-col el-col-12 el-col-xs-24">
-                    <el-input v-model="detailData.InsurerContactPerson"></el-input>
-                </el-form-item>
-                <el-form-item label="流失原因：" class="el-col el-col-12 el-col-xs-24">
-                    <el-input v-model="detailData.ChurnReason"></el-input>
-                </el-form-item>
-                <el-form-item label="客户挽留措施:" class="el-col el-col-24">
-                    <el-input type="textarea" v-model="detailData.RetentionActions" :autosize="{minRows:5}" placeholder="Within 500 characters"></el-input>
-                </el-form-item>
+            <el-form class="inline-form">
+                <el-row :gutter="20">
+                    <el-col :md="6" :sm="12">
+                        <el-form-item label="开工单日期">
+                            <el-date-picker type="date" placeholder="选择日期" style="width:100%"></el-date-picker>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :md="6" :sm="12">
+                        <el-form-item label="工单结算日期">
+                            <el-date-picker type="date" placeholder="选择日期" style="width:100%"></el-date-picker>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :md="6" :sm="12">
+                        <el-form-item label="结算单金额（含税）">
+                            <el-input placeholder=""></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :md="6" :sm="12">
+                        <el-form-item label="工单号">
+                            <el-input placeholder=""></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :md="6" :sm="12">
+                        <el-form-item label="结算单号">
+                            <el-input placeholder=""></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :md="6" :sm="12">
+                        <el-form-item label="总配件金额">
+                            <el-input placeholder=""></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
             </el-form>
         </div>
-        <!-- 经销商 -->
-        <div v-if="UserRole == 'Dealer' || UserRole == 'Administrator' " class="">
-            <div class="form-box-neworder">
-                <div class="form-title">
-                    附件
-                </div>
-                <!-- <el-upload action="/BigAccident/Action/FileUpload" :show-file-list="false" :headers="{'content-type': 'multipart/form-data','X-Requested-With':'XMLHttpRequest'}" :on-success="handleFileUploadSuccess" v-bind:disabled="detailData.Attachments&&detailData.Attachments.length >20">
-                    <el-button size="small" type="primary">点击上传</el-button>
-                    <div slot="tip" class="el-upload__tip">附件上传数量不能超过20个</div>
-                </el-upload> -->
-                <el-upload action="/FileUpload" :http-request="uploadSectionFile" :show-file-list="false" v-bind:disabled="detailData.Attachments&&detailData.Attachments.length >20">
-                    <el-button type="primary">点击上传</el-button>
-                    <div slot="tip" class="el-upload__tip">附件上传数量不能超过20个</div>
-                </el-upload>
-
-                <div class="Attachments">
-                    <div class="AttachmentItem" v-for="(item, index) in detailData.Attachments" :key="index">
-                        <div v-if="isImg(item.FileName)" class="AttachmentContent">
-                            <img :src="ServerUrl+'/BigAccident/Action/FileDownLoad?filename='+ item.DownloadFileName" />
-                            <!-- {{item.FileName}} -->
-                        </div>
-                        <div v-else class="AttachmentContent">
-                            <a :href="ServerUrl+'/BigAccident/Action/FileDownLoad?filename='+ item.DownloadFileName">{{item.FileName}}</a>
-                        </div>
-                        <el-button class="removeAttachmentItem" type="text" icon="el-icon-delete" @click="handleRemoveFile(index, item.DownloadFileName)" style="color:#ff4949">删除</el-button>
-                    </div>
-                </div>
-            </div>
-            <div class="form-box-neworder text-center">
-                <el-button type="primary" @click="submitToSaveOrder('detailData')">保存但不提交</el-button>
-                <el-button type="primary" @click="submitToSubmitOrder('detailData')">保存并提交</el-button>
-                <el-button @click="handleGoBack">取消</el-button>
-                <el-button type="danger" @click="handleDeleteOrder">删除</el-button>
-            </div>
+        <div class="form-box-neworder text-center">
+            <el-button type="primary" @click="submitToSaveOrder('detailData')">保存但不提交</el-button>
+            <el-button type="primary" @click="submitToSubmitOrder('detailData')">保存并提交</el-button>
+            <el-button @click="handleGoBack">取消</el-button>
+            <el-button type="danger" @click="handleDeleteOrder">删除</el-button>
         </div>
-        <!-- 区域经理和bmw -->
-        <div v-if="UserRole == 'RegionManager' || UserRole == 'BMW-BP' || UserRole == 'Administrator' " class="">
-            <div class="form-box-neworder">
-                <div class="form-title">
-                    附件
-                </div>
-                <div class="Attachments">
-                    <div class="AttachmentItem" v-for="(item, index) in detailData.Attachments" :key="index">
-                        <div v-if="isImg(item.FileName)" class="AttachmentContent">
-                            <img :src="ServerUrl+'/BigAccident/Action/FileDownLoad?filename='+ item.DownloadFileName" />
-                            <!-- {{item.FileName}} -->
-                        </div>
-                        <div v-else class="AttachmentContent">
-                            <a :href="ServerUrl+'/BigAccident/Action/FileDownLoad?filename='+ item.DownloadFileName">{{item.FileName}}</a>
-                        </div>
-                    </div>
-                </div>
+
+        <el-form class="inline-form el-row" label-width="200px">
+            <el-form-item label="审核备注：" class="el-col el-col-12 el-col-xs-24">
+                <el-input v-model="Comment" placeholder=""></el-input>
+            </el-form-item>
+            <el-button type="primary" @click="handleApproved('Approved')">通过</el-button>
+            <el-button type="danger" @click="handleApproved('Rejected')">不通过</el-button>
+            <el-button @click="handleGoBack">退出</el-button>
+        </el-form>
+
+        <div class="form-box-neworder">
+            <div class="form-title">
+                申请日志
             </div>
-            <div class="form-box-neworder text-center">
-                <el-form class="inline-form el-row" label-width="200px">
-                    <el-form-item label="审核备注：" class="el-col el-col-12 el-col-xs-24">
-                        <el-input v-model="Comment" placeholder=""></el-input>
-                    </el-form-item>
-                    <el-button type="primary" @click="handleApproved('Approved')">通过</el-button>
-                    <el-button type="danger" @click="handleApproved('Rejected')">不通过</el-button>
-                    <el-button @click="handleGoBack">退出</el-button>
-                </el-form>
-            </div>
-            <div class="form-box-neworder">
-                <div class="form-title">
-                    申请日志
-                </div>
-                <el-row v-for="(item,index) in this.detailData.ApplicationLogs" :key="index" class="ApplicationLogs">
-                    <el-col :span="5" class="OperationDate">{{item.OperationDate}}</el-col>
-                    <el-col :span="5">{{item.Operator}} :{{item.Operation}}</el-col>
-                    <el-col :span="5">审批备注：{{item.Comments}}</el-col>
-                </el-row>
-            </div>
+            <el-row v-for="(item,index) in this.detailData.ApplicationLogs" :key="index" class="ApplicationLogs">
+                <el-col :span="5" class="OperationDate">{{item.OperationDate}}</el-col>
+                <el-col :span="5">{{item.Operator}} :{{item.Operation}}</el-col>
+                <el-col :span="5">审批备注：{{item.Comments}}</el-col>
+            </el-row>
         </div>
     </div>
+</div>
 
 </div>
 </template>
@@ -309,13 +339,17 @@ export default {
                 SpareParts: [],
                 Attachments: [],
             },
-            rules:{
-                VehicleMSRP:[
-                    {required: true, message: '请输入新车销售价',trigger: 'blur'}
-                ],
-                VehicleCurrentPrice:[
-                    {required: true, message: '车辆实际价值',trigger: 'blur'}
-                ]
+            rules: {
+                VehicleMSRP: [{
+                    required: true,
+                    message: '请输入新车销售价',
+                    trigger: 'blur'
+                }],
+                VehicleCurrentPrice: [{
+                    required: true,
+                    message: '车辆实际价值',
+                    trigger: 'blur'
+                }]
             }
         }
     },
@@ -342,8 +376,10 @@ export default {
             console.log(val)
             let now = new Date()
             let cartime = new Date(val)
-            let carage = Math.round((now - cartime) / 1000 / 60 / 60 / 24 / 30)
-            this.detailData.VehicleAge = carage
+            let cartotlemonth = Math.round((now - cartime) / 1000 / 60 / 60 / 24 / 30)
+            let year = parseInt(cartotlemonth / 12)
+            let month = cartotlemonth % 12
+            this.detailData.VehicleAge = year == 0 ? month + '个月' : year + '年零' + month + '个月'
         },
         toggleSelection(rows) {
             if (rows) {
@@ -384,10 +420,12 @@ export default {
         async uploadSectionFile(f) {
             console.log(f.file)
             let param = new FormData(); //创建form对象
-            param.append('file',f.file);//通过append向form对象添加数据
+            param.append('file', f.file); //通过append向form对象添加数据
             let config = {
-                headers:{'Content-Type':'multipart/form-data'}
-            };  //添加请求头
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }; //添加请求头
             // console.log(f.action,param,config)
             // axios.post(f.action,param,config)//上传图片
             // .then(function(res){
@@ -397,9 +435,9 @@ export default {
             //     console.log(err)
             // })
             try {
-                const response = await Dealer.FileUpload(param,config)
+                const response = await Dealer.FileUpload(param, config)
                 console.log(response)
-                if(response.Code == 200) {
+                if (response.Code == 200) {
                     this.handleFileUploadSuccess(response.Data)
                 }
             } catch (error) {
@@ -459,7 +497,7 @@ export default {
                 console.log(e)
             }
         },
-        submitToSaveOrder(formName){
+        submitToSaveOrder(formName) {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
                     this.handleSaveOrder()
@@ -469,7 +507,7 @@ export default {
                 }
             })
         },
-        submitToSubmitOrder(formName){
+        submitToSubmitOrder(formName) {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
                     this.handleSubmitOrder()
@@ -568,9 +606,6 @@ export default {
             border-bottom: 1px solid #000000;
             margin: 20px 0;
         }
-        button {
-            margin-left: 10px;
-        }
         .DealerMessage {
             font-size: 15px;
             margin-left: 40px;
@@ -588,9 +623,6 @@ export default {
 .el-form-item__content > div {
     width: 100%;
 }
-div.small-label {
-    height: 33px;
-}
 .Attachments {
     margin: 20px 10px;
     .AttachmentItem {
@@ -599,7 +631,7 @@ div.small-label {
         .AttachmentContent {
             display: inline-block;
             width: 80%;
-            img{
+            img {
                 max-width: 100%;
             }
         }
@@ -610,13 +642,20 @@ div.small-label {
         }
     }
 }
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
+input::-webkit-inner-spin-button,
+input::-webkit-outer-spin-button {
     -webkit-appearance: none;
 }
 
 input[type="number"] {
     -moz-appearance: textfield;
 }
-
+.el-form-item--small .el-form-item__content,
+.el-form-item--small .el-form-item__label {
+    line-height: 25px;
+}
+.iconInfo {
+    color: #409EFF;
+    cursor: help;
+}
 </style>
