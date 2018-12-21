@@ -21,6 +21,14 @@
                     </el-menu-item>
                 </template>
             </template>
+            <el-card class="systemMsg">
+                <div slot="header" class="clearfix">
+                    <span>系统消息</span>
+                    <el-button style="float: right; padding: 3px 0" type="text">详细</el-button>
+                </div>
+                <p>发布日期：2018-12-13 13:20</p>
+                <p>消息内容：这是一条系统测试消息，敬请留意。</p>
+            </el-card>
         </el-menu>
     </div>
 </template>
@@ -133,6 +141,7 @@
         top: 70px;
         bottom:0;
         overflow-y: scroll;
+        background-color: rgb(50, 65, 87);
     }
     .sidebar::-webkit-scrollbar{
         width: 0;
@@ -142,5 +151,10 @@
     }
     .sidebar > ul {
         height:100%;
+    }
+    .systemMsg{
+        width: 90%;
+        margin: 0 auto;
+        font-size: 13px;
     }
 </style>
