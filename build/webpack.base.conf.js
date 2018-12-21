@@ -4,21 +4,20 @@ const utils = require('./utils')
 const config = require('../config')
 const vueLoaderConfig = require('./vue-loader.conf')
 require('babel-polyfill')
-
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
 }
 
-// const createLintingRule = () => ({
-//   test: /\.(js|vue)$/,
-//   loader: 'eslint-loader',
-//   enforce: 'pre',
-//   include: [resolve('src'), resolve('test')],
-//   options: {
-//     formatter: require('eslint-friendly-formatter'),
-//     emitWarning: !config.dev.showEslintErrorsInOverlay
-//   }
-// })
+const createLintingRule = () => ({
+  test: /\.(js|vue)$/,
+  loader: 'eslint-loader',
+  enforce: 'pre',
+  include: [resolve('src'), resolve('test')],
+  options: {
+    formatter: require('eslint-friendly-formatter'),
+    emitWarning: !config.dev.showEslintErrorsInOverlay
+  }
+})
 
 module.exports = {
   context: path.resolve(__dirname, '../'),
@@ -49,7 +48,7 @@ module.exports = {
       },
       {
         test: /\.js$/,
-        loader: 'babel-loader?cacheDirectory',
+        loader: 'babel-loader',
         include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client')]
       },
       {
@@ -57,7 +56,7 @@ module.exports = {
         loader: 'url-loader',
         options: {
           limit: 10000,
-          name: utils.assetsPath('img/[name].[ext]?[hash:7]')
+          name: utils.assetsPath('img/[name].[hash:7].[ext]')
         }
       },
       {
@@ -65,7 +64,7 @@ module.exports = {
         loader: 'url-loader',
         options: {
           limit: 10000,
-          name: utils.assetsPath('media/[name].[ext]?[hash:7]')
+          name: utils.assetsPath('media/[name].[hash:7].[ext]')
         }
       },
       {
@@ -73,7 +72,7 @@ module.exports = {
         loader: 'url-loader',
         options: {
           limit: 10000,
-          name: utils.assetsPath('fonts/[name].[ext]?[hash:7]')
+          name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
         }
       }
     ]
