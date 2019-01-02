@@ -13,7 +13,7 @@ Mock.mock(/Login/, 'post', {
 Mock.mock(/GetUserInfo/, 'get', {
     "Code": 200,
     "Data": {
-        "Role": "Dealer",
+        "Role": "Administrator",
         "UserName": "系统管理员"
     }
 })
