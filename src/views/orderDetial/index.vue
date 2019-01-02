@@ -305,8 +305,18 @@
             </el-row>
         </div>
     </div>
-</div>
-
+    <el-dialog title="你正在创建新订单，请选择事故类型：" class="selectAccidentType" :close-on-click-modal="false" :close-on-press-escape="false" :visible.sync="selectAccidentType" :show-close="false">
+        <el-radio-group v-model="detailData.AccidentType" style="text-align:center">
+          <el-radio :label="1">大事故</el-radio>
+          <el-radio :label="2">水淹车</el-radio>
+        </el-radio-group>
+        <div slot="footer" class="dialog-footer">
+            <router-link to="/orderList">
+                <el-button type="">取消</el-button>
+            </router-link>
+            <el-button type="primary" @click="selectAccidentType = false" :disabled="!detailData.AccidentType">确 定</el-button>
+        </div>    
+    </el-dialog>
 </div>
 </template>
 
@@ -326,6 +336,7 @@ export default {
     name: 'orderDetail',
     data: function() {
         return {
+            selectAccidentType: false,
             addPartDialog: false,
             Result: '', // 审批结果 “Approved”：通过 “Rejected”：不通过
             Comment: '', //审核备注
@@ -342,7 +353,7 @@ export default {
                 HST: null,
                 HT: null,
                 BaseModelID:12,
-                BaseModelName:"5 Series (5系) Lim. (F10/F18) (08.2010->)",
+                BaseModelName:"",
                 UT: null,
                 SubModelID: '',
                 SubModelName: "",
@@ -366,6 +377,9 @@ export default {
                 ApplyExtraServiceCost:true,
                 ExtraServiceCost:'',
                 SpareParts: [],
+            },
+            newSpareParts:{
+                
             },
             Attachments: [],
             rules: {
@@ -615,13 +629,15 @@ export default {
             this.$router.push({
                 name: 'orderList'
             })
-        }
+        },
     },
     watch: {
         '$route': 'routeChange'
     },
     created() {
         this.routeChange()
+
+        this.selectAccidentType = !this.$route.params.id
     }
 }
 </script>
@@ -673,6 +689,14 @@ export default {
             top: 50%;
             transform: translateY(-50%);
         }
+    }
+}
+.selectAccidentType{
+    .el-dialog__body{
+        padding: 30px 20px;
+        color: #606266;
+        font-size: 25px;
+        text-align: center;
     }
 }
 input::-webkit-inner-spin-button,
