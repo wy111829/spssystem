@@ -21,13 +21,15 @@
                     </el-menu-item>
                 </template>
             </template>
-            <el-card class="systemMsg">
-                <div slot="header" class="clearfix">
-                    <span>系统消息</span>
-                    <el-button style="float: right; padding: 3px 0" type="text">详细</el-button>
+            <el-card class="systemMsg" v-if="!collapse">
+                <div class="clearfix" style="text-align:center;margin-bottom:10px">
+                    <span>BMW广播站</span>
                 </div>
-                <p>发布日期：2018-12-13 13:20</p>
-                <p>消息内容：这是一条系统测试消息，敬请留意。</p>
+                <p style="text-align:center;font-size:6px;line-height20px;margin-bottom:10px;color:#909399">2018-06-30 13:20</p>
+                <p>为了进一步帮助经销商事故车留修，BMW将采取一系列措施并简化申请流程以提升工作效率。我们继续提供碰撞类事故车配件折扣，次项目不和其他项目或活动重复支持...</p>
+                <router-link :to="{ name: 'systemMsg'}">
+                    <el-button style="float: right; padding: 3px 0" type="text">详细</el-button>
+                </router-link>
             </el-card>
         </el-menu>
     </div>
@@ -133,7 +135,7 @@
     }
 </script>
 
-<style scoped>
+<style scoped lang="less">
     .sidebar{
         display: block;
         position: absolute;
@@ -156,5 +158,10 @@
         width: 90%;
         margin: 0 auto;
         font-size: 13px;
+        background-color: rgb(50, 65, 87);
+        border-color: rgb(50, 65, 87);
+        color: rgb(191, 203, 217);
+        margin-top: 20px;
     }
+
 </style>

@@ -4,21 +4,23 @@
     <div class="search-box">
         <template>
             <el-radio-group v-model="Status" @change="handleRadioChange">
-                <el-radio  :label="0">全部</el-radio>
-                <el-radio  :label="201" v-if = "UserRole == 'Administrator'||UserRole == 'Dealer'">待提交</el-radio>
-                <el-radio  :label="202">待区域经理审批</el-radio>
-                <el-radio  :label="203">被区域经理退回</el-radio>
-                <el-radio  :label="204">待宝马审批</el-radio>
-                <el-radio  :label="205">被宝马退回</el-radio>
-                <el-radio  :label="206">待上传工单和发票</el-radio>
-                <el-radio  :label="207">已完成</el-radio>
-                <el-radio  :label="208">已删除</el-radio>
+                <el-radio :label="0">全部 {{OrderNumbers.Total}}</el-radio>
+                <el-radio v-if="UserRole == 'Dealer'||UserRole == 'Administrator'" :label="201">草稿 {{OrderNumbers['201']}}</el-radio>
+                <el-radio v-if="UserRole == 'Dealer'||UserRole == 'Administrator'||UserRole =='RegionManager'" :label="202">区域审批 {{OrderNumbers['202']}}</el-radio>
+                <el-radio :label="203">总部审批 {{OrderNumbers['203']}}</el-radio>
+                <el-radio :label="204">审批通过 {{OrderNumbers['204']}}</el-radio>
+                <el-radio :label="205">已发物流 {{OrderNumbers['205']}}</el-radio>
+                <el-radio :label="206">已结束 {{OrderNumbers['206']}}</el-radio>
+                <el-radio :label="207">区域驳回 {{OrderNumbers['207']}}</el-radio>
+                <el-radio :label="208">总部驳回 {{OrderNumbers['208']}}</el-radio>
+                <el-radio :label="209">已取消 {{OrderNumbers['209']}}</el-radio>
+                <el-radio :label="210">已拒绝支持 {{OrderNumbers['210']}}</el-radio>
             </el-radio-group>
         </template>
         <div style="display:inline-block">
             <div class="sort-select">
                 <el-select v-model="SearchField" placeholder="--请选择要查询的字段--" style="width:200px">
-                    <el-option v-for="(item, index) in selectList" :key="index" v-if="item.role.includes(UserRole)" :label="item.label" :value="item.value"></el-option>
+                    <el-option v-for="(item, index) in selectList" :key="index" :label="item.label" :value="item.value"></el-option>
                 </el-select>
             </div>
             <div class="handle-input">
@@ -28,30 +30,31 @@
             </div>
         </div>
 
-        <router-link class="button" to="/orderDetial" v-if = "UserRole == 'Dealer'">
+        <router-link class="button" to="/orderDetial" v-if="UserRole == 'Dealer'">
             <el-button type="primary" class="newOrderButton" style="font-size:13px">新建订单</el-button>
         </router-link>
     </div>
     <el-table :data="Orders" class="table" ref="multipleTable" @sort-change="handleSortChange" :default-sort="{prop: 'CreateDate', order: 'descending'}" border @row-click="goMessageDetail" empty-text="搜索结果为空">
-        <el-table-column align="center" v-for="(item, index) in tableList" :key="index" v-if="item.role.includes(UserRole)"   :prop="item.prop" :label="item.label" :sortable="item.sortable" resizable :min-width="item.width"></el-table-column>
-        <el-table-column prop="RepairCostTotal" label="本次维修价格" sortable min-width="150" align="center"></el-table-column>
-        <el-table-column prop="Repair_CurrentPrice_PCT" label="占实际价值比" sortable min-width="150" align="center"></el-table-column>
+        <el-table-column align="center" v-for="(item, index) in tableList" :key="index" :prop="item.prop" :label="item.label" :sortable="item.sortable" resizable :min-width="item.width"></el-table-column>
+        <!-- <el-table-column prop="RepairCostTotal" label="本次维修价格" sortable min-width="150" align="center"></el-table-column>
+        <el-table-column prop="Repair_CurrentPrice_PCT" label="占实际价值比" sortable min-width="150" align="center"></el-table-column> -->
         <!-- <el-table-column label="占实际价值比"  >
             <template slot-scope="scope">
               {{Math.round(scope.row.RepairCostTotal/scope.row.VehicleCurrentPrice*10000)/100 + '%'}}
           </template>
         </el-table-column> -->
-        <el-table-column prop="SparePartCostTotal" label="配件费用" sortable min-width="130" align="center"></el-table-column>
-        <el-table-column prop="Part_Repair_PCT" label="配件占比" sortable min-width="130" align="center"></el-table-column>
+        <!-- <el-table-column prop="SparePartCostTotal" label="配件费用" sortable min-width="130" align="center"></el-table-column>
+        <el-table-column prop="Part_Repair_PCT" label="配件占比" sortable min-width="130" align="center"></el-table-column> -->
         <!-- <el-table-column label="配件占比" >
             <template slot-scope="scope">
               {{Math.round(scope.row.SparePartCostTotal/scope.row.RepairCostTotal*10000)/100 + '%'}}
           </template>
         </el-table-column> -->
-        <el-table-column label="状态" sortable prop="StatusName"></el-table-column>
-        <el-table-column label="操作" align="center"  fixed="right">
+        <el-table-column label="操作" align="center" fixed="right">
             <template slot-scope="scope">
-                <el-button type="text" icon="el-icon-edit" @click.stop="goMessageDetail(scope.row)" @click.native="stopBubble">编辑</el-button>
+                <el-button type="text" icon="el-icon-edit" @click.stop="goMessageDetail(scope.row)" @click.native="stopBubble" v-if="UserRole=='Dealer'&& [201,205,207,208].includes(scope.row.StatusCode)">编辑</el-button>
+                <el-button type="text" icon="el-icon-view" @click.stop="goMessageDetail(scope.row)" @click.native="stopBubble" v-else>查看</el-button>
+                <el-button type="text" icon="el-icon-delete" @click.stop="goMessageDetail(scope.row)" @click.native="stopBubble" style="color:#ff4949" v-if="UserRole=='Dealer'&&[201,202,203,204,207,208].includes(scope.row.StatusCode)">取消</el-button>
             </template>
         </el-table-column>
     </el-table>
@@ -63,8 +66,12 @@
 </template>
 
 <script>
-import {General} from '@/networks/api'
-import {mapState} from 'vuex'
+import {
+    General
+} from '@/networks/api'
+import {
+    mapState
+} from 'vuex'
 export default {
     name: 'orderList',
     data() {
@@ -76,124 +83,109 @@ export default {
             SortType: 'DESC',
             RowOffset: 0,
             RowCount: 20,
+            OrderNumbers: '',
             Orders: [{
-                "OrderID": 0,
-                "ReferenceNumber": "",
-                "CreateDate": "",
-                "RegionID": "",
-                "RegionName": "",
-                "ProvinceID": "",
-                "ProvinceName": "",
-                "CityID": "",
-                "CityName": "",
-                "PlateNumber": "",
-                "VIN": "",
-                "SubModel": "",
-                "Insurer": "",
-                "RepairCostTotal": 0,
-                "VehicleCurrentPrice": 0,
-                "SparePartCostTotal": 0,
-                "StatusCode": 0,
-                "Status": ""
+                "OrderID": 122122,
+                "OrderNumber": "3613320181226143421",
+                "AccidentTypeID": 1,
+                "AccidentType": "大事故",
+                "SubmitDate": "2018-10-19 10:23:31",
+                "LastModified": "2018-10-19 10:23:31",
+                "RegionID": "100004",
+                "RegionName": "北区",
+                "ProvinceID": "110000",
+                "ProvinceName": "北京",
+                "CityID": "110100",
+                "CityName": "北京",
+                "PlateNumber": "京N88888",
+                "VIN": "LBVPZ1100ASD77412",
+                "SubModelName": "520Li",
+                "DealerName": "北京华德宝",
+                "StatusCode": 201,
+                "StatusName": "草稿"
             }],
             TotalNumber: 0,
             selectList: [{
-                label: '区域',
-                value: 'RegionName',
-                role:  ['BMW-BP','Administrator']
-            },{
-                label: '省份',
-                value: 'ProvinceName',
-                role:  ['RegionManager', 'BMW-BP','Administrator']
-            },{
-                label: '城市',
-                value: 'CityName',
-                role:  ['RegionManager', 'BMW-BP','Administrator']
-            },{
-                label: '经销商名称',
-                value: 'DealerName',
-                role:  ['RegionManager', 'BMW-BP','Administrator']
-            },{
-                label: '车牌号',
-                value: 'PlateNumber',
-                role:  ['Dealer','Administrator']
-            },{
-                label: 'VIN码',
-                value: 'VIN',
-                role:  ['Dealer','Administrator']
-            },
-            // {
-            //     label: '保险公司',
-            //     value: 'InsurerName',
-            //     role:  ['Dealer', 'RegionManager','Administrator']
-            // },
-            {
-                label: '车型',
-                value: 'SubModelName',
-                sortable: true,
-                role:  ['Dealer','Administrator']
-            }],
+                    label: '区域',
+                    value: 'RegionName',
+                }, {
+                    label: '省份',
+                    value: 'ProvinceName',
+
+                }, {
+                    label: '城市',
+                    value: 'CityName',
+
+                }, {
+                    label: '经销商名称',
+                    value: 'DealerName',
+
+                }, {
+                    label: '车牌号',
+                    value: 'PlateNumber',
+
+                }, {
+                    label: '车架号',
+                    value: 'VIN',
+
+                },
+                // {
+                //     label: '保险公司',
+                //     value: 'InsurerName',
+                //     role:  ['Dealer', 'RegionManager','Administrator']
+                // },
+                {
+                    label: '车型',
+                    value: 'SubModelName',
+                    sortable: true,
+
+                }
+            ],
             tableList: [{
-                prop: 'CreateDate',
-                label: '创建日期',
+                prop: 'OrderNumber',
+                label: '订单号',
                 sortable: true,
-                role:  ['Dealer','Administrator'],
-                width:135
-            },{
-                prop: 'PlateNumber',
-                label: '车牌号',
+                width:110
+            }, {
+                prop: 'AccidentType',
+                label: '申请类型',
                 sortable: true,
-                role:  ['Dealer','Administrator'],
-                width:100
-            },{
-                prop: 'SubmitDate',
-                label: '申请日期',
+                width:70
+            }, {
+                prop: 'StatusName',
+                label: '状态',
                 sortable: true,
-                role:  ['RegionManager', 'BMW-BP','Administrator'],
-                width:135
-            },{
-                prop: 'RegionName',
-                label: '区域',
-                sortable: true,
-                role:  ['BMW-BP','Administrator']
-            },{
-                prop: 'ProvinceName',
-                label: '省份',
-                sortable: true,
-                role:  ['RegionManager', 'BMW-BP','Administrator']
-            },{
-                prop: 'CityName',
-                label: '城市',
-                sortable: true,
-                role:  ['RegionManager', 'BMW-BP','Administrator']
-            },{
+                width:55
+            }, {
                 prop: 'DealerName',
                 label: '经销商名称',
                 sortable: true,
-                role:  ['RegionManager', 'BMW-BP','Administrator'],
-                width:120
-            },{
-                prop: 'VIN',
-                label: 'VIN',
-                sortable: true,
-                role:  ['Dealer','Administrator'],
-                width: 175
-            },{
+
+            }, {
                 prop: 'SubModelName',
                 label: '车型',
                 sortable: true,
-                role:  ['Dealer','Administrator']
-            },{
-                prop: 'InsurerName',
-                label: '保险公司',
+                width:55
+            }, {
+                prop: 'PlateNumber',
+                label: '车牌号',
                 sortable: true,
-                role:  ['Dealer', 'RegionManager','Administrator'],
-                width:120
+                width:60
+            }, {
+                prop: 'VIN',
+                label: '车架号',
+                sortable: true,
+                width:110
+            }, {
+                prop: 'LastModified',
+                label: '更新日期',
+                sortable: true,
+                width:100
             }]
         }
     },
     methods: {
-        stopBubble () {
+        stopBubble() {
             event.stopPropagation()
         },
         handleRadioChange(val) {
@@ -208,7 +200,7 @@ export default {
         },
         handleSortChange(obj) {
             //console.log(obj)
-            this.SortType = obj.order == 'ascending'? 'ASC' : obj.order == 'descending' ? 'DESC' : null
+            this.SortType = obj.order == 'ascending' ? 'ASC' : obj.order == 'descending' ? 'DESC' : null
             this.SortField = obj.prop
             this.getData()
         },
@@ -225,7 +217,7 @@ export default {
                 }
             });
         },
-        goMessageDetail(data){
+        goMessageDetail(data) {
             this.$router.push({
                 name: 'orderDetial',
                 params: {
@@ -247,14 +239,22 @@ export default {
                 this.TotalNumber = response.Data.TotalNumber
                 this.Orders = response.Data.Orders
             } catch (error) {
-
+                console.log(error)
+            }
+        },
+        async getOrderNumbers() {
+            try {
+                const response = await General.GetOrderNumbers()
+                this.OrderNumbers = response.Data
+            } catch (e) {
+                console.log(e)
             }
         },
         search() {
 
         }
     },
-    computed:{
+    computed: {
         ...mapState([
             'UserName',
             'UserRole'
@@ -262,12 +262,16 @@ export default {
     },
     created() {
         this.getData()
+        this.getOrderNumbers()
     }
 }
 </script>
 
 <style lang="less">
 .main-container {
+    .el-radio {
+        margin: 5px 0;
+    }
     background: #ffffff;
     padding: 10px;
     .search-box {

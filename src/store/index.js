@@ -50,7 +50,7 @@ const store = new Vuex.Store({
             if (item) {
                 delItem.path === router.currentRoute.fullPath && router.push(item.path);
             } else {
-                router.push('/');
+                router.push('/orderList');
             }
         },
         closeAll: (state, payload) => {

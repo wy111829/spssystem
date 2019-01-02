@@ -2,6 +2,9 @@
 <div class="newOrder-container">
     <div class="container">
         <div class="form-box-neworder">
+            <div class="orderNumber">
+                当前订单编号：{{detailData.OrderNumber}}
+            </div>
             <div class="form-title">
                 基本信息
             </div>
@@ -9,9 +12,9 @@
                 <el-row :gutter="20">
                     <el-col :md="6" :sm="12">
                         <el-form-item label="事故类型">
-                            <el-radio-group>
-                                <el-radio label="">大事故</el-radio>
-                                <el-radio label="">水淹车</el-radio>
+                            <el-radio-group v-model="detailData.AccidentType">
+                                <el-radio :label="1">大事故</el-radio>
+                                <el-radio :label="2">水淹车</el-radio>
                             </el-radio-group>
                         </el-form-item>
                     </el-col>
@@ -24,7 +27,7 @@
                     </el-col>
                     <el-col :md="6" :sm="12">
                         <el-form-item label="经销商CKD代码">
-                            <el-input></el-input>
+                            <el-input v-model="detailData.DealerCKD"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
@@ -49,7 +52,7 @@
                     </el-col>
                     <el-col :md="6" :sm="12">
                         <el-form-item label="主车型名称">
-                            <el-input v-model="detailData.SubModelName" disabled></el-input>
+                            <el-input v-model="detailData.BaseModelName" disabled></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
@@ -88,55 +91,55 @@
                 <el-row :gutter="20">
                     <el-col :md="6" :sm="12">
                         <el-form-item label="配件费用">
-                            <el-input v-model="detailData.SparePartCostTotal" type="number"></el-input>
+                            <el-input v-model="detailData.PartCost" type="number"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
                         <el-form-item label="工时及其他费用">
-                            <el-input v-model="detailData.LaborCostTotal" type="number"></el-input>
+                            <el-input v-model="detailData.LaborPaintCost" type="number"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
                         <el-form-item label="维修费用">
                             <i class="el-icon-info iconInfo" title="=配件费用+工时及其他费用"></i>
-                            <el-input v-model="detailData.RepairCostTotal" type="number"></el-input>
+                            <el-input v-model="detailData.RepairCost" type="number"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
                         <el-form-item label="采购零件总额">
-                            <el-input v-model="detailData.DealerName"></el-input>
+                            <el-input v-model="detailData.OrderPartCost"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
                         <el-form-item label="车损险保额">
-                            <el-input v-model="detailData.VehicleOwner"></el-input>
+                            <el-input v-model="detailData.InsuranceCoverage"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
                         <el-form-item label="维修费用/车损险保额">
-                            <!-- <el-popover placement="top-start" trigger="hover" content="=维修费用/车损险保额*100%">
+                            <!-- <el-popover placement="top-start" trigger="hover" content="=维修费用/车损险保额*100%" placement="right">
                                 <i class="el-icon-info iconInfo" slot="reference"></i>
                             </el-popover> -->
                             <i class="el-icon-info iconInfo" title="=维修费用/车损险保额*100%"></i>
-                            <el-input v-model="detailData.PlateNumber"></el-input>
+                            <el-input v-model="detailData.Repair_Div_Insurance"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
                         <el-form-item label="配件费用/维修费用">
                             <i class="el-icon-info iconInfo" title="=配件费用/维修费用*100%"></i>
-                            <el-input v-model="detailData.VIN" disabled=""></el-input>
+                            <el-input v-model="detailData.Part_Div_Repair" disabled=""></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
                         <el-form-item label="采购零件总额/配件费用">
                             <i class="el-icon-info iconInfo" title="=采购零件总额/配件费用*100%"></i>
-                            <el-input v-model="detailData.SubModelName" disabled></el-input>
+                            <el-input v-model="detailData.OrderPart_Div_Part" disabled></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
                         <el-form-item label="配件折扣支持">
                             <i class="el-icon-info iconInfo" title="=(采购零件总额-增值税)*15%"></i>
-                            <el-input v-model="detailData.SubModelName" disabled></el-input>
+                            <el-input v-model="detailData.OrderPartDiscount" disabled></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
@@ -149,16 +152,16 @@
                     </el-col>
                     <el-col :md="6" :sm="12">
                         <el-form-item label="申请额外服务费">
-                            <el-radio-group>
-                                <el-radio label="">是</el-radio>
-                                <el-radio label="">否</el-radio>
+                            <el-radio-group v-model="detailData.ApplyExtraServiceCost">
+                                <el-radio :label='true'>是</el-radio>
+                                <el-radio :label='false'>否</el-radio>
                             </el-radio-group>
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
-                        <el-form-item label="额外服务费">
+                        <el-form-item label="额外服务费" v-if="detailData.ApplyExtraServiceCost">
                             <i class="el-icon-info iconInfo" title="=(采购零件总额-增值税)*10%"></i>
-                            <el-input v-model="detailData.InsuranceNumber"></el-input>
+                            <el-input v-model="detailData.ExtraServiceCost"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -192,19 +195,43 @@
                         <el-checkbox v-model="scope.row.IsOrdered"></el-checkbox>
                     </template>
                 </el-table-column>
-                <el-table-column prop="" label="物流说明" show-overflow-tooltip width="200">
+                <el-table-column prop="" label="物流备注" show-overflow-tooltip width="400">
                     <template slot-scope="scope">
                         <el-input placeholder="请输入内容" v-model="scope.row.LogisticsCmt" clearable>
                         </el-input>
                     </template>
                 </el-table-column>
-                <el-table-column prop="" label="宝马审批说明" show-overflow-tooltip width="200">
-                    <template slot-scope="scope">
-                        <el-input placeholder="请输入内容" v-model="scope.row.BMWApprovalCmt" clearable>
-                        </el-input>
-                    </template>
-                </el-table-column>
             </el-table>
+            <el-button type="primary" @click="addPartDialog = true">添加零件</el-button>
+            <el-dialog title="添加零件" :visible.sync="addPartDialog" width="40%">
+                <el-form label-width="100px">
+                    <el-form-item label="订购类型：">
+                        <el-input></el-input>
+                    </el-form-item>
+                    <el-form-item label="零件号：">
+                        <el-input></el-input>
+                    </el-form-item>
+                    <el-form-item label="订购数量：">
+                        <el-input type="number"></el-input>
+                    </el-form-item>
+                    <el-form-item label="单价：">
+                        <el-input type="number"></el-input>
+                    </el-form-item>
+                    <el-form-item label="总价：">
+                        <el-input type="number"></el-input>
+                    </el-form-item>
+                    <el-form-item label="是否订购：">
+                        <el-checkbox></el-checkbox>
+                    </el-form-item>
+                    <el-form-item label="物流备注：">
+                        <el-input type="number"></el-input>
+                    </el-form-item>
+                </el-form>
+                <div class="text-center">
+                    <el-button type="primary">添加该零件</el-button>
+                    <el-button type="primary" @click="addPartDialog = false">取消添加该零件</el-button>
+                </div>
+            </el-dialog>
         </div>
         <div class="form-box-neworder">
             <div class="form-title">
@@ -250,20 +277,21 @@
                 </el-row>
             </el-form>
         </div>
-        <div class="form-box-neworder text-center">
-            <el-button type="primary" @click="submitToSaveOrder('detailData')">保存但不提交</el-button>
+        <!-- <div class="form-box-neworder text-center">
+            <el-button type="primary" @click="submitToSaveOrder('detailData')">保存</el-button>
             <el-button type="primary" @click="submitToSubmitOrder('detailData')">保存并提交</el-button>
-            <el-button @click="handleGoBack">取消</el-button>
+            <el-button @click="handleGoBack">返回订单列表</el-button>
             <el-button type="danger" @click="handleDeleteOrder">删除</el-button>
-        </div>
+        </div> -->
 
         <el-form class="inline-form el-row" label-width="200px">
-            <el-form-item label="审核备注：" class="el-col el-col-12 el-col-xs-24">
+            <el-form-item label="审核备注：" class="el-col el-col-12" style="margin-right:10px;">
                 <el-input v-model="Comment" placeholder=""></el-input>
             </el-form-item>
             <el-button type="primary" @click="handleApproved('Approved')">通过</el-button>
-            <el-button type="danger" @click="handleApproved('Rejected')">不通过</el-button>
-            <el-button @click="handleGoBack">退出</el-button>
+            <el-button type="danger" @click="handleApproved('Rejected')">驳回</el-button>
+            <el-button type="danger" @click="handleApproved('Rejected')">拒绝支持</el-button>
+            <el-button type="" @click="handleApproved('Rejected')">返回订单列表</el-button>
         </el-form>
 
         <div class="form-box-neworder">
@@ -298,11 +326,13 @@ export default {
     name: 'orderDetail',
     data: function() {
         return {
+            addPartDialog: false,
             Result: '', // 审批结果 “Approved”：通过 “Rejected”：不通过
             Comment: '', //审核备注
             detailData: {
                 OrderID: '',
                 MyClaimID: '',
+                AccidentType: '',
                 ReferenceNumber: "",
                 VehicleOwner: "",
                 PlateNumber: "",
@@ -311,34 +341,33 @@ export default {
                 FZA: null,
                 HST: null,
                 HT: null,
+                BaseModelID:12,
+                BaseModelName:"5 Series (5系) Lim. (F10/F18) (08.2010->)",
                 UT: null,
                 SubModelID: '',
                 SubModelName: "",
+                VehicleMadeCountry:'',
                 VehicleFirstRegDate: "",
                 VehicleAge: '',
                 InsurerID: '',
                 InsurerName: "",
-                InsurerContactPerson: "",
                 InsuranceNumber: "",
                 AccidentBrief: "",
-                VehicleMSRP: '',
-                VehicleCurrentPrice: '',
-                RepairCostTotal: '',
-                Repair_CurrentPrice_PCT: '',
-                SparePartCostTotal: '',
-                Part_Repair_PCT: '',
-                LaborCostTotal: '',
-                InsuredAmount: '',
-                IsManufacturerPaint: true,
-                HasAdditionalLabor: false,
-                CaseStatus: "",
-                IsCustomerChurned: false,
-                ChurnTo: "",
-                ChurnReason: "",
-                RetentionActions: "",
+                PartCost:'',
+                LaborPaintCost: '',
+                RepairCost: '',
+                OrderPartCost:'',
+                InsuranceCoverage:'',
+                Repair_Div_Insurance:'',
+                Repair_Div_Insurance:'',
+                Part_Div_Repair:'',
+                OrderPart_Div_Part:'',
+                OrderPartDiscount:'',
+                ApplyExtraServiceCost:true,
+                ExtraServiceCost:'',
                 SpareParts: [],
-                Attachments: [],
             },
+            Attachments: [],
             rules: {
                 VehicleMSRP: [{
                     required: true,
@@ -598,12 +627,16 @@ export default {
 </script>
 <style lang="less">
 .newOrder-container {
+    .orderNumber{
+        text-align: center;
+        font-weight: 600;
+    }
     .form-box-neworder {
         .form-title {
             font-size: 16px;
             font-weight: bold;
             padding-left: 10px;
-            border-bottom: 1px solid #000000;
+            border-bottom: 1px solid #dedede;
             margin: 20px 0;
         }
         .DealerMessage {

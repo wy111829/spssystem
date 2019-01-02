@@ -9,7 +9,7 @@ import 'element-ui/lib/theme-chalk/index.css'   // 默认主题
 // import '../static/css/theme-green/index.css';       // 浅绿色主题
 import '../static/css/icon.css'
 import "babel-polyfill"
-//import '@/MockData/MockData'
+import '@/MockData/MockData'
 
 Vue.use(ElementUI, { size: 'small' })
 Vue.prototype.$axios = axios

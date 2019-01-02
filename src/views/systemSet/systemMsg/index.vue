@@ -3,9 +3,21 @@
         <router-link class="button" to="/systemMsgNew">
             <el-button type="primary" v-if="UserRole == 'BMW-BP' ||UserRole == 'Administrator' ">新建消息</el-button>
         </router-link>
-        <el-table :data="Messages" class="table" ref='multipleTable' @row-click="goMessageDetail">
+        <div class="search-box">
+            <div class="sort-select">
+                <el-select v-model="SearchField" placeholder="--请选择要查询的字段--" style="width:200px">
+                    <el-option v-for="(item, index) in selectList" :key="index" :label="item.label" :value="item.value"></el-option>
+                </el-select>
+            </div>
+            <div class="handle-input">
+                <el-input placeholder="" v-model="SearchValue" class="input-with-select">
+                    <el-button slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
+                </el-input>
+            </div>
+        </div>
+        <el-table :data="Messages" class="table" ref='multipleTable' @row-click="goMessageDetail" @sort-change="handleSortChange">
             <el-table-column label="消息内容" prop="MessageContent"></el-table-column>
-            <el-table-column label="消息发送日期" prop="PublishDate"></el-table-column>
+            <el-table-column label="消息发送日期" prop="PublishDate" sortable ></el-table-column>
             <el-table-column label="操作" align="center"  v-if="UserRole == 'BMW-BP' ||UserRole == 'Administrator' ">
                 <template slot-scope="scope">
                     <el-button type="text" icon="el-icon-delete" @click.stop="handleDelet(scope.row)" style="color:#ff4949">删除</el-button>
@@ -53,9 +65,20 @@ export default {
             TotalNumber:120,
             RowOffset:0,
             RowCount: 20,
+            SearchField: '',
+            SearchValue: '',
+            SortField: 'CreateDate',
+            SortType: 'DESC',
             dialogFormVisible: false,
             MessageDetail: '',
-            MessageDetailPublishDate:''
+            MessageDetailPublishDate:'',
+            selectList: [{
+                label: '--请选择要查询的字段--',
+                value: ''
+            },{
+                label: '消息内容',
+                value: 'MessageContent'
+            }]
         }
     },
     computed: {
@@ -85,11 +108,31 @@ export default {
                 console.log(error)
             }
         },
+        handleSearch(val) {
+            if (this.SearchValue.trim()) {
+                this.SearchValue = this.SearchValue.trim()
+                this.GetSysMessageList()
+            }
+        },
+        handleSortChange(obj) {
+            //console.log(obj)
+            this.SortType = obj.order == 'ascending'? 'ASC' : obj.order == 'descending' ? 'DESC' : null
+            this.SortField = obj.prop
+            this.GetSysMessageList()
+        },
+        handleCurrentChange(val) {
+            this.RowOffset = val;
+            this.GetSysMessageList();
+        },
         async GetSysMessageList() {
             try {
                 const response = await General.GetSysMessageList({
                     "RowOffset":this.RowOffset,
-                    "RowCount":this.RowCount
+                    "RowCount":this.RowCount,
+                    "SearchField": this.SearchField,
+                    "SearchValue": this.SearchValue,
+                    "SortField": this.SortField,
+                    "SortType": this.SortType
                 })
                 this.TotalNumber = response.Data.TotalNumber
                 this.Messages = response.Data.Messages
@@ -121,9 +164,35 @@ export default {
 </script>
 
 <style lang="less">
-.table{
-    margin-top: 20px;
+.main-container {
+    background: #ffffff;
+    padding: 10px;
+    .search-box {
+        padding: 10px 0;
+    }
+    .handle-box {
+        margin-bottom: 20px;
+    }
+
+    .handle-select {
+        width: 120px;
+    }
+    .handle-input {
+        width: 300px;
+        margin: 10px;
+        display: inline-block;
+    }
+    .sort-select {
+        width: 200px;
+        margin: 10px;
+        display: inline-block;
+    }
+    .el-input--small .el-input__inner {
+    height: 32px;
+    line-height: 30px;
 }
+}
+
 .MessageDetail{
     min-height: 50px;
     margin:20px;

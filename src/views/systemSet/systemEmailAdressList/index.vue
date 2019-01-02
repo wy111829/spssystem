@@ -2,8 +2,10 @@
 <div class="main-container">
     <!-- <el-button type="primary" class="newOrderButton" @click="dialogFormVisible=true">新建邮箱地址</el-button> -->
     <el-table :data="MailAddresses" class="table" ref="multipleTable" @row-click="goMessageDetail">
-        <el-table-column prop="MailBoxAddress" label="邮箱"></el-table-column>
-        <el-table-column prop="MailBoxName" label="使用人"></el-table-column>
+        <el-table-column prop="MailBoxAddress" label="账号(邮箱)"></el-table-column>
+        <el-table-column prop="MailBoxName" label="名称"></el-table-column>
+        <el-table-column prop="MailBoxRole" label="角色"></el-table-column>
+        <el-table-column prop="UpdataTime" label="更新时间"></el-table-column>
         <el-table-column prop="StatusName" label="状态">
             <template slot-scope="scope">
                 <el-switch v-model="scope.row.StatusCode" @click.native="stopBubble" @change="ChangeMailAddressStatus(scope.$index, scope.row)" active-color="#13ce66" inactive-color="#ff4949" active-text="启用" inactive-text="停用" :active-value="101" :inactive-value="102"></el-switch>
