@@ -213,7 +213,7 @@
                 </el-table-column>
                 <el-table-column label="操作" align="center" fixed="right">
                     <template slot-scope="scope">
-                        <el-button type="text" icon="el-icon-delete" style="color:#ff4949" @click="handleDeletPart(scope.$index)">删除</el-button>
+                        <el-button type="text" icon="el-icon-delete" style="color:#ff4949" @click="handleDeletPart(scope.$index, scope)">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -388,13 +388,13 @@ export default {
             newSpareParts: {
                 OrderType: 'SPSO',
                 Price_Old: '',
-                Price:'',
+                Price: '',
                 PartNumber: '',
-                Quantity_Old:'',
+                Quantity_Old: '',
                 Quantity: '',
-                TotalPrice_Old:'',
+                TotalPrice_Old: '',
                 TotalPrice: '',
-                IsManualAddPart:true,
+                IsManualAddPart: true,
                 IsOrdered: false,
                 LogisticsCmt: ''
             },
@@ -414,18 +414,18 @@ export default {
         }
     },
     filters: {
-        NumFormat:function(value) {
-            if(!value) return '0.00'
+        NumFormat: function(value) {
+            if (!value) return '0.00'
             value = value.toString()
-            var intPart =  Number(value)|0 //获取整数部分
+            var intPart = Number(value) | 0 //获取整数部分
             var intPartFormat = intPart.toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,') //将整数部分逢三一断
-            var floatPart = ".00"//预定义小数部分
+            var floatPart = ".00" //预定义小数部分
             var value2Array = value.split(".")
             //=2表示数据有小数位
-            if(value2Array.length == 2) {
+            if (value2Array.length == 2) {
                 floatPart = value2Array[1].toString() //拿到小数部分
 
-                if(floatPart.length == 1) { //补0,实际上用不着
+                if (floatPart.length == 1) { //补0,实际上用不着
                     return intPartFormat + "." + floatPart + '0'
                 } else {
                     return intPartFormat + "." + floatPart
@@ -473,10 +473,10 @@ export default {
         //         this.$refs.multipleTable.clearSelection();
         //     }
         // },
-        async handleCreateOrder(type){//创建新订单
+        async handleCreateOrder(type) { //创建新订单
             try {
                 const response = await Dealer.CreateOrder({
-                    AccidentType : type
+                    AccidentType: type
                 })
                 for (var variable in response.Data) {
                     this.detailData[variable] = response.Data[variable]
@@ -489,11 +489,11 @@ export default {
         addSpareParts() { //添加零件
             this.newSpareParts.Price_Old = this.newSpareParts.Price
             this.newSpareParts.Quantity_Old = this.newSpareParts.Quantity
-            this.newSpareParts.TotalPrice =this.newSpareParts.Quantity&&this.newSpareParts.Price?this.newSpareParts.Quantity*this.newSpareParts.Price:0
+            this.newSpareParts.TotalPrice = this.newSpareParts.Quantity && this.newSpareParts.Price ? this.newSpareParts.Quantity * this.newSpareParts.Price : 0
             this.newSpareParts.TotalPrice_Old = this.newSpareParts.TotalPrice
             let Obj = JSON.parse(JSON.stringify(this.newSpareParts)) //深拷贝
             this.detailData.SpareParts.push(Obj)
-            for(var key in this.newSpareParts){
+            for (var key in this.newSpareParts) {
                 this.newSpareParts[key] = ''
             }
             this.newSpareParts.OrderType = "SPSO"
@@ -501,8 +501,12 @@ export default {
             this.addPartDialog = false
             console.log(this.detailData.SpareParts)
         },
-        handleDeletPart(index) { //删除零件
-            this.detailData.SpareParts.splice(index,1)
+        handleDeletPart(index, data) { //删除零件
+
+            let arrindex = this.detailData.SpareParts.indexOf(data.row)
+
+            this.detailData.SpareParts.splice(arrindex, 1)
+            // this.detailData.SpareParts.splice(index,1)
             console.log(this.detailData.SpareParts)
         },
         async handleRemoveFile(index, filename) { // 附件删除
