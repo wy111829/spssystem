@@ -1,5 +1,15 @@
 <template>
 <div class="newOrder-container">
+    <el-dialog title="你正在创建新订单，请选择事故类型：" class="selectAccidentType" :close-on-click-modal="false" :close-on-press-escape="false" :visible.sync="selectAccidentType" :show-close="false">
+        <el-radio-group v-model="detailData.AccidentType" style="text-align:center">
+            <el-radio :label="1">大事故</el-radio>
+            <el-radio :label="2">水淹车</el-radio>
+        </el-radio-group>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="handleGoBack()">取消</el-button>
+            <el-button type="primary" @click="handleCreateOrder(detailData.AccidentType)" :disabled="!detailData.AccidentType">确 定</el-button>
+        </div>
+    </el-dialog>
     <div class="container">
         <div class="form-box-neworder">
             <div class="orderNumber">
@@ -87,7 +97,7 @@
             <div class="form-title">
                 维修成本分析
             </div>
-            <el-form class="inline-form">
+            <el-form class="inline-form text-right">
                 <el-row :gutter="20">
                     <el-col :md="6" :sm="12">
                         <el-form-item label="配件费用">
@@ -143,7 +153,7 @@
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
-                        <el-form-item label="是否购买涉水险">
+                        <el-form-item label="是否购买涉水险" v-if="detailData.AccidentType=='2'">
                             <el-radio-group>
                                 <el-radio label="">是</el-radio>
                                 <el-radio label="">否</el-radio>
@@ -151,7 +161,7 @@
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
-                        <el-form-item label="申请额外服务费">
+                        <el-form-item label="申请额外服务费" v-if="detailData.AccidentType=='1'">
                             <el-radio-group v-model="detailData.ApplyExtraServiceCost">
                                 <el-radio :label='true'>是</el-radio>
                                 <el-radio :label='false'>否</el-radio>
@@ -159,7 +169,7 @@
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
-                        <el-form-item label="额外服务费" v-if="detailData.ApplyExtraServiceCost">
+                        <el-form-item label="额外服务费" v-if="detailData.AccidentType=='1'&&detailData.ApplyExtraServiceCost">
                             <i class="el-icon-info iconInfo" title="=(采购零件总额-增值税)*10%"></i>
                             <el-input v-model="detailData.ExtraServiceCost"></el-input>
                         </el-form-item>
@@ -171,8 +181,8 @@
             <div class="form-title">
                 零件列表
             </div>
-            <el-table ref="multipleTable" :data="detailData.SpareParts" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange" :default-sort="{prop: 'PartNumber', order: 'descending'}">
-                <el-table-column label="订购类型"></el-table-column>
+            <el-table ref="multipleTable" :data="detailData.SpareParts" tooltip-effect="dark" style="width: 100%">
+                <el-table-column label="订购类型" prop="OrderType"></el-table-column>
                 <el-table-column label="配件号" sortable prop="PartNumber" min-width="100">
                 </el-table-column>
                 <el-table-column prop="PartName" label="配件名称" min-width="150">
@@ -195,40 +205,49 @@
                         <el-checkbox v-model="scope.row.IsOrdered"></el-checkbox>
                     </template>
                 </el-table-column>
-                <el-table-column prop="" label="物流备注" show-overflow-tooltip width="400">
+                <el-table-column prop="LogisticsCmt" label="物流备注" show-overflow-tooltip width="300">
                     <template slot-scope="scope">
                         <el-input placeholder="请输入内容" v-model="scope.row.LogisticsCmt" clearable>
                         </el-input>
                     </template>
                 </el-table-column>
+                <el-table-column label="操作" align="center" fixed="right">
+                    <template slot-scope="scope">
+                        <el-button type="text" icon="el-icon-delete" style="color:#ff4949" @click="handleDeletPart(scope.$index)">删除</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
             </el-table>
             <el-button type="primary" @click="addPartDialog = true">添加零件</el-button>
             <el-dialog title="添加零件" :visible.sync="addPartDialog" width="40%">
                 <el-form label-width="100px">
                     <el-form-item label="订购类型：">
-                        <el-input></el-input>
+                        <el-input disabled v-model="newSpareParts.OrderType"></el-input>
                     </el-form-item>
                     <el-form-item label="零件号：">
-                        <el-input></el-input>
+                        <el-input v-model="newSpareParts.PartNumber"></el-input>
+                    </el-form-item>
+                    <el-form-item label="配件名称：">
+                        <el-input v-model="newSpareParts.PartName"></el-input>
                     </el-form-item>
                     <el-form-item label="订购数量：">
-                        <el-input type="number"></el-input>
+                        <el-input type="number" v-model="newSpareParts.Quantity"></el-input>
                     </el-form-item>
                     <el-form-item label="单价：">
-                        <el-input type="number"></el-input>
+                        <el-input type="number" v-model="newSpareParts.Price"></el-input>
                     </el-form-item>
                     <el-form-item label="总价：">
-                        <el-input type="number"></el-input>
+                        <el-input type="number" disabled :value="newSpareParts.Quantity&&newSpareParts.Price?newSpareParts.Quantity*newSpareParts.Price:''"></el-input>
                     </el-form-item>
                     <el-form-item label="是否订购：">
-                        <el-checkbox></el-checkbox>
+                        <el-checkbox v-model="newSpareParts.IsOrdered"></el-checkbox>
                     </el-form-item>
                     <el-form-item label="物流备注：">
-                        <el-input type="number"></el-input>
+                        <el-input v-model="newSpareParts.LogisticsCmt"></el-input>
                     </el-form-item>
                 </el-form>
                 <div class="text-center">
-                    <el-button type="primary">添加该零件</el-button>
+                    <el-button type="primary" @click="addSpareParts()">添加该零件</el-button>
                     <el-button type="primary" @click="addPartDialog = false">取消添加该零件</el-button>
                 </div>
             </el-dialog>
@@ -305,18 +324,6 @@
             </el-row>
         </div>
     </div>
-    <el-dialog title="你正在创建新订单，请选择事故类型：" class="selectAccidentType" :close-on-click-modal="false" :close-on-press-escape="false" :visible.sync="selectAccidentType" :show-close="false">
-        <el-radio-group v-model="detailData.AccidentType" style="text-align:center">
-          <el-radio :label="1">大事故</el-radio>
-          <el-radio :label="2">水淹车</el-radio>
-        </el-radio-group>
-        <div slot="footer" class="dialog-footer">
-            <router-link to="/orderList">
-                <el-button type="">取消</el-button>
-            </router-link>
-            <el-button type="primary" @click="selectAccidentType = false" :disabled="!detailData.AccidentType">确 定</el-button>
-        </div>    
-    </el-dialog>
 </div>
 </template>
 
@@ -352,34 +359,44 @@ export default {
                 FZA: null,
                 HST: null,
                 HT: null,
-                BaseModelID:12,
-                BaseModelName:"",
+                BaseModelID: 12,
+                BaseModelName: "",
                 UT: null,
                 SubModelID: '',
                 SubModelName: "",
-                VehicleMadeCountry:'',
+                VehicleMadeCountry: '',
                 VehicleFirstRegDate: "",
                 VehicleAge: '',
                 InsurerID: '',
                 InsurerName: "",
                 InsuranceNumber: "",
                 AccidentBrief: "",
-                PartCost:'',
+                PartCost: '',
                 LaborPaintCost: '',
                 RepairCost: '',
-                OrderPartCost:'',
-                InsuranceCoverage:'',
-                Repair_Div_Insurance:'',
-                Repair_Div_Insurance:'',
-                Part_Div_Repair:'',
-                OrderPart_Div_Part:'',
-                OrderPartDiscount:'',
-                ApplyExtraServiceCost:true,
-                ExtraServiceCost:'',
+                OrderPartCost: '',
+                InsuranceCoverage: '',
+                Repair_Div_Insurance: '',
+                Repair_Div_Insurance: '',
+                Part_Div_Repair: '',
+                OrderPart_Div_Part: '',
+                OrderPartDiscount: '',
+                ApplyExtraServiceCost: true,
+                ExtraServiceCost: '',
                 SpareParts: [],
             },
-            newSpareParts:{
-                
+            newSpareParts: {
+                OrderType: 'SPSO',
+                Price_Old: '',
+                Price:'',
+                PartNumber: '',
+                Quantity_Old:'',
+                Quantity: '',
+                TotalPrice_Old:'',
+                TotalPrice: '',
+                IsManualAddPart:true,
+                IsOrdered: false,
+                LogisticsCmt: ''
             },
             Attachments: [],
             rules: {
@@ -393,6 +410,28 @@ export default {
                     message: '车辆实际价值',
                     trigger: 'blur'
                 }]
+            }
+        }
+    },
+    filters: {
+        NumFormat:function(value) {
+            if(!value) return '0.00'
+            value = value.toString()
+            var intPart =  Number(value)|0 //获取整数部分
+            var intPartFormat = intPart.toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,') //将整数部分逢三一断
+            var floatPart = ".00"//预定义小数部分
+            var value2Array = value.split(".")
+            //=2表示数据有小数位
+            if(value2Array.length == 2) {
+                floatPart = value2Array[1].toString() //拿到小数部分
+
+                if(floatPart.length == 1) { //补0,实际上用不着
+                    return intPartFormat + "." + floatPart + '0'
+                } else {
+                    return intPartFormat + "." + floatPart
+                }
+            } else {
+                return intPartFormat + floatPart
             }
         }
     },
@@ -420,24 +459,51 @@ export default {
             let now = new Date()
             let cartime = new Date(val)
             let cartotlemonth = Math.round((now - cartime) / 1000 / 60 / 60 / 24 / 30)
-            let year = parseInt(cartotlemonth / 12)
-            let month = cartotlemonth % 12
-            this.detailData.VehicleAge = year == 0 ? month + '个月' : year + '年零' + month + '个月'
+            // let year = parseInt(cartotlemonth / 12)
+            // let month = cartotlemonth % 12
+            // this.detailData.VehicleAge = year == 0 ? month + '个月' : year + '年零' + month + '个月'
+            this.detailData.VehicleAge = cartotlemonth
         },
-        toggleSelection(rows) {
-            if (rows) {
-                rows.forEach(row => {
-                    this.$refs.multipleTable.toggleRowSelection(row);
-                });
-            } else {
-                this.$refs.multipleTable.clearSelection();
+        // toggleSelection(rows) {
+        //     if (rows) {
+        //         rows.forEach(row => {
+        //             this.$refs.multipleTable.toggleRowSelection(row);
+        //         });
+        //     } else {
+        //         this.$refs.multipleTable.clearSelection();
+        //     }
+        // },
+        async handleCreateOrder(type){//创建新订单
+            try {
+                const response = await Dealer.CreateOrder({
+                    AccidentType : type
+                })
+                for (var variable in response.Data) {
+                    this.detailData[variable] = response.Data[variable]
+                }
+            } catch (e) {
+                console.log(e)
             }
+            this.selectAccidentType = false
         },
-        handleSelectionChange(val) {
-            this.multipleSelection = val;
+        addSpareParts() { //添加零件
+            this.newSpareParts.Price_Old = this.newSpareParts.Price
+            this.newSpareParts.Quantity_Old = this.newSpareParts.Quantity
+            this.newSpareParts.TotalPrice =this.newSpareParts.Quantity&&this.newSpareParts.Price?this.newSpareParts.Quantity*this.newSpareParts.Price:0
+            this.newSpareParts.TotalPrice_Old = this.newSpareParts.TotalPrice
+            let Obj = JSON.parse(JSON.stringify(this.newSpareParts)) //深拷贝
+            this.detailData.SpareParts.push(Obj)
+            for(var key in this.newSpareParts){
+                this.newSpareParts[key] = ''
+            }
+            this.newSpareParts.OrderType = "SPSO"
+            this.newSpareParts.IsManualAddPart = true
+            this.addPartDialog = false
+            console.log(this.detailData.SpareParts)
         },
-        handleRemove(file, fileList) {
-            console.log(file, fileList);
+        handleDeletPart(index) { //删除零件
+            this.detailData.SpareParts.splice(index,1)
+            console.log(this.detailData.SpareParts)
         },
         async handleRemoveFile(index, filename) { // 附件删除
             try {
@@ -636,14 +702,13 @@ export default {
     },
     created() {
         this.routeChange()
-
         this.selectAccidentType = !this.$route.params.id
     }
 }
 </script>
 <style lang="less">
 .newOrder-container {
-    .orderNumber{
+    .orderNumber {
         text-align: center;
         font-weight: 600;
     }
@@ -691,12 +756,17 @@ export default {
         }
     }
 }
-.selectAccidentType{
-    .el-dialog__body{
+.selectAccidentType {
+    .el-dialog__body {
         padding: 30px 20px;
         color: #606266;
         font-size: 25px;
         text-align: center;
+    }
+}
+.text-right {
+    input {
+        text-align: right;
     }
 }
 input::-webkit-inner-spin-button,

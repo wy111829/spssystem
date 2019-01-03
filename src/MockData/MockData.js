@@ -9,7 +9,6 @@ Mock.mock(/Login/, 'post', {
     "Code": 200,
     "Data":{
         "RoleCode":"Dealer",
-        "RoleName":"经销商",
         "UserName":"北京某某经销商"
     }
 })
@@ -18,9 +17,8 @@ Mock.mock(/Login/, 'post', {
 Mock.mock(/GetUserInfo/, 'get', {
     "Code": 200,
     "Data": {
-        "Role": "Dealer",
-        "RoleName":"经销商",
-        "UserName": "系统管理员"
+        "RoleCode":"Dealer",
+        "UserName":"北京某某经销商"
     }
 })
 
@@ -251,6 +249,29 @@ Mock.mock(/GetOrderNumbers/, 'get', {
         "210":0
     }
 })
+
+//新建订单
+Mock.mock(/CreateOrder/, 'post',{
+    "Code":200,
+    "Data":{
+        "OrderID":722622,
+        "OrderNumber":"35531201812261305023",
+        "AccidentType":1,
+        "StatusCode":201,
+        "StatusName":"草稿",
+        "CeateDate":"2018-10-19 10:23:31",
+        "LastModified":"2018-10-19 10:23:31",
+        "DealerID":23,
+        "DealerCKD":"35531",
+        "DealerName":"华德宝",
+        "RegionID":"100004",
+        "RegionName":"北区",
+        "ProvinceID":"110000",
+        "ProvinceName":"北京",
+        "CityID":"110100",
+        "CityName":"北京"
+    }
+})
 // 获取订单详细信息
 Mock.mock(/GetOrderInfo([\w|\?\S*]+)/, 'get', {
     "Code": 200,
@@ -317,55 +338,61 @@ Mock.mock(/GetOrderInfo([\w|\?\S*]+)/, 'get', {
         "Settlement_PartCost":84659.91,
 
         "SpareParts":[
-            {
-                "ID":3212,
-                "OrderType":"SPSO",
-                "DVN":42110,
-                "PartNumber":"41217182570",
-                "PartName":"左后翼子板",
-                "Price_OLd":600,
-                "Price":600,
-                "Quantity_Old":1,
-                "Quantity":1,
-                "TotalPrice_Old":600,
-                "TotalPrice":600,
-                "IsOrdered":true,
-                "IsUnOrderable":false,
-                "LogisticsCmt":""
-            },
-            {
-                "ID":3213,
-                "OrderType":"SPSO",
-                "DVN":47151,
-                "PartNumber":"51117293022",
-                "PartName":"前部保险杠",
-                "Price_OLd":600,
-                "Price":600,
-                "Quantity_Old":1,
-                "Quantity":1,
-                "TotalPrice_Old":600,
-                "TotalPrice":600,
-                "IsOrdered":false,
-                "IsUnOrderable":false,
-                "LogisticsCmt":""
-            },
-            {
-                "ID":3214,
-                "OrderType":"SPSO",
-                "DVN":42725,
-                "PartNumber":"83190301421",
-                "PartName":"左前门",
-                "Price_OLd":600,
-                "Price":600,
-                "Quantity_Old":1,
-                "Quantity":1,
-                "TotalPrice_Old":600,
-                "TotalPrice":600,
-                "IsOrdered":false,
-                "IsUnOrderable":true,
-                "LogisticsCmt":""
-            }
-        ],
+           {
+               "ID":3212,
+               "OrderType":"SPSO",
+               "DVN":42110,
+               "PartNumber":"41217182570",
+               "PartName":"左后翼子板",
+               "Price_OLd":600,
+               "Price":600,
+               "Quantity_Old":1,
+               "Quantity":1,
+               "TotalPrice_Old":600,
+               "TotalPrice":600,
+               "IsManualAddPart":false,
+               "IsManualInputPrice":false,
+               "IsUnOrderable":false,
+               "IsOrdered":true,
+               "LogisticsCmt":""
+           },
+           {
+               "ID":3213,
+               "OrderType":"SPSO",
+               "DVN":47151,
+               "PartNumber":"51117293022",
+               "PartName":"前部保险杠",
+               "Price_OLd":600,
+               "Price":600,
+               "Quantity_Old":1,
+               "Quantity":1,
+               "TotalPrice_Old":600,
+               "TotalPrice":600,
+               "IsManualAddPart":false,
+               "IsManualInputPrice":false,
+               "IsUnOrderable":false,
+               "IsOrdered":false,
+               "LogisticsCmt":""
+           },
+           {
+               "ID":3214,
+               "OrderType":"SPSO",
+               "DVN":42725,
+               "PartNumber":"83190301421",
+               "PartName":"左前门",
+               "Price_OLd":600,
+               "Price":600,
+               "Quantity_Old":1,
+               "Quantity":1,
+               "TotalPrice_Old":600,
+               "TotalPrice":600,
+               "IsManualAddPart":false,
+               "IsManualInputPrice":false,
+               "IsUnOrderable":true,
+               "IsOrdered":false,
+               "LogisticsCmt":""
+           }
+       ],
         "AttachmentNumbers":{
             "Total":17,
             "1":1,
@@ -449,53 +476,97 @@ Mock.mock(/GetDealerPolicyList/, 'post', {
 //导入定损单信息
 Mock.mock(/ImportOrderInfo/, 'post', {
     "Code": 200,
-    "Data": {
-        "ContractID": 122121,
-        "ReferenceNumber": "DAT-20181019152745251",
-        "VehicleOwner": "张三",
-        "PlateNumber": "京N88888",
-        "VIN": "LBVPZ1100ASD77412",
-        "DATECode": "011300430200002",
-        "FZA": 1,
-        "HST": 130,
-        "HT": 43,
-        "UT": 20,
-        "SubModelID": 12,
-        "SubModelName": "xDrive35d",
-        "VehicleMadeCountry": "CN",
-        "VehicleFirstRegDate": "2017-10-12",
-        "VehicleAge": 18,
-        "InsurerID": 23,
-        "InsurerName": "中国人保",
-        "InsurerContactPerson": "",
-        "InsuranceNumber": "Dfaas12892182",
-        "AccidentBrief": "双方事故，宝马全责，宝马右侧受损",
-        "VehicleMSRP": 128000,
-        "VehicleCurrentPrice": 95000,
-        "RepairCostTotal": 23500,
-        "Repair_CurrentPrice_PCT":24.7,
-        "SparePartCostTotal": 19000,
-        "Part_Repair_PCT":80.9,
-        "LaborCostTotal": 4500,
-        "InsuredAmount": 23500,
-        "IsManufacturerPaint": true,
-        "HasAdditionalLabor": false,
-        "SpareParts": [{
-                "PartNumber": "41217182570",
-                "PartName": "左后翼子板",
-                "Price": 600,
-                "Quantity": 1,
-                "TotalPrice": 600
+    "Data":{
+        "MyClaimID":122121,
+        "ReferenceNumber":"DAT-20181019152745251",
+
+        "VehicleOwner":"张三",
+        "PlateNumber":"京N88888",
+        "VIN":"LBVPZ1100ASD77412",
+        "DATECode":"011300430200002",
+        "FZA":1,
+        "HST":130,
+        "HT":43,
+        "BaseModelID":12,
+        "BaseModelName":"5 Series (5系) Lim. (F10/F18) (08.2010->)",
+        "UT":20,
+        "SubModelID":12,
+        "SubModelName":"520Li",
+        "VehicleMadeCountry":"CN",
+        "VehicleFirstRegDate":"2017-10-12",
+        "VehicleAge":18,
+
+        "InsurerID":23,
+        "InsurerName":"中国人保",
+        "InsuranceNumber":"PDAA20186397376290173",
+        "AccidentBrief":"双方事故，宝马全责，宝马右侧受损",
+
+        "PartCost":84659.91,
+        "LaborCost":10000,
+        "PaintCost":449.54,
+        "LaborPaintCost":10449.54,
+        "RepairCost":95109.45,
+        "OrderPartCost":84659.91,
+        "InsuranceCoverage":195200,
+        "Repair_Div_Insurance":48.72,
+        "Part_Div_Repair":89.01,
+        "OrderPart_Div_Part":100,
+        "OrderPartDiscount":10947.4,
+        "ApplyExtraServiceCost":false,
+        "HasWadingInsurance":false,
+
+        "SpareParts":[
+            {
+                "OrderType":"SPSO",
+                "DVN":42110,
+                "PartNumber":"41217182570",
+                "PartName":"左后翼子板",
+                "Price":600,
+                "Price_OLd":600,
+                "Quantity":1,
+                "Quantity_Old":1,
+                "TotalPrice":600,
+                "TotalPrice_Old":600,
+                "IsManualInputPrice":false,
+                "IsUnOrderable":false,
+                "IsOrdered":true,
+                "LogisticsCmt":""
             },
             {
-                "PartNumber": "83190301421",
-                "PartName": "左前门",
-                "Price": 600,
-                "Quantity": 1,
-                "TotalPrice": 600
+                "OrderType":"SPSO",
+                "DVN":47151,
+                "PartNumber":"51117293022",
+                "PartName":"前部保险杠",
+                "Price":600,
+                "Price_OLd":600,
+                "Quantity":1,
+                "Quantity_Old":1,
+                "TotalPrice":600,
+                "TotalPrice_Old":600,
+                "IsManualInputPrice":false,
+                "IsUnOrderable":false,
+                "IsOrdered":true,
+                "LogisticsCmt":""
+            },
+            {
+                "OrderType":"SPSO",
+                "DVN":42725,
+                "PartNumber":"83190301421",
+                "PartName":"左前门",
+                "Price":600,
+                "Price_OLd":600,
+                "Quantity":1,
+                "Quantity_Old":1,
+                "TotalPrice":600,
+                "TotalPrice_Old":600,
+                "IsManualInputPrice":false,
+                "IsUnOrderable":false,
+                "IsOrdered":true,
+                "LogisticsCmt":""
             }
         ]
     }
+
 })
 
 //获取系统消息列表

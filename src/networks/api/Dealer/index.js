@@ -1,6 +1,7 @@
 import axios from 'axios'
 
 export default {
+    CreateOrder: (data = {}, config = {}) => axios.post('CreateOrder',data,config),
     ImportOrderInfo: (data = {}, config = {}) => axios.post('ImportOrderInfo',data,config),
     SaveOrder: (obj, config = {}) => axios.post('SaveOrder', obj, config),
     SubmitOrder: ({OrderID}, config = {}) => axios.get('SubmitOrder?OrderID='+ OrderID,config),

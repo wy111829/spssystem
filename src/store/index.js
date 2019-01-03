@@ -14,7 +14,7 @@ const store = new Vuex.Store({
         UserRole: '',
         UserName: '',
         tagsList: [],
-        ServerUrl : ''
+        ServerUrl: ''
     },
     mutations: {
         setTagsList: (state, payload) => {
@@ -71,7 +71,7 @@ const store = new Vuex.Store({
         }) {
             try {
                 const response = await General.GetUserInfo()
-                state.UserRole = response.Data.Role
+                state.UserRole = response.Data.RoleCode
                 state.UserName = response.Data.UserName
             } catch (error) {
                 console.log(error)
