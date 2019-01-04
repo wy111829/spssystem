@@ -87,7 +87,7 @@
                     </el-col>
                     <el-col :md="6" :sm="12">
                         <el-form-item label="车龄">
-                            <el-input v-model="detailData.VehicleAge"></el-input>
+                            <el-input :value="detailData.VehicleAge" disabled></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -101,7 +101,7 @@
                 <el-row :gutter="20">
                     <el-col :md="6" :sm="12">
                         <el-form-item label="配件费用">
-                            <el-input v-model="detailData.PartCost" type="number"></el-input>
+                            <el-input :value="PartCost" type="number" disabled></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
@@ -112,12 +112,12 @@
                     <el-col :md="6" :sm="12">
                         <el-form-item label="维修费用">
                             <i class="el-icon-info iconInfo" title="=配件费用+工时及其他费用"></i>
-                            <el-input v-model="detailData.RepairCost" type="number"></el-input>
+                            <el-input :value="RepairCost" disabled></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
                         <el-form-item label="采购零件总额">
-                            <el-input v-model="detailData.OrderPartCost"></el-input>
+                            <el-input :value="OrderPartCost" disabled></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
@@ -131,47 +131,47 @@
                                 <i class="el-icon-info iconInfo" slot="reference"></i>
                             </el-popover> -->
                             <i class="el-icon-info iconInfo" title="=维修费用/车损险保额*100%"></i>
-                            <el-input v-model="detailData.Repair_Div_Insurance"></el-input>
+                            <el-input :value="Repair_Div_Insurance" disabled></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
                         <el-form-item label="配件费用/维修费用">
                             <i class="el-icon-info iconInfo" title="=配件费用/维修费用*100%"></i>
-                            <el-input v-model="detailData.Part_Div_Repair" disabled=""></el-input>
+                            <el-input :value="Part_Div_Repair" disabled=""></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
                         <el-form-item label="采购零件总额/配件费用">
                             <i class="el-icon-info iconInfo" title="=采购零件总额/配件费用*100%"></i>
-                            <el-input v-model="detailData.OrderPart_Div_Part" disabled></el-input>
+                            <el-input :value="OrderPart_Div_Part" disabled></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
                         <el-form-item label="配件折扣支持">
                             <i class="el-icon-info iconInfo" title="=(采购零件总额-增值税)*15%"></i>
-                            <el-input v-model="detailData.OrderPartDiscount" disabled></el-input>
+                            <el-input :value="OrderPartDiscount" disabled></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
                         <el-form-item label="是否购买涉水险" v-if="detailData.AccidentType=='2'">
-                            <el-radio-group>
-                                <el-radio label="">是</el-radio>
-                                <el-radio label="">否</el-radio>
+                            <el-radio-group v-model="detailData.HasWadingInsurance">
+                                <el-radio :label="true">是</el-radio>
+                                <el-radio :label="false">否</el-radio>
                             </el-radio-group>
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
                         <el-form-item label="申请额外服务费" v-if="detailData.AccidentType=='1'">
                             <el-radio-group v-model="detailData.ApplyExtraServiceCost">
-                                <el-radio :label='true'>是</el-radio>
-                                <el-radio :label='false'>否</el-radio>
+                                <el-radio :label="true">是</el-radio>
+                                <el-radio :label="false">否</el-radio>
                             </el-radio-group>
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
                         <el-form-item label="额外服务费" v-if="detailData.AccidentType=='1'&&detailData.ApplyExtraServiceCost">
                             <i class="el-icon-info iconInfo" title="=(采购零件总额-增值税)*10%"></i>
-                            <el-input v-model="detailData.ExtraServiceCost"></el-input>
+                            <el-input :value="ExtraServiceCost" disabled></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -181,33 +181,46 @@
             <div class="form-title">
                 零件列表
             </div>
-            <el-table ref="multipleTable" :data="detailData.SpareParts" tooltip-effect="dark" style="width: 100%">
+            <el-table ref="multipleTable" :data="detailData.SpareParts" tooltip-effect="dark" style="width: 100%" :row-class-name="IsUnOrderable">
                 <el-table-column label="订购类型" prop="OrderType"></el-table-column>
+                <el-table-column label="" width="25">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.IsManualAddPart" class="symbol">M</span>
+                        <span v-if="scope.row.IsManualInputPrice">*</span>
+                    </template>
+                </el-table-column>
                 <el-table-column label="配件号" sortable prop="PartNumber" min-width="100">
                 </el-table-column>
-                <el-table-column prop="PartName" label="配件名称" min-width="150">
+                <el-table-column prop="PartName" label="配件名称" min-width="120">
                 </el-table-column>
-                <el-table-column prop="Quantity" label="订购数量">
+                <el-table-column prop="Quantity" label="订购数量" min-width="90">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.Quantity" type="number"></el-input>
+                        <el-input v-model="scope.row.Quantity" type="number" style="width:75%" min='0' :disabled="scope.row.IsUnOrderable" :class="IsQuantityRevise(scope.row)?'bgc-green':''"></el-input>
+                        <i class="el-icon-info iconInfo" :title="'原始数量:'+scope.row.Quantity_Old" v-if="IsQuantityRevise(scope.row)"></i>
                     </template>
                 </el-table-column>
-                <el-table-column prop="Price" label="单价" sortable>
+                <el-table-column prop="Price" label="单价" sortable min-width="130">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.Price" type="number"></el-input>
+                        <el-input v-model="scope.row.Price" type="number" style="width:75%" min='0' :disabled="scope.row.IsUnOrderable" :class="IsPriceRevise(scope.row)?'bgc-green':''"></el-input>
+                        <i class="el-icon-info iconInfo" :title="'原始价格:'+scope.row.Price_Old" v-if="IsPriceRevise(scope.row)"></i>
                     </template>
                 </el-table-column>
-                <el-table-column label="总价" show-overflow-tooltip>
-                    <template slot-scope="scope">{{scope.row.Price?scope.row.Quantity*scope.row.Price:''}}</template>
+                <el-table-column label="总价" show-overflow-tooltip sortable min-width="135">
+                    <template slot-scope="scope">
+                        <el-input disabled :value="scope.row.Price?scope.row.Quantity*scope.row.Price:''" style="width:75%" :class="IsTotalPriceRevise(scope.row)?'bgc-green':''"></el-input>
+                        <i class="el-icon-info iconInfo" :title="'原始价格:'+scope.row.TotalPrice_Old" v-if="IsTotalPriceRevise(scope.row)"></i>
+                    </template>
                 </el-table-column>
+
                 <el-table-column prop="IsOrdered" label="是否订购" width="50">
                     <template slot-scope="scope">
-                        <el-checkbox v-model="scope.row.IsOrdered"></el-checkbox>
+                        <i class="el-icon-error" title="不可订货零件" v-if="scope.row.IsUnOrderable" style="color:#ff4949"></i>
+                        <el-checkbox v-model="scope.row.IsOrdered" v-else></el-checkbox>
                     </template>
                 </el-table-column>
-                <el-table-column prop="LogisticsCmt" label="物流备注" show-overflow-tooltip width="300">
+                <el-table-column prop="LogisticsCmt" label="物流备注" show-overflow-tooltip width="200" >
                     <template slot-scope="scope">
-                        <el-input placeholder="请输入内容" v-model="scope.row.LogisticsCmt" clearable>
+                        <el-input placeholder="请输入内容" v-model="scope.row.LogisticsCmt" clearable :disabled="scope.row.IsUnOrderable">
                         </el-input>
                     </template>
                 </el-table-column>
@@ -440,12 +453,126 @@ export default {
             'UserName',
             'UserRole',
             'ServerUrl'
-        ])
+        ]),
+        PartCost: function(){ //计算配件费用
+            let Sum = 0
+            this.detailData.SpareParts.map(function(item){
+                item.TotalPrice = item.Price * item.Quantity
+                Sum += item.TotalPrice
+            })
+            this.detailData.PartCost = Sum
+            return Sum
+        },
+        OrderPartCost: function(){ //计算采购零件总额
+            let Sum = 0
+            this.detailData.SpareParts.map(function(item){
+                item.TotalPrice = item.Price * item.Quantity
+                if(item.IsOrdered){
+                    Sum += item.TotalPrice
+                }
+            })
+            this.detailData.OrderPartCost = Sum
+            return Sum
+        },
+        RepairCost: function(){ //计算维修费用
+            if(this.PartCost||this.detailData.LaborPaintCost){
+                let Num = Number(this.PartCost) + Number(this.detailData.LaborPaintCost)
+                Num = Number(Num).toFixed(2)
+                this.detailData.RepairCost = Num
+                return Num
+            }else {
+                this.detailData.RepairCost = ''
+                return ''
+            }
+        },
+        Repair_Div_Insurance: function(){ //计算维修费用/车损险保额
+            if(this.detailData.InsuranceCoverage){
+                let Num = this.RepairCost/this.detailData.InsuranceCoverage*100
+                Num = Number(Num).toFixed(2)
+                this.detailData.Repair_Div_Insurance = Num
+                return Num + '%'
+            }else{
+                this.detailData.Repair_Div_Insurance = ''
+                return ''
+            }
+        },
+        Part_Div_Repair: function(){ //配件费用/维修费用
+            if(this.RepairCost){
+                let Num = this.PartCost/this.RepairCost*100
+                Num = Number(Num).toFixed(2)
+                this.detailData.Part_Div_Repair = Num
+                return Num + '%'
+            }else{
+                this.detailData.Part_Div_Repair = ''
+                return ''
+            }
+        },
+        OrderPart_Div_Part: function(){ //计算采购零件总额/配件费用
+            if(this.PartCost){
+                let Num = this.OrderPartCost/this.PartCost*100
+                Num = Number(Num).toFixed(2)
+                this.detailData.OrderPart_Div_Part = Num
+                return Num + '%'
+            }else{
+                this.detailData.OrderPart_Div_Part = ''
+                return ''
+            }
+        },
+        OrderPartDiscount: function(){ //计算配件折扣支持
+            if(this.OrderPartCost){
+                let Num = this.OrderPartCost/1.16*0.15
+                Num = Number(Num).toFixed(2)
+                this.detailData.OrderPartDiscount = Num
+                return Num
+            }else {
+                this.detailData.OrderPartDiscount=''
+                return ''
+            }
+        },
+        ExtraServiceCost: function(){ //计算额外服务费
+            if(this.detailData.ApplyExtraServiceCost&&this.OrderPartCost){
+                let Num = this.OrderPartCost/1.16*0.1
+                Num = Number(Num).toFixed(2)
+                this.detailData.ExtraServiceCost = Num
+                return Num
+            }else {
+                this.detailData.ExtraServiceCost=''
+                return ''
+            }
+        }
     },
     methods: {
         ...mapMutations([
             'closeTags'
         ]),
+        IsQuantityRevise(row){
+            if(!row.IsManualAddPart&&row.Quantity_Old!=row.Quantity){
+                return true
+            }else{
+                return false
+            }
+        },
+        IsPriceRevise(row){
+            if(!row.IsManualAddPart&&row.Price_Old!=row.Price){
+                return true
+            }else{
+                return false
+            }
+        },
+        IsTotalPriceRevise(row){
+            if(!row.IsManualAddPart&&row.TotalPrice_Old!=row.TotalPrice){
+                return true
+            }else{
+                return false
+            }
+        },
+        IsUnOrderable({row, rowIndex}){
+            if(row.IsUnOrderable){
+                return 'UnOrderable'
+            }else {
+                return ''
+            }
+        },
         isImg(filename) {
             let fileType = filename.substring(filename.indexOf(".") + 1).toUpperCase();
             if (fileType == "PNG" || fileType == "JPG" || fileType == "JPEG" || fileType == "GIF") {
@@ -499,7 +626,6 @@ export default {
             this.newSpareParts.OrderType = "SPSO"
             this.newSpareParts.IsManualAddPart = true
             this.addPartDialog = false
-            console.log(this.detailData.SpareParts)
         },
         handleDeletPart(index, data) { //删除零件
 
@@ -702,7 +828,7 @@ export default {
         },
     },
     watch: {
-        '$route': 'routeChange'
+        '$route': 'routeChange',
     },
     created() {
         this.routeChange()
@@ -736,6 +862,22 @@ export default {
                 color: #606266;
             }
         }
+    }
+    .symbol{
+        background-color:#ff4949;
+        color: #fff;
+    }
+    .bgc-green{
+        input{
+            background-color: #bbffbb;
+        }
+        .el-input__inner{
+            background-color: #bbffbb;
+            color:#606266;
+        }
+    }
+    .UnOrderable{
+        color: #C3C4CF;
     }
 }
 .el-form-item__content > div {
