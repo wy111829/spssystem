@@ -52,14 +52,14 @@
                         role: ['Dealer', 'RegionManager', 'BMW-BP','Administrator']
                     },
                     {
-                        icon: 'el-icon-lx-copy',
+                        icon: 'el-icon-tickets',
                         name: 'report',
                         title: '统计分析',
                         index: '2',
                         role:  ['Dealer', 'RegionManager', 'BMW-BP','Administrator']
                     },
                     {
-                        icon: 'el-icon-lx-copy',
+                        icon: 'el-icon-tickets',
                         name: 'DealerManagment',
                         index: '3',
                         title: '审批策略设置',

@@ -6,6 +6,6 @@ export default {
     SaveOrder: (obj, config = {}) => axios.post('SaveOrder', obj, config),
     SubmitOrder: ({OrderID}, config = {}) => axios.get('SubmitOrder?OrderID='+ OrderID,config),
     DeleteOrder: ({OrderID}, config = {}) => axios.get('DeleteOrder?OrderID='+ OrderID,config),
-    FileDelete: (obj, config = {}) => axios.post('FileDelete', obj, config),
+    FileDelete: ({id}, config = {}) => axios.get('FileDelete?id' + id, config),
     FileUpload: (obj, config = {}) =>axios.post('FileUpload',obj, config)
 }

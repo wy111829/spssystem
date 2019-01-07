@@ -416,6 +416,48 @@ Mock.mock(/GetOrderInfo([\w|\?\S*]+)/, 'get', {
                 "FileName":"TestPic2.PNG",
                 "FileSize":1.8,
                 "UploadDate":"2018-10-19 14:23:38"
+            },
+            {
+                "ID":229,
+                "CategoryID":3,
+                "FileName":"TestPic1.PNG",
+                "FileSize":2.1,
+                "UploadDate":"2018-10-19 14:23:38"
+            },
+            {
+                "ID":230,
+                "CategoryID":4,
+                "FileName":"TestPic2.PNG",
+                "FileSize":1.8,
+                "UploadDate":"2018-10-19 14:23:38"
+            },
+            {
+                "ID":231,
+                "CategoryID":5,
+                "FileName":"TestPic1.PNG",
+                "FileSize":2.1,
+                "UploadDate":"2018-10-19 14:23:38"
+            },
+            {
+                "ID":232,
+                "CategoryID":6,
+                "FileName":"TestPic2.PNG",
+                "FileSize":1.8,
+                "UploadDate":"2018-10-19 14:23:38"
+            },
+            {
+                "ID":233,
+                "CategoryID":1,
+                "FileName":"TestPic1.PNG",
+                "FileSize":2.1,
+                "UploadDate":"2018-10-19 14:23:38"
+            },
+            {
+                "ID":234,
+                "CategoryID":2,
+                "FileName":"TestPic2.PNG",
+                "FileSize":1.8,
+                "UploadDate":"2018-10-19 14:23:38"
             }
         ],
         "ApplicationLogs":[
@@ -522,7 +564,7 @@ Mock.mock(/ImportOrderInfo/, 'post', {
                 "PartNumber":"41217182570",
                 "PartName":"左后翼子板",
                 "Price":600,
-                "Price_OLd":600,
+                "Price_Old":600,
                 "Quantity":1,
                 "Quantity_Old":1,
                 "TotalPrice":600,
@@ -538,7 +580,7 @@ Mock.mock(/ImportOrderInfo/, 'post', {
                 "PartNumber":"51117293022",
                 "PartName":"前部保险杠",
                 "Price":600,
-                "Price_OLd":600,
+                "Price_Old":600,
                 "Quantity":1,
                 "Quantity_Old":1,
                 "TotalPrice":600,
@@ -554,7 +596,7 @@ Mock.mock(/ImportOrderInfo/, 'post', {
                 "PartNumber":"83190301421",
                 "PartName":"左前门",
                 "Price":600,
-                "Price_OLd":600,
+                "Price_Old":600,
                 "Quantity":1,
                 "Quantity_Old":1,
                 "TotalPrice":600,
@@ -566,7 +608,6 @@ Mock.mock(/ImportOrderInfo/, 'post', {
             }
         ]
     }
-
 })
 
 //获取系统消息列表
@@ -958,13 +999,15 @@ Mock.mock(/GetRegionProvCityList/, 'get', {
 Mock.mock(/FileUpload/, 'post', {
     "Code": 200,
     "Data": {
-        "FileName": "TestPic2.PNG",
-        "DownloadFileName": "92f9b43b-4f2b-4b69-98e9-84d23ae38ae2_TestPic2.PNG"
+        "ID":227,
+        "CategoryID":2,
+        "FileName":"油漆截图20181214.png",
+        "FileSize":1.8
     }
 })
 
 //附件删除
-Mock.mock(/FileDelete/, 'post', {
+Mock.mock(/FileDelete([\w|\?\S*]+)/, 'get', {
     "Code": 200,
 })
 

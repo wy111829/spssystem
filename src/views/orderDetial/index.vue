@@ -218,7 +218,7 @@
                         <el-checkbox v-model="scope.row.IsOrdered" v-else></el-checkbox>
                     </template>
                 </el-table-column>
-                <el-table-column prop="LogisticsCmt" label="物流备注" show-overflow-tooltip width="200" >
+                <el-table-column prop="LogisticsCmt" label="物流备注" show-overflow-tooltip width="200">
                     <template slot-scope="scope">
                         <el-input placeholder="请输入内容" v-model="scope.row.LogisticsCmt" clearable :disabled="scope.row.IsUnOrderable">
                         </el-input>
@@ -231,23 +231,23 @@
                 </el-table-column>
             </el-table>
             </el-table>
-            <el-button type="primary" @click="addPartDialog = true">添加零件</el-button>
+            <el-button type="primary" @click="addPartDialog = true" style="margin-top:10px">添加零件</el-button>
             <el-dialog title="添加零件" :visible.sync="addPartDialog" width="40%">
                 <el-form label-width="100px">
                     <el-form-item label="订购类型：">
                         <el-input disabled v-model="newSpareParts.OrderType"></el-input>
                     </el-form-item>
                     <el-form-item label="零件号：">
-                        <el-input v-model="newSpareParts.PartNumber"></el-input>
+                        <el-input v-model="newSpareParts.PartNumber" type="number"></el-input>
                     </el-form-item>
                     <el-form-item label="配件名称：">
                         <el-input v-model="newSpareParts.PartName"></el-input>
                     </el-form-item>
                     <el-form-item label="订购数量：">
-                        <el-input type="number" v-model="newSpareParts.Quantity"></el-input>
+                        <el-input type="number" v-model="newSpareParts.Quantity" type="number" min="0"></el-input>
                     </el-form-item>
                     <el-form-item label="单价：">
-                        <el-input type="number" v-model="newSpareParts.Price"></el-input>
+                        <el-input type="number" v-model="newSpareParts.Price" type="number" min="0"></el-input>
                     </el-form-item>
                     <el-form-item label="总价：">
                         <el-input type="number" disabled :value="newSpareParts.Quantity&&newSpareParts.Price?newSpareParts.Quantity*newSpareParts.Price:''"></el-input>
@@ -261,7 +261,7 @@
                 </el-form>
                 <div class="text-center">
                     <el-button type="primary" @click="addSpareParts()">添加该零件</el-button>
-                    <el-button type="primary" @click="addPartDialog = false">取消添加该零件</el-button>
+                    <el-button  @click="addPartDialog = false">取消添加该零件</el-button>
                 </div>
             </el-dialog>
         </div>
@@ -269,6 +269,45 @@
             <div class="form-title">
                 相关附件
             </div>
+            <div class="radio-box">
+                <el-radio-group v-model="AttachmentCategoryID" @change="CategoryChange">
+                    <el-radio :label="0">全部 {{detailData.AttachmentNumbers.Total}}</el-radio>
+                    <el-radio :label="1">车险保单 {{detailData.AttachmentNumbers['1']}}</el-radio>
+                    <el-radio :label="2">车损照片和油漆订单截屏 {{detailData.AttachmentNumbers['2']}}</el-radio>
+                    <el-radio :label="3">车辆铭牌 {{detailData.AttachmentNumbers['3']}}</el-radio>
+                    <el-radio :label="4">行驶证 {{detailData.AttachmentNumbers['4']}}</el-radio>
+                    <el-radio :label="5">DAT定损单 {{detailData.AttachmentNumbers['5']}}</el-radio>
+                    <el-radio :label="6">发票及结算单 {{detailData.AttachmentNumbers['6']}}</el-radio>
+                </el-radio-group>
+            </div>
+            <div class="select-box" style="margin-top:10px">
+                <el-select v-model="AttachmentCategoryID" placeholder="请选择分类">
+                    <el-option v-for="(item, index) in AttachmentSelectList" :key="index" :label="item.label" :value="item.value"></el-option>
+                </el-select>
+                <el-upload action="/FileUpload" :http-request="uploadSectionFile" :show-file-list="false" style="display:inline-block" :disabled="AttachmentCategoryID==0">
+                    <el-button type="primary" :disabled="AttachmentCategoryID==0">附件上传</el-button>
+                </el-upload>
+            </div>
+            <el-table :data="detailData.Attachments" :row-class-name="IsHidden">
+                <el-table-column label="序号" prop="ID"></el-table-column>
+                <el-table-column label="分类" prop="CategoryID">
+                    <template slot-scope="scope">
+                        {{GetCategoryName(scope.row.CategoryID)}}
+                    </template>
+                </el-table-column>
+                <el-table-column label="名称" prop="FileName"></el-table-column>
+                <el-table-column label="大小" prop="FileSize">
+                    <template slot-scope="scope">
+                        {{scope.row.FileSize+'MB'}}
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作" align="center">
+                    <template slot-scope="scope">
+                        <el-button type="text" icon="el-icon-download">下载</el-button>
+                        <el-button type="text" icon="el-icon-delete" style="color:#ff4949" @click="handleRemoveFile(scope.row)">删除</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
         </div>
         <div class="form-box-neworder">
             <div class="form-title">
@@ -309,22 +348,29 @@
                 </el-row>
             </el-form>
         </div>
+        <div class="form-box-neworder">
+            <div class="form-title">
+                事故简述及车辆损坏情况
+            </div>
+            <el-input v-model="detailData.AccidentBrief" type="textarea" width="80" rows=5></el-input>
+        </div>
         <!-- <div class="form-box-neworder text-center">
             <el-button type="primary" @click="submitToSaveOrder('detailData')">保存</el-button>
             <el-button type="primary" @click="submitToSubmitOrder('detailData')">保存并提交</el-button>
             <el-button @click="handleGoBack">返回订单列表</el-button>
             <el-button type="danger" @click="handleDeleteOrder">删除</el-button>
         </div> -->
-
-        <el-form class="inline-form el-row" label-width="200px">
-            <el-form-item label="审核备注：" class="el-col el-col-12" style="margin-right:10px;">
-                <el-input v-model="Comment" placeholder=""></el-input>
-            </el-form-item>
-            <el-button type="primary" @click="handleApproved('Approved')">通过</el-button>
-            <el-button type="danger" @click="handleApproved('Rejected')">驳回</el-button>
-            <el-button type="danger" @click="handleApproved('Rejected')">拒绝支持</el-button>
-            <el-button type="" @click="handleApproved('Rejected')">返回订单列表</el-button>
-        </el-form>
+        <div style="margin-top:20px">
+            <el-form class="inline-form el-row" label-width="200px">
+                <el-form-item label="审核备注：" class="el-col el-col-12" style="margin-right:10px;">
+                    <el-input v-model="Comment" placeholder=""></el-input>
+                </el-form-item>
+                <el-button type="primary" @click="handleApproved('Approved')">通过</el-button>
+                <el-button type="danger" @click="handleApproved('Rejected')">驳回</el-button>
+                <el-button type="danger" @click="handleApproved('Rejected')">拒绝支持</el-button>
+                <el-button type="" @click="handleApproved('Rejected')">返回订单列表</el-button>
+            </el-form>
+        </div>
 
         <div class="form-box-neworder">
             <div class="form-title">
@@ -397,6 +443,16 @@ export default {
                 ApplyExtraServiceCost: true,
                 ExtraServiceCost: '',
                 SpareParts: [],
+                AttachmentNumbers: {
+                    "Total": 0,
+                    "1": 0,
+                    "2": 0,
+                    "3": 0,
+                    "4": 0,
+                    "5": 0,
+                    "6": 0
+                },
+                ApplicationLogs: []
             },
             newSpareParts: {
                 OrderType: 'SPSO',
@@ -408,22 +464,36 @@ export default {
                 TotalPrice_Old: '',
                 TotalPrice: '',
                 IsManualAddPart: true,
-                IsOrdered: false,
+                IsOrdered: true,
                 LogisticsCmt: ''
             },
+            AttachmentCategoryID: 0,
             Attachments: [],
-            rules: {
-                VehicleMSRP: [{
-                    required: true,
-                    message: '请输入新车销售价',
-                    trigger: 'blur'
-                }],
-                VehicleCurrentPrice: [{
-                    required: true,
-                    message: '车辆实际价值',
-                    trigger: 'blur'
-                }]
-            }
+            AttachmentSelectList: [
+                {
+                    label:'请选择分类',
+                    value: 0
+                },
+                {
+                    label: '车险保单',
+                    value: 1
+                }, {
+                    label: '车损照片和油漆订单截屏',
+                    value: 2
+                }, {
+                    label: '车辆铭牌',
+                    value: 3
+                }, {
+                    label: '行驶证',
+                    value: 4
+                }, {
+                    label: 'DAT定损单',
+                    value: 5
+                }, {
+                    label: '发票及结算单',
+                    value: 6
+                }
+            ]
         }
     },
     filters: {
@@ -454,121 +524,147 @@ export default {
             'UserRole',
             'ServerUrl'
         ]),
-        PartCost: function(){ //计算配件费用
+        PartCost: function() { //计算配件费用
             let Sum = 0
-            this.detailData.SpareParts.map(function(item){
+            this.detailData.SpareParts.map(function(item) {
                 item.TotalPrice = item.Price * item.Quantity
                 Sum += item.TotalPrice
             })
             this.detailData.PartCost = Sum
             return Sum
         },
-        OrderPartCost: function(){ //计算采购零件总额
+        OrderPartCost: function() { //计算采购零件总额
             let Sum = 0
-            this.detailData.SpareParts.map(function(item){
+            this.detailData.SpareParts.map(function(item) {
                 item.TotalPrice = item.Price * item.Quantity
-                if(item.IsOrdered){
+                if (item.IsOrdered) {
                     Sum += item.TotalPrice
                 }
             })
             this.detailData.OrderPartCost = Sum
             return Sum
         },
-        RepairCost: function(){ //计算维修费用
-            if(this.PartCost||this.detailData.LaborPaintCost){
+        RepairCost: function() { //计算维修费用
+            if (this.PartCost || this.detailData.LaborPaintCost) {
                 let Num = Number(this.PartCost) + Number(this.detailData.LaborPaintCost)
                 Num = Number(Num).toFixed(2)
                 this.detailData.RepairCost = Num
                 return Num
-            }else {
+            } else {
                 this.detailData.RepairCost = ''
                 return ''
             }
         },
-        Repair_Div_Insurance: function(){ //计算维修费用/车损险保额
-            if(this.detailData.InsuranceCoverage){
-                let Num = this.RepairCost/this.detailData.InsuranceCoverage*100
+        Repair_Div_Insurance: function() { //计算维修费用/车损险保额
+            if (this.detailData.InsuranceCoverage) {
+                let Num = this.RepairCost / this.detailData.InsuranceCoverage * 100
                 Num = Number(Num).toFixed(2)
                 this.detailData.Repair_Div_Insurance = Num
                 return Num + '%'
-            }else{
+            } else {
                 this.detailData.Repair_Div_Insurance = ''
                 return ''
             }
         },
-        Part_Div_Repair: function(){ //配件费用/维修费用
-            if(this.RepairCost){
-                let Num = this.PartCost/this.RepairCost*100
+        Part_Div_Repair: function() { //配件费用/维修费用
+            if (this.RepairCost) {
+                let Num = this.PartCost / this.RepairCost * 100
                 Num = Number(Num).toFixed(2)
                 this.detailData.Part_Div_Repair = Num
                 return Num + '%'
-            }else{
+            } else {
                 this.detailData.Part_Div_Repair = ''
                 return ''
             }
         },
-        OrderPart_Div_Part: function(){ //计算采购零件总额/配件费用
-            if(this.PartCost){
-                let Num = this.OrderPartCost/this.PartCost*100
+        OrderPart_Div_Part: function() { //计算采购零件总额/配件费用
+            if (this.PartCost) {
+                let Num = this.OrderPartCost / this.PartCost * 100
                 Num = Number(Num).toFixed(2)
                 this.detailData.OrderPart_Div_Part = Num
                 return Num + '%'
-            }else{
+            } else {
                 this.detailData.OrderPart_Div_Part = ''
                 return ''
             }
         },
-        OrderPartDiscount: function(){ //计算配件折扣支持
-            if(this.OrderPartCost){
-                let Num = this.OrderPartCost/1.16*0.15
+        OrderPartDiscount: function() { //计算配件折扣支持
+            if (this.OrderPartCost) {
+                let Num = this.OrderPartCost / 1.16 * 0.15
                 Num = Number(Num).toFixed(2)
                 this.detailData.OrderPartDiscount = Num
                 return Num
-            }else {
-                this.detailData.OrderPartDiscount=''
+            } else {
+                this.detailData.OrderPartDiscount = ''
                 return ''
             }
         },
-        ExtraServiceCost: function(){ //计算额外服务费
-            if(this.detailData.ApplyExtraServiceCost&&this.OrderPartCost){
-                let Num = this.OrderPartCost/1.16*0.1
+        ExtraServiceCost: function() { //计算额外服务费
+            if (this.detailData.ApplyExtraServiceCost && this.OrderPartCost) {
+                let Num = this.OrderPartCost / 1.16 * 0.1
                 Num = Number(Num).toFixed(2)
                 this.detailData.ExtraServiceCost = Num
                 return Num
-            }else {
-                this.detailData.ExtraServiceCost=''
+            } else {
+                this.detailData.ExtraServiceCost = ''
                 return ''
             }
-        }
+        },
+        GetCategoryName: function() {
+            return function(CategoryID) {
+                if(CategoryID == 1){
+                    return '车险保单'
+                }else if (CategoryID == 2) {
+                    return '车损照片和油漆订单截屏';
+                }else if (CategoryID == 3) {
+                    return '车辆铭牌';
+                }else if (CategoryID == 4) {
+                    return '行驶证';
+                }else if (CategoryID == 5) {
+                    return 'DAT定损单';
+                }else if (CategoryID == 6) {
+                    return '发票及结算单';
+                }
+            }
+        } //附件显示分类 1=>'xxx'
     },
     methods: {
         ...mapMutations([
             'closeTags'
         ]),
-        IsQuantityRevise(row){
-            if(!row.IsManualAddPart&&row.Quantity_Old!=row.Quantity){
+        IsQuantityRevise(row) {
+            if (!row.IsManualAddPart && row.Quantity_Old != row.Quantity) {
                 return true
-            }else{
+            } else {
                 return false
             }
         },
-        IsPriceRevise(row){
-            if(!row.IsManualAddPart&&row.Price_Old!=row.Price){
+        IsPriceRevise(row) {
+            if (!row.IsManualAddPart && row.Price_Old != row.Price) {
                 return true
-            }else{
+            } else {
                 return false
             }
         },
-        IsTotalPriceRevise(row){
-            if(!row.IsManualAddPart&&row.TotalPrice_Old!=row.TotalPrice){
+        IsTotalPriceRevise(row) {
+            if (!row.IsManualAddPart && row.TotalPrice_Old != row.TotalPrice) {
                 return true
-            }else{
+            } else {
                 return false
             }
         },
-        IsUnOrderable({row, rowIndex}){
-            if(row.IsUnOrderable){
+        IsUnOrderable({row,rowIndex}) {
+            if (row.IsUnOrderable) {
                 return 'UnOrderable'
+            } else {
+                return ''
+            }
+        },
+        IsHidden({row,rowIndex}){
+            if(this.AttachmentCategoryID == 0){
+                return ''
+            } else if (this.AttachmentCategoryID != row.CategoryID) {
+                return 'hidden'
             }else {
                 return ''
             }
@@ -624,6 +720,7 @@ export default {
                 this.newSpareParts[key] = ''
             }
             this.newSpareParts.OrderType = "SPSO"
+            this.newSpareParts.IsOrdered = true
             this.newSpareParts.IsManualAddPart = true
             this.addPartDialog = false
         },
@@ -635,14 +732,21 @@ export default {
             // this.detailData.SpareParts.splice(index,1)
             console.log(this.detailData.SpareParts)
         },
-        async handleRemoveFile(index, filename) { // 附件删除
+        CategoryChange(val) { //切换附件类型
+            console.log(val)
+            return val
+        },
+        async handleRemoveFile(row) { // 附件删除
             try {
-                console.log(index, filename)
                 const response = await Dealer.FileDelete({
-                    DownloadFileName: filename
+                    id: row.ID
                 })
                 if (response.Code == 200) {
-                    this.detailData.Attachments.splice(index, 1)
+                    //this.detailData.Attachments.splice(index, 1)
+                    let arrindex = this.detailData.Attachments.indexOf(row)
+                    this.detailData.Attachments.splice(arrindex, 1)
+                    this.detailData.AttachmentNumbers.Total--
+                    this.detailData.AttachmentNumbers[row.CategoryID]--
                 }
             } catch (error) {
                 console.log(error)
@@ -651,15 +755,21 @@ export default {
         },
         handleFileUploadSuccess(Data) { //  附件上传成功
             this.detailData.Attachments.push({
+                ID:Data.ID,
+                CategoryID:Data.CategoryID,
                 FileName: Data.FileName,
-                DownloadFileName: Data.DownloadFileName,
+                FileSize:2.1,
             })
+            this.detailData.AttachmentNumbers.Total++
+            this.detailData.AttachmentNumbers[Data.CategoryID]++
         },
 
-        async uploadSectionFile(f) {
-            console.log(f.file)
+        async uploadSectionFile(f) { //上传附件
             let param = new FormData(); //创建form对象
             param.append('file', f.file); //通过append向form对象添加数据
+            param.append('OrderId', this.detailData.OrderId);
+            param.append('OrderNumber', this.detailData.OrderNumber);
+            param.append('CategoryID', this.AttachmentCategoryID);
             let config = {
                 headers: {
                     'Content-Type': 'multipart/form-data'
@@ -675,7 +785,6 @@ export default {
             // })
             try {
                 const response = await Dealer.FileUpload(param, config)
-                console.log(response)
                 if (response.Code == 200) {
                     this.handleFileUploadSuccess(response.Data)
                 }
@@ -863,21 +972,24 @@ export default {
             }
         }
     }
-    .symbol{
-        background-color:#ff4949;
+    .symbol {
+        background-color: #ff4949;
         color: #fff;
     }
-    .bgc-green{
-        input{
+    .bgc-green {
+        input {
             background-color: #bbffbb;
         }
-        .el-input__inner{
+        .el-input__inner {
             background-color: #bbffbb;
-            color:#606266;
+            color: #606266;
         }
     }
-    .UnOrderable{
+    .UnOrderable {
         color: #C3C4CF;
+    }
+    .hidden{
+        display: none;
     }
 }
 .el-form-item__content > div {
