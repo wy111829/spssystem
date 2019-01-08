@@ -230,7 +230,6 @@
                     </template>
                 </el-table-column>
             </el-table>
-            </el-table>
             <el-button type="primary" @click="addPartDialog = true" style="margin-top:10px">添加零件</el-button>
             <el-dialog title="添加零件" :visible.sync="addPartDialog" width="40%">
                 <el-form label-width="100px">
@@ -244,10 +243,10 @@
                         <el-input v-model="newSpareParts.PartName"></el-input>
                     </el-form-item>
                     <el-form-item label="订购数量：">
-                        <el-input type="number" v-model="newSpareParts.Quantity" type="number" min="0"></el-input>
+                        <el-input type="number" v-model="newSpareParts.Quantity"  min="0"></el-input>
                     </el-form-item>
                     <el-form-item label="单价：">
-                        <el-input type="number" v-model="newSpareParts.Price" type="number" min="0"></el-input>
+                        <el-input type="number" v-model="newSpareParts.Price"  min="0"></el-input>
                     </el-form-item>
                     <el-form-item label="总价：">
                         <el-input type="number" disabled :value="newSpareParts.Quantity&&newSpareParts.Price?newSpareParts.Quantity*newSpareParts.Price:''"></el-input>
@@ -289,7 +288,7 @@
                 </el-upload>
                 <el-button type="primary" @click="AttachmentPreviewDialog = true">附件预览</el-button>
             </div>
-            <el-table :data="detailData.Attachments" :row-class-name="IsHidden">
+            <el-table :data="AttachmentShowList" >
                 <el-table-column label="序号" prop="ID"></el-table-column>
                 <el-table-column label="分类" prop="CategoryID">
                     <template slot-scope="scope">
@@ -386,7 +385,7 @@
     </div>
     <el-dialog title="相关附件" class="AttachmentPreviewDialog" :visible.sync="AttachmentPreviewDialog" fullscreen>
         <div class="radio-box">
-            <el-radio-group v-model="AttachmentCategoryID" @change="CategoryChange">
+            <el-radio-group v-model="AttachmentCategoryID" >
                 <el-radio :label="0">全部 {{detailData.AttachmentNumbers.Total}}</el-radio>
                 <el-radio :label="1">车险保单 {{detailData.AttachmentNumbers['1']}}</el-radio>
                 <el-radio :label="2">车损照片和油漆订单截屏 {{detailData.AttachmentNumbers['2']}}</el-radio>
@@ -405,7 +404,7 @@
             </el-upload>
             <el-button type="primary" @click="AttachmentPreviewDialog = true">附件预览</el-button>
         </div>
-        <el-table :data="detailData.Attachments" default-expand-all >
+        <el-table :data="AttachmentShowList" default-expand-all >
             <el-table-column type="expand">
                 <template slot-scope="scope" v-if="isImg(scope.row.FileName)">
                     <!-- <img :src="ServerUrl+'/BigAccident/Action/FileDownLoad?filename='+ scope.row.FileName" /> -->
@@ -544,8 +543,7 @@ export default {
                     label: '发票及结算单',
                     value: 6
                 }
-            ],
-            AttachmentShowList:[]
+            ]
         }
     },
     filters: {
@@ -678,7 +676,23 @@ export default {
                     return '发票及结算单';
                 }
             }
-        } //附件显示分类 1=>'xxx'
+        }, //附件显示分类 1=>'xxx'
+        AttachmentShowList: function() {
+            let list = []
+            console.log(888, this.detailData)
+            if (this.detailData&&this.detailData.Attachments&&this.detailData.Attachments.length>0) {
+                if(this.AttachmentCategoryID==0){
+                    list = this.detailData.Attachments.slice(0)
+                }else {
+                    this.detailData.Attachments.map((item)=>{
+                        if(item.CategoryID==this.AttachmentCategoryID){
+                            list.push(item)
+                        }
+                    })
+                } 
+            }
+            return list
+        }
     },
     methods: {
         ...mapMutations([
@@ -709,15 +723,6 @@ export default {
             if (row.IsUnOrderable) {
                 return 'UnOrderable'
             } else {
-                return ''
-            }
-        },
-        IsHidden({row,rowIndex}){
-            if(this.AttachmentCategoryID == 0){
-                return ''
-            } else if (this.AttachmentCategoryID != row.CategoryID) {
-                return 'hidden'
-            }else {
                 return ''
             }
         },
@@ -785,10 +790,11 @@ export default {
             console.log(this.detailData.SpareParts)
         },
         CategoryChange(val) { //切换附件类型
+            this.AttachmentShowList = []
             if(val==0){
                 this.AttachmentShowList = this.detailData.Attachments.slice(0)
             }else {
-                this.detailData.Attachments.map(function(item){
+                this.detailData.Attachments.map((item)=>{
                     if(item.CategoryID==val){
                         this.AttachmentShowList.push(item)
                     }
