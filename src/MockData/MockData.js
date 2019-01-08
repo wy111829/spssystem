@@ -654,7 +654,7 @@ Mock.mock(/SubmitOrder([\w|\?\S*]+)/, 'get', {
 })
 
 //订单删除
-Mock.mock(/DeleteOrder([\w|\?\S*]+)/, 'get', {
+Mock.mock(/CancelOrder([\w|\?\S*]+)/, 'get', {
     "Code": 200
 })
 

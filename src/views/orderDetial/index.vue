@@ -1,6 +1,6 @@
 <template>
 <div class="newOrder-container">
-    <el-dialog title="你正在创建新订单，请选择事故类型：" class="selectAccidentType" :close-on-click-modal="false" :close-on-press-escape="false" :visible.sync="selectAccidentType" :show-close="false">
+    <el-dialog title="你正在创建新订单，请选择事故类型：" class="selectAccidentType" :close-on-click-modal="false" :close-on-press-escape="false" :visible.sync="selectAccidentTypeDialog" :show-close="false">
         <el-radio-group v-model="detailData.AccidentType" style="text-align:center">
             <el-radio :label="1">大事故</el-radio>
             <el-radio :label="2">水淹车</el-radio>
@@ -270,7 +270,7 @@
                 相关附件
             </div>
             <div class="radio-box">
-                <el-radio-group v-model="AttachmentCategoryID" @change="CategoryChange">
+                <el-radio-group v-model="AttachmentCategoryID">
                     <el-radio :label="0">全部 {{detailData.AttachmentNumbers.Total}}</el-radio>
                     <el-radio :label="1">车险保单 {{detailData.AttachmentNumbers['1']}}</el-radio>
                     <el-radio :label="2">车损照片和油漆订单截屏 {{detailData.AttachmentNumbers['2']}}</el-radio>
@@ -287,6 +287,7 @@
                 <el-upload action="/FileUpload" :http-request="uploadSectionFile" :show-file-list="false" style="display:inline-block" :disabled="AttachmentCategoryID==0">
                     <el-button type="primary" :disabled="AttachmentCategoryID==0">附件上传</el-button>
                 </el-upload>
+                <el-button type="primary" @click="AttachmentPreviewDialog = true">附件预览</el-button>
             </div>
             <el-table :data="detailData.Attachments" :row-class-name="IsHidden">
                 <el-table-column label="序号" prop="ID"></el-table-column>
@@ -317,32 +318,32 @@
                 <el-row :gutter="20">
                     <el-col :md="6" :sm="12">
                         <el-form-item label="开工单日期">
-                            <el-date-picker type="date" placeholder="选择日期" style="width:100%"></el-date-picker>
+                            <el-date-picker type="date" placeholder="选择日期" style="width:100%" v-model="detailData.WIP_OpenDate"></el-date-picker>
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
                         <el-form-item label="工单结算日期">
-                            <el-date-picker type="date" placeholder="选择日期" style="width:100%"></el-date-picker>
+                            <el-date-picker type="date" placeholder="选择日期" style="width:100%" v-model="detailData.WIP_SettleDate"></el-date-picker>
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
                         <el-form-item label="结算单金额（含税）">
-                            <el-input placeholder=""></el-input>
+                            <el-input placeholder="" v-model="detailData.Settlement_Cost"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
                         <el-form-item label="工单号">
-                            <el-input placeholder=""></el-input>
+                            <el-input placeholder="" v-model="detailData.WIP_Number"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
                         <el-form-item label="结算单号">
-                            <el-input placeholder=""></el-input>
+                            <el-input placeholder="" v-model="detailData.Settlement_Number"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
                         <el-form-item label="总配件金额">
-                            <el-input placeholder=""></el-input>
+                            <el-input placeholder="" v-model="detailData.Settlement_PartCost"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -354,12 +355,13 @@
             </div>
             <el-input v-model="detailData.AccidentBrief" type="textarea" width="80" rows=5></el-input>
         </div>
-        <!-- <div class="form-box-neworder text-center">
+        <div class="form-box-neworder text-center" style="margin-top:20px">
             <el-button type="primary" @click="submitToSaveOrder('detailData')">保存</el-button>
             <el-button type="primary" @click="submitToSubmitOrder('detailData')">保存并提交</el-button>
+            <el-button @click="handleCancelOrder">取消订单</el-button>
+            <el-button>结算单上传完成</el-button>
             <el-button @click="handleGoBack">返回订单列表</el-button>
-            <el-button type="danger" @click="handleDeleteOrder">删除</el-button>
-        </div> -->
+        </div>
         <div style="margin-top:20px">
             <el-form class="inline-form el-row" label-width="200px">
                 <el-form-item label="审核备注：" class="el-col el-col-12" style="margin-right:10px;">
@@ -371,7 +373,6 @@
                 <el-button type="" @click="handleApproved('Rejected')">返回订单列表</el-button>
             </el-form>
         </div>
-
         <div class="form-box-neworder">
             <div class="form-title">
                 申请日志
@@ -383,6 +384,54 @@
             </el-row>
         </div>
     </div>
+    <el-dialog title="相关附件" class="AttachmentPreviewDialog" :visible.sync="AttachmentPreviewDialog" fullscreen>
+        <div class="radio-box">
+            <el-radio-group v-model="AttachmentCategoryID" @change="CategoryChange">
+                <el-radio :label="0">全部 {{detailData.AttachmentNumbers.Total}}</el-radio>
+                <el-radio :label="1">车险保单 {{detailData.AttachmentNumbers['1']}}</el-radio>
+                <el-radio :label="2">车损照片和油漆订单截屏 {{detailData.AttachmentNumbers['2']}}</el-radio>
+                <el-radio :label="3">车辆铭牌 {{detailData.AttachmentNumbers['3']}}</el-radio>
+                <el-radio :label="4">行驶证 {{detailData.AttachmentNumbers['4']}}</el-radio>
+                <el-radio :label="5">DAT定损单 {{detailData.AttachmentNumbers['5']}}</el-radio>
+                <el-radio :label="6">发票及结算单 {{detailData.AttachmentNumbers['6']}}</el-radio>
+            </el-radio-group>
+        </div>
+        <div class="select-box" style="margin-top:10px">
+            <el-select v-model="AttachmentCategoryID" placeholder="请选择分类">
+                <el-option v-for="(item, index) in AttachmentSelectList" :key="index" :label="item.label" :value="item.value"></el-option>
+            </el-select>
+            <el-upload action="/FileUpload" :http-request="uploadSectionFile" :show-file-list="false" style="display:inline-block" :disabled="AttachmentCategoryID==0">
+                <el-button type="primary" :disabled="AttachmentCategoryID==0">附件上传</el-button>
+            </el-upload>
+            <el-button type="primary" @click="AttachmentPreviewDialog = true">附件预览</el-button>
+        </div>
+        <el-table :data="detailData.Attachments" default-expand-all >
+            <el-table-column type="expand">
+                <template slot-scope="scope" v-if="isImg(scope.row.FileName)">
+                    <!-- <img :src="ServerUrl+'/BigAccident/Action/FileDownLoad?filename='+ scope.row.FileName" /> -->
+                    <img src="../../assets/login-bg1.png" style="width:90%"/>
+                </template>
+            </el-table-column>
+            <el-table-column label="序号" prop="ID"></el-table-column>
+            <el-table-column label="分类" prop="CategoryID">
+                <template slot-scope="scope">
+                    {{GetCategoryName(scope.row.CategoryID)}}
+                </template>
+            </el-table-column>
+            <el-table-column label="名称" prop="FileName"></el-table-column>
+            <el-table-column label="大小" prop="FileSize">
+                <template slot-scope="scope">
+                    {{scope.row.FileSize+'MB'}}
+                </template>
+            </el-table-column>
+            <el-table-column label="操作" align="center">
+                <template slot-scope="scope">
+                    <el-button type="text" icon="el-icon-download">下载</el-button>
+                    <el-button type="text" icon="el-icon-delete" style="color:#ff4949" @click="handleRemoveFile(scope.row)">删除</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+    </el-dialog>
 </div>
 </template>
 
@@ -402,8 +451,9 @@ export default {
     name: 'orderDetail',
     data: function() {
         return {
-            selectAccidentType: false,
+            selectAccidentTypeDialog: false,
             addPartDialog: false,
+            AttachmentPreviewDialog: false,
             Result: '', // 审批结果 “Approved”：通过 “Rejected”：不通过
             Comment: '', //审核备注
             detailData: {
@@ -441,8 +491,10 @@ export default {
                 OrderPart_Div_Part: '',
                 OrderPartDiscount: '',
                 ApplyExtraServiceCost: true,
+                HasWadingInsurance:'',
                 ExtraServiceCost: '',
                 SpareParts: [],
+                Attachments: [],
                 AttachmentNumbers: {
                     "Total": 0,
                     "1": 0,
@@ -468,7 +520,6 @@ export default {
                 LogisticsCmt: ''
             },
             AttachmentCategoryID: 0,
-            Attachments: [],
             AttachmentSelectList: [
                 {
                     label:'请选择分类',
@@ -493,7 +544,8 @@ export default {
                     label: '发票及结算单',
                     value: 6
                 }
-            ]
+            ],
+            AttachmentShowList:[]
         }
     },
     filters: {
@@ -707,7 +759,7 @@ export default {
             } catch (e) {
                 console.log(e)
             }
-            this.selectAccidentType = false
+            this.selectAccidentTypeDialog = false
         },
         addSpareParts() { //添加零件
             this.newSpareParts.Price_Old = this.newSpareParts.Price
@@ -733,8 +785,16 @@ export default {
             console.log(this.detailData.SpareParts)
         },
         CategoryChange(val) { //切换附件类型
-            console.log(val)
-            return val
+            if(val==0){
+                this.AttachmentShowList = this.detailData.Attachments.slice(0)
+            }else {
+                this.detailData.Attachments.map(function(item){
+                    if(item.CategoryID==val){
+                        this.AttachmentShowList.push(item)
+                    }
+                })
+            }
+            console.log(this.AttachmentShowList)
         },
         async handleRemoveFile(row) { // 附件删除
             try {
@@ -794,14 +854,8 @@ export default {
         },
 
         async handleSaveOrder() { // 保存并不提交-经销商
-            //将计算后的占比传入
-            this.detailData.Repair_CurrentPrice_PCT = parseFloat(this.$refs.Repair_CurrentPrice_PCT.value).toFixed(1)
-            this.detailData.Part_Repair_PCT = parseFloat(this.$refs.Part_Repair_PCT.value).toFixed(1)
             try {
-                const response = await Dealer.SaveOrder({
-                    "Operation": this.detailData.OrderID ? 'Update' : 'Create',
-                    "Order": this.detailData
-                })
+                const response = await Dealer.SaveOrder(this.detailData)
                 if (response.Code == 200) {
                     //console.log(this.detailData)
                     this.alertDialog()
@@ -811,9 +865,6 @@ export default {
             }
         },
         async handleSubmitOrder() { // 保存并提交-经销商
-            //将计算后的占比传入
-            this.detailData.Repair_CurrentPrice_PCT = parseFloat(this.$refs.Repair_CurrentPrice_PCT.value).toFixed(1)
-            this.detailData.Part_Repair_PCT = parseFloat(this.$refs.Part_Repair_PCT.value).toFixed(1)
             try {
                 const response = await Dealer.SaveOrder({
                     "Operation": this.detailData.OrderID ? 'Update' : 'Create',
@@ -833,9 +884,9 @@ export default {
                 console.log(error)
             }
         },
-        async handleDeleteOrder() {
+        async handleCancelOrder() {
             try {
-                const response = await Dealer.DeleteOrder({
+                const response = await Dealer.CancelOrder({
                     "OrderID": this.detailData.OrderID
                 })
                 if (response.Code == 200) {
@@ -845,15 +896,9 @@ export default {
                 console.log(e)
             }
         },
-        submitToSaveOrder(formName) {
-            this.$refs[formName].validate((valid) => {
-                if (valid) {
-                    this.handleSaveOrder()
-                } else {
-                    alert('error submit!!');
-                    return false;
-                }
-            })
+        submitToSaveOrder() {
+            this.handleSaveOrder()
+
         },
         submitToSubmitOrder(formName) {
             this.$refs[formName].validate((valid) => {
@@ -941,7 +986,7 @@ export default {
     },
     created() {
         this.routeChange()
-        this.selectAccidentType = !this.$route.params.id
+        this.selectAccidentTypeDialog = !this.$route.params.id
     }
 }
 </script>
@@ -995,25 +1040,7 @@ export default {
 .el-form-item__content > div {
     width: 100%;
 }
-.Attachments {
-    margin: 20px 10px;
-    .AttachmentItem {
-        position: relative;
-        margin: 20px;
-        .AttachmentContent {
-            display: inline-block;
-            width: 80%;
-            img {
-                max-width: 100%;
-            }
-        }
-        .removeAttachmentItem {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-    }
-}
+
 .selectAccidentType {
     .el-dialog__body {
         padding: 30px 20px;
