@@ -1,11 +1,20 @@
 <template>
 <div class="main-container">
-    <!-- <div class="handle-input">
-        <el-input placeholder="Typing dealer name to search" v-model="input5" class="input-with-select">
-            <el-button slot="append" icon="el-icon-search"></el-button>
-        </el-input>
-    </div> -->
-    <!-- <el-button type="primary" class="newOrderButton" @click="dialogFormVisible=true">新建区域经理</el-button> -->
+    <div class="search-box">
+        <div class="sort-select">
+            <el-select v-model="SearchField" placeholder="--请选择要查询的字段--" style="width:200px">
+                <el-option v-for="(item, index) in selectList" :key="index" :label="item.label" :value="item.value"></el-option>
+            </el-select>
+        </div>
+        <div class="handle-input">
+            <el-input placeholder="" :disabled="!SearchField" v-model="SearchValue" class="input-with-select">
+                <el-button slot="append" icon="el-icon-search" @click="handleSearch"></el-button>
+            </el-input>
+        </div>
+        <router-link to="/systemRegionManagerDetail" class="button">
+            <el-button type="primary" class="newOrderButton">新建区域经理</el-button>
+        </router-link>
+    </div>
     <el-table :data="RegionManagers" class="table" ref="multipleTable" @row-click="goMessageDetail">
         <el-table-column prop="RegionName" label="区域"></el-table-column>
         <el-table-column prop="Name" label="姓名"></el-table-column>
@@ -33,6 +42,12 @@ import {
 export default {
     data() { //选项 / 数据
         return {
+            SearchField: '',
+            SearchValue: '',
+            SortField: '',
+            SortType: '',
+            RowOffset: 0,
+            RowCount: 6,
             TotalNumber: 5,
             RegionManagers: [{
                 "ID": 15,
@@ -44,7 +59,20 @@ export default {
                 "Mobile": "13900000000",
                 "StatusCode": 101,
                 "StatusName": "启用"
-            }, ],
+            }],
+            selectList: [{
+                label: '地区',
+                value: 'RegionName',
+            }, {
+                label: '区域经理姓名',
+                value: 'Name',
+            }, {
+                label: '邮箱',
+                value: 'MailBox',
+            }, {
+                label: '手机',
+                value: 'Mobile',
+            }]
         }
     },
     methods: { //事件处理器
@@ -59,9 +87,22 @@ export default {
                 }
             });
         },
+        handleSearch(val) {
+            if (this.SearchValue.trim()) {
+                this.SearchValue = this.SearchValue.trim()
+                this.getData()
+            }
+        },
         async getData() {
             try {
-                const response = await BMW.GetRMList()
+                const response = await BMW.GetRMList({
+                    "SearchField": this.SearchField,
+                    "SearchValue": this.SearchValue,
+                    "SortField": this.SortField,
+                    "SortType": this.SortType,
+                    "RowOffset": this.RowOffset,
+                    "RowCount": this.RowCount
+                })
                 this.TotalNumber = response.Data.TotalNumber
                 this.RegionManagers = response.Data.RegionManagers
             } catch (error) {
@@ -96,13 +137,24 @@ export default {
 .main-container {
     background-color: #fff;
     padding: 10px;
+    .search-box {
+        padding: 10px 0;
+    }
     .handle-input {
         width: 300px;
         margin: 10px;
         display: inline-block;
     }
+    .sort-select {
+        width: 200px;
+        margin: 10px;
+        display: inline-block;
+    }
     .newOrderButton {
         color: #fff;
+    }
+    .el-input--small .el-input__inner {
+        height: 34px;
     }
 }
 </style>

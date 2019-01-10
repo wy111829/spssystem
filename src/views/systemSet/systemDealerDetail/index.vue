@@ -1,35 +1,21 @@
 <template>
 <div class="newDealer-container main-container">
     <div class="form-box-newdealer">
-        <el-form class="inline-form el-row" ref="Dealer" :model="Dealer" :rules="rules" label-width="150px">
-            <el-form-item label="DAT客户编号：" prop="CustomerNumber">
+        <el-form class="inline-form el-row" ref="Dealer" :model="Dealer" :rules="rules" label-width="180px">
+            <el-form-item label="账号(DAT客户编号)：" prop="CustomerNumber">
                 <el-input v-model="Dealer.CustomerNumber" clearable></el-input>
             </el-form-item>
-            <el-form-item label="CBU：" prop="CBU">
-                <el-input v-model="Dealer.CBU" clearable></el-input>
-            </el-form-item>
-            <el-form-item label="CKD：" prop="CKD">
+            <el-form-item label="经销商ID(CKD)：" prop="CKD">
                 <el-input v-model="Dealer.CKD" clearable></el-input>
             </el-form-item>
-            <el-form-item label="经销商名称(全称)：" prop="FullName">
-                <el-input v-model="Dealer.FullName" clearable></el-input>
+            <el-form-item label="经销商名称：" prop="Name">
+                <el-input v-model="Dealer.Name" clearable></el-input>
             </el-form-item>
-            <el-form-item label="经销商名称(简称)：" prop="ShortName">
-                <el-input v-model="Dealer.ShortName" clearable></el-input>
+            <el-form-item label="邮箱1：" prop="MailBox1">
+                <el-input v-model="Dealer.MailBox1" clearable></el-input>
             </el-form-item>
-            <el-form-item label="登录名：" prop="LoginName">
-                <el-input v-model="Dealer.LoginName" clearable></el-input>
-            </el-form-item>
-            <template v-if="Dealer.DealerID == 0">
-                <el-form-item label="密码：" prop="Password">
-                    <el-input v-model="Dealer.Password" type="Password" clearable></el-input>
-                </el-form-item>
-                <el-form-item label="密码确认：" prop="Passwordagain">
-                    <el-input v-model="Dealer.Passwordagain" type="Password" clearable></el-input>
-                </el-form-item>
-            </template>
-            <el-form-item label="经销商集团：" prop="DealerGroup">
-                <el-input v-model="Dealer.DealerGroup" clearable></el-input>
+            <el-form-item label="邮箱2：" prop="MailBox1">
+                <el-input v-model="Dealer.MailBox2" clearable></el-input>
             </el-form-item>
             <el-form-item label="区域： " prop="RegionID">
                 <el-select v-model="Dealer.RegionID" @change="RegionIDChange" clearable placeholder="请选择">
@@ -49,9 +35,20 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="邮箱：" prop="MailBox">
-                <el-input v-model="Dealer.MailBox" clearable></el-input>
+            <el-form-item label="区域经理：" prop="RegionManagerName">
+                <el-input v-model="Dealer.RegionManagerName" clearable></el-input>
             </el-form-item>
+            <el-form-item label="所属经销商集团：" prop="DealerGroup">
+                <el-input v-model="Dealer.DealerGroup" clearable></el-input>
+            </el-form-item>
+            <template v-if="Dealer.DealerID == 0">
+                <el-form-item label="密码：" prop="Password">
+                    <el-input v-model="Dealer.Password" type="Password" clearable></el-input>
+                </el-form-item>
+                <el-form-item label="密码确认：" prop="Passwordagain">
+                    <el-input v-model="Dealer.Passwordagain" type="Password" clearable></el-input>
+                </el-form-item>
+            </template>
             <el-form-item label="状态：" prop="StatusCode">
                 <el-radio-group v-model="Dealer.StatusCode">
                     <el-radio :label="101">启用</el-radio>
@@ -74,6 +71,7 @@
             <el-row class="text-center">
                 <el-form-item>
                     <el-button type="primary" @click="submitForm('Dealer')">保存</el-button>
+                    <el-button type="danger" @click="handleDeletDealer('Dealer')" v-if="Dealer.DealerID != 0">删除</el-button>
                     <el-button type="info" @click="handleGoBack">取消</el-button>
                 </el-form-item>
             </el-row>
@@ -117,41 +115,29 @@ export default {
         }
         return {
             Dealer: {
+                "DealerID": 0,
                 "CustomerNumber":'',
-                "DealerID": '',
-                "CBU": "",
                 "CKD": "",
-                "FullName": "",
-                "ShortName": "",
+                "Name": "",
+                "MailBox1":"",
+                "MailBox2":"",
                 "RegionID": "",
                 "RegionName": "",
                 "ProvinceID": "",
                 "ProvinceName": "",
                 "CityID": "",
                 "CityName": "",
-                "DealerGroup": "",
+                "RegionManagerID":"",
+                "DealerGroup":"",
                 "StatusCode": '',
-                "LoginName": "",
-                "MailBox": "",
-                Password: ''
+                "StatusName":"",
+                "Password": ''
             },
             areaData: [],
             rules: {
                 CustomerNumber: [{
                         required: true,
                         message: '请输入DAT客户编号',
-                        trigger: 'blur'
-                    },
-                    {
-                        min: 1,
-                        max: 100,
-                        message: '长度小于100个字',
-                        trigger: 'blur'
-                    }
-                ],
-                CBU: [{
-                        required: true,
-                        message: '请输入CBU',
                         trigger: 'blur'
                     },
                     {
@@ -173,9 +159,9 @@ export default {
                         trigger: 'blur'
                     }
                 ],
-                FullName: [{
+                Name: [{
                         required: true,
-                        message: '请输入经销商名称(全称)',
+                        message: '请输入经销商名称',
                         trigger: 'blur'
                     },
                     {
@@ -185,21 +171,9 @@ export default {
                         trigger: 'blur'
                     }
                 ],
-                ShortName: [{
+                RegionManagerName: [{
                         required: true,
-                        message: '请输入经销商名称(简称)',
-                        trigger: 'blur'
-                    },
-                    {
-                        min: 1,
-                        max: 100,
-                        message: '长度小于100个字',
-                        trigger: 'blur'
-                    }
-                ],
-                LoginName: [{
-                        required: true,
-                        message: '登录名',
+                        message: '区域经理',
                         trigger: 'blur'
                     },
                     {
@@ -246,7 +220,18 @@ export default {
                         trigger: 'blur'
                     }
                 ],
-                MailBox: [{
+                MailBox1: [{
+                        required: true,
+                        message: '请输入邮箱地址',
+                        trigger: 'blur'
+                    },
+                    {
+                        type: 'email',
+                        message: '请输入正确的邮箱地址',
+                        trigger: ['blur', 'change']
+                    }
+                ],
+                MailBox2: [{
                         required: true,
                         message: '请输入邮箱地址',
                         trigger: 'blur'
@@ -364,6 +349,19 @@ export default {
                 const response = await BMW.GetRegionProvCityList()
                 this.area = response.Data.Regions
                 this.initAreaFun()
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        async handleDeletDealer(data){
+            try {
+                const response = await BMW.ChangeDealerStatus({
+                    "DealerID": data.DealerID,
+                    "StatusCode": 103
+                })
+                if (response.Code == 200) {
+                    this.alertDialog()
+                }
             } catch (error) {
                 console.log(error)
             }

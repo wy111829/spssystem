@@ -1,48 +1,69 @@
 <template>
 <div class="main-container">
-    <div class="RMDetail">
-        <el-form ref="Data" :model="Data" class="inline-form el-row" label-width="150px" :rules="rules">
-            <el-form-item label="地区：" prop="RegionName">
-                <el-input v-model="Data.RegionName" readonly ></el-input>
-            </el-form-item>
-            <el-form-item label="区域经理姓名：" prop="Name">
-                <el-input v-model="Data.Name"></el-input>
-            </el-form-item>
-            <el-form-item label="登录名：" prop="LoginName">
-                <el-input v-model="Data.LoginName"></el-input>
-            </el-form-item>
-            <el-form-item label="邮箱：" prop="MailBox">
-                <el-input v-model="Data.MailBox" clearable></el-input>
-            </el-form-item>
-            <el-form-item label="手机：" prop="Mobile">
-                <el-input v-model="Data.Mobile" clearable></el-input>
-            </el-form-item>
-            <el-form-item label="状态：" prop="StatusCode">
-                <el-radio-group v-model="Data.StatusCode">
-                    <el-radio :label="101">启用</el-radio>
-                    <el-radio :label="102">停用</el-radio>
-                </el-radio-group>
-            </el-form-item>
-            <el-form-item label="修改密码：" prop="pswCheck">
-                <el-checkbox v-model="pswCheck" ></el-checkbox>
-            </el-form-item>
-            <template v-if="pswCheck">
-                <el-form-item label="密码：" prop="Password">
-                    <el-input v-model="Data.Password" type="Password" clearable></el-input>
-                </el-form-item>
-                <el-form-item label="密码确认：" prop="Passwordagain">
-                    <el-input v-model="Data.Passwordagain" type="Password" clearable></el-input>
-                </el-form-item>
-            </template>
-            <el-row class="text-center">
-                <el-form-item>
-                    <el-button type="primary" @click="submitForm('Data')">保存</el-button>
-                    <el-button type="info" @click="handleGoBack">取消</el-button>
-                </el-form-item>
-            </el-row>
-        </el-form>
-
-    </div>
+    <el-row :gutter="20">
+        <el-col :md="12" :sm="24">
+            <div class="RMDetail">
+                <el-form ref="Data" :model="Data" class="inline-form el-row" label-width="150px" :rules="rules">
+                    <el-form-item label="账号(邮箱)：" prop="MailBox">
+                        <el-input v-model="Data.MailBox" clearable></el-input>
+                    </el-form-item>
+                    <el-form-item label="地区：" prop="RegionName">
+                        <el-input v-model="Data.RegionName"></el-input>
+                    </el-form-item>
+                    <el-form-item label="区域经理姓名：" prop="Name">
+                        <el-input v-model="Data.Name"></el-input>
+                    </el-form-item>
+                    <el-form-item label="手机：" prop="Mobile">
+                        <el-input v-model="Data.Mobile" clearable></el-input>
+                    </el-form-item>
+                    <template v-if="Data.ID == 0">
+                        <el-form-item label="密码：" prop="Password">
+                            <el-input v-model="Data.Password" type="Password" clearable></el-input>
+                        </el-form-item>
+                        <el-form-item label="密码确认：" prop="Passwordagain">
+                            <el-input v-model="Data.Passwordagain" type="Password" clearable></el-input>
+                        </el-form-item>
+                    </template>
+                    <el-form-item label="状态：" prop="StatusCode">
+                        <el-radio-group v-model="Data.StatusCode">
+                            <el-radio :label="101">启用</el-radio>
+                            <el-radio :label="102">停用</el-radio>
+                        </el-radio-group>
+                    </el-form-item>
+                    <template v-if="Data.ID != 0">
+                        <el-form-item label="修改密码：" prop="pswCheck">
+                            <el-checkbox v-model="pswCheck"></el-checkbox>
+                        </el-form-item>
+                        <template v-if="pswCheck">
+                            <el-form-item label="密码：" prop="Password">
+                                <el-input v-model="Data.Password" type="Password" clearable></el-input>
+                            </el-form-item>
+                            <el-form-item label="密码确认：" prop="Passwordagain">
+                                <el-input v-model="Data.Passwordagain" type="Password" clearable></el-input>
+                            </el-form-item>
+                        </template>
+                    </template>
+                </el-form>
+            </div>
+        </el-col>
+        <el-col :md="12" :sm="24">
+            <div class="SelectDealerList">
+                <template>
+                    <el-transfer filterable filter-placeholder="查询关键字"
+                     v-model="value2"
+                     :titles="[Data.RegionName+'所有经销商',Data.Name+'所辖经销商']"
+                     :data="data2">
+                    </el-transfer>
+                </template>
+            </div>
+        </el-col>
+        <el-col :span="24">
+            <div class="text-center" style="margin-top:20px;">
+                <el-button type="primary" @click="submitForm('Data')">保存</el-button>
+                <el-button type="info" @click="handleGoBack">取消</el-button>
+            </div>
+        </el-col>
+    </el-row>
 </div>
 </template>
 
@@ -80,7 +101,7 @@ export default {
         }
         return {
             Data: {
-                "ID":null,
+                "ID": null,
                 "RegionID": "",
                 "RegionName": "",
                 "Name": "",
@@ -142,9 +163,9 @@ export default {
             }
         },
         submitForm(formName) {
-            if (!this.pswCheck){
-                this.$delete(this.Data,'Password'),
-                this.$delete(this.Data,'Passwordagain')
+            if (!this.pswCheck) {
+                this.$delete(this.Data, 'Password'),
+                    this.$delete(this.Data, 'Passwordagain')
             }
             this.$refs[formName].validate((valid) => {
                 if (valid) {
@@ -202,8 +223,14 @@ export default {
 </script>
 
 <style lang="less">
-.RMDetail {
-    max-width: 700px;
-    margin: 0 auto;
+.el-transfer-panel {
+    width: 35%;
+}
+.el-transfer__buttons {
+    width: 5%;
+}
+.el-transfer-panel .el-transfer-panel__header .el-checkbox .el-checkbox__label{
+    font-size: 14px;
+    color: #606266;
 }
 </style>

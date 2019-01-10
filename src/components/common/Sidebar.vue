@@ -25,8 +25,8 @@
                 <div class="clearfix" style="text-align:center;margin-bottom:10px">
                     <span>BMW广播站</span>
                 </div>
-                <p style="text-align:center;font-size:6px;line-height20px;margin-bottom:10px;color:#909399">2018-06-30 13:20</p>
-                <p>为了进一步帮助经销商事故车留修，BMW将采取一系列措施并简化申请流程以提升工作效率。我们继续提供碰撞类事故车配件折扣，次项目不和其他项目或活动重复支持...</p>
+                <p style="text-align:center;font-size:6px;line-height20px;margin-bottom:10px;color:#909399">{{Message.PublishDate}}</p>
+                <p>{{Message.MessageContent}}</p>
                 <router-link :to="{ name: 'systemMsg'}">
                     <el-button style="float: right; padding: 3px 0" type="text">详细</el-button>
                 </router-link>
@@ -36,7 +36,8 @@
 </template>
 
 <script>
-    import bus from '../common/bus';
+    import {General} from '@/networks/api'
+    import bus from '../common/bus'
     import { mapState} from 'vuex'
     export default {
         data() {
@@ -114,7 +115,12 @@
                             }
                         ]
                     }
-                ]
+                ],
+                Message:{
+                    "ID":23,
+                    "MessageContent":"这是一条测试消息。",
+                    "PublishDate":"2018-10-19 14:23:38"
+                }
             }
         },
         computed:{
@@ -126,7 +132,26 @@
                 return this.$route.path.replace('/','');
             }
         },
+        methods: {
+            async GetSysMessageList() {
+                try {
+                    const response = await General.GetSysMessageList({
+                        "RowOffset":1,
+                        "RowCount":1,
+                        "SearchField": '',
+                        "SearchValue": '',
+                        "SortField": '',
+                        "SortType": ''
+                    })
+                    this.Message = response.Data.Messages[0]
+                    this.Message.MessageContent = this.Message.MessageContent.substring(0,15)
+                } catch (error) {
+                    console.log(error)
+                }
+            },
+        },
         created(){
+            this.GetSysMessageList()
             // 通过 Event Bus 进行组件间通信，来折叠侧边栏
             bus.$on('collapse', msg => {
                 this.collapse = msg;

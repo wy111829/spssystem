@@ -16,21 +16,25 @@
         </router-link>
     </div>
     <el-table :data="tableList" class="table" ref="multipleTable" @sort-change="handleSortChange" empty-text='搜索结果为空' @row-click="goMessageDetail">
-        <el-table-column prop="CBU" label="CBU" sortable></el-table-column>
+        <el-table-column prop="CustomerNumber" label="账号" sortable></el-table-column>
         <el-table-column prop="CKD" label="CKD" sortable></el-table-column>
-        <el-table-column prop="DealerName" label="经销商名称" sortable></el-table-column>
+        <el-table-column prop="Name" label="经销商名称" sortable width="120"></el-table-column>
         <el-table-column prop="RegionName" label="地区"></el-table-column>
         <el-table-column prop="ProvinceName" label="省份" sortable></el-table-column>
         <el-table-column prop="CityName" label="城市" sortable></el-table-column>
-        <el-table-column prop="DealerGroup" label="经销商集团" sortable></el-table-column>
-        <el-table-column prop="StatusName" label="状态" sortable width=150>
+        <el-table-column prop="MailBox1" label="邮箱1" sortable width="160" align="center"></el-table-column>
+        <el-table-column prop="MailBox2" label="邮箱2" sortable width="160" align="center"></el-table-column>
+        <el-table-column prop="RegionManagerName" label="区域经理" sortable width="100"></el-table-column>
+        <el-table-column prop="LastModified" label="更新日期" sortable width="140" align="center"></el-table-column>
+        <el-table-column prop="StatusName" label="状态" sortable width="140" fixed="right" align="center">
             <template slot-scope="scope" >
                 <el-switch v-model="scope.row.StatusCode"  @click.native="stopBubble"  @change="handleChangeDealerStatus(scope.$index, scope.row)" active-color="#13ce66" inactive-color="#ff4949" active-text="启用" inactive-text="停用" :active-value="101" :inactive-value="102"></el-switch>
             </template>
         </el-table-column>
-        <el-table-column label="操作" align="center">
+        <el-table-column label="操作" align="center" width="120" fixed="right">
             <template slot-scope="scope">
                 <el-button type="text" icon="el-icon-edit" @click="goMessageDetail(scope.row)" @click.native="stopBubble">编辑</el-button>
+                <el-button type="text" icon="el-icon-delete" @click.stop="handleDeletDealer(scope.row)" @click.native="stopBubble" style="color:#ff4949">删除</el-button>
             </template>
         </el-table-column>
     </el-table>
@@ -146,6 +150,20 @@ export default {
                 })
                 if (response.Code != 200) {
                     this.tableList[index].StatusCode = data.StatusCode == 101 ? 102 : 101
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        async handleDeletDealer(data){
+            try {
+                const response = await BMW.ChangeDealerStatus({
+                    "DealerID": data.DealerID,
+                    "StatusCode": 103
+                })
+                if (response.Code == 200) {
+                    let arrindex = this.tableList.indexOf(data)
+                    this.tableList.splice(arrindex,1)
                 }
             } catch (error) {
                 console.log(error)

@@ -13,14 +13,15 @@
         </div>
     </div>
     <el-table :data="tableList" class="table" ref="multipleTable" @sort-change="handleSortChange" empty-text='搜索结果为空'>
-        <el-table-column prop="CBU" label="CBU" sortable ></el-table-column>
+        <el-table-column prop="CustomerNumber" label="账号" sortable ></el-table-column>
         <el-table-column prop="CKD" label="CKD" sortable ></el-table-column>
-        <el-table-column prop="DealerName" label="经销商名称" sortable ></el-table-column>
-        <el-table-column prop="RegionName" label="地区" ></el-table-column>
+        <el-table-column prop="Name" label="经销商名称" sortable width="120"></el-table-column>
+        <el-table-column prop="RegionName" label="区域" ></el-table-column>
         <el-table-column prop="ProvinceName" label="省份" sortable ></el-table-column>
         <el-table-column prop="CityName" label="城市" sortable ></el-table-column>
-        <el-table-column prop="DealerGroup" label="经销商集团" sortable ></el-table-column>
-        <el-table-column label="审批策略" width="280" align="center" sortable >
+        <el-table-column prop="MailBox1" label="邮箱1" sortable align="center" width="160"></el-table-column>
+        <el-table-column prop="MailBox2" label="邮箱2" sortable align="center" width="160"></el-table-column>
+        <el-table-column label="审批策略" width="200" align="center" sortable >
             <template slot-scope="scope">
                 <el-radio-group v-model="scope.row.ApproveMethod" @change="handleRadioChange(scope.$index, scope.row)">
                     <el-radio label="AutoApprove">自动审核</el-radio>

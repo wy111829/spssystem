@@ -226,7 +226,7 @@
                 </el-table-column>
                 <el-table-column label="操作" align="center" fixed="right">
                     <template slot-scope="scope">
-                        <el-button type="text" icon="el-icon-delete" style="color:#ff4949" @click="handleDeletPart(scope.$index, scope)">删除</el-button>
+                        <el-button type="text" icon="el-icon-delete" style="color:#ff4949" @click="handleDeletPart(scope.$index, scope.row)">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -430,6 +430,9 @@
                 </template>
             </el-table-column>
         </el-table>
+        <span slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="AttachmentPreviewDialog = false" >返回订单</el-button>
+        </span>
     </el-dialog>
 </div>
 </template>
@@ -660,7 +663,7 @@ export default {
                 return ''
             }
         },
-        GetCategoryName: function() {
+        GetCategoryName: function() {  //附件显示分类 1=>'xxx'
             return function(CategoryID) {
                 if(CategoryID == 1){
                     return '车险保单'
@@ -676,11 +679,10 @@ export default {
                     return '发票及结算单';
                 }
             }
-        }, //附件显示分类 1=>'xxx'
+        },
         AttachmentShowList: function() {
             let list = []
-            console.log(888, this.detailData)
-            if (this.detailData&&this.detailData.Attachments&&this.detailData.Attachments.length>0) {
+            if (this.detailData.Attachments.length>0) {
                 if(this.AttachmentCategoryID==0){
                     list = this.detailData.Attachments.slice(0)
                 }else {
@@ -689,7 +691,7 @@ export default {
                             list.push(item)
                         }
                     })
-                } 
+                }
             }
             return list
         }
@@ -783,7 +785,7 @@ export default {
         },
         handleDeletPart(index, data) { //删除零件
 
-            let arrindex = this.detailData.SpareParts.indexOf(data.row)
+            let arrindex = this.detailData.SpareParts.indexOf(data)
 
             this.detailData.SpareParts.splice(arrindex, 1)
             // this.detailData.SpareParts.splice(index,1)
