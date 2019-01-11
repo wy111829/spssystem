@@ -62,17 +62,17 @@ export default new Router({
                 },
                 {
 
-                    path: '/systemEmailAdressList',
-                    component: resolve => require(['@/views/systemSet/systemEmailAdressList'], resolve),
-                    meta: { title: '邮件地址管理', keepAlive: false  },
-                    name: 'systemEmailAdressList'
+                    path: '/systemUserManager',
+                    component: resolve => require(['@/views/systemSet/systemUserManager'], resolve),
+                    meta: { title: '用户管理', keepAlive: false  },
+                    name: 'systemUserManager'
                 },
                 {
 
-                    path: '/systemEmailAdressDetail/:id?',
-                    component: resolve => require(['@/views/systemSet/systemEmailAdressDetail'], resolve),
-                    meta: { title: '邮件地址', keepAlive: false  },
-                    name: 'systemEmailAdressDetail'
+                    path: '/systemUserDetail/:id?',
+                    component: resolve => require(['@/views/systemSet/systemUserDetail'], resolve),
+                    meta: { title: '用户详情', keepAlive: false  },
+                    name: 'systemUserDetail'
                 },
                 {
 

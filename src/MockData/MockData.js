@@ -756,23 +756,24 @@ Mock.mock(/GetRMList/, 'post', {
                 "RegionID": "100001",
                 "RegionName": "东区",
                 "Name": "张无忌",
-                "LoginName": "zhangwuji",
                 "MailBox": "Test@Test.com",
                 "Mobile": "13900000000",
                 "StatusCode": 101,
-                "StatusName": "启用"
+                "StatusName": "启用",
+                "LastModified": "2018-12-26 13:23"
             },
             {
                 "ID": 16,
                 "RegionID": "100002",
                 "RegionName": "南区",
-                "Name": "乔峰",
-                "LoginName": "qiaofeng",
+                "Name": "张无忌",
                 "MailBox": "Test@Test.com",
                 "Mobile": "13900000000",
                 "StatusCode": 101,
-                "StatusName": "启用"
+                "StatusName": "启用",
+                "LastModified": "2018-12-26 13:23"
             }
+
         ]
     }
 })
@@ -783,19 +784,19 @@ Mock.mock(/GetRegionDealerList/, 'post', {
     "Data": {
         "TotalNumber": 120,
         "Dealers": [{
-                "DealerID": 122121,
+                "ID": 122121,
                 "Name": "北京华德宝"
             },
             {
-                "DealerID": 122122,
+                "ID": 122122,
                 "Name": "北京宝泽行"
             },
             {
-                "DealerID": 122123,
+                "ID": 122123,
                 "Name": "北京经销商1"
             },
             {
-                "DealerID": 122124,
+                "ID": 122124,
                 "Name": "北京经销商2"
             }
         ]
@@ -813,13 +814,26 @@ Mock.mock(/GetRMInfo([\w|\?\S*]+)/, 'get', {
     "Code": 200,
     "Data": {
         "ID": 2,
-        "RegionID": "100001",
+        "RegionID": 100001,
         "RegionName": "东区",
         "Name": "张无忌",
-        "LoginName": "zhangwuji",
         "MailBox": "Test@Test.com",
         "Mobile": "13900000000",
-        "Status": 101
+        "StatusCode": 101,
+        "StatusName": "启用",
+        "Dealers": [{
+                "ID": 122121,
+                "Name": "北京华德宝"
+            },
+            {
+                "ID": 122122,
+                "Name": "北京宝泽行"
+            },
+            {
+                "ID": 122123,
+                "Name": "北京经销商1"
+            }
+        ]
     }
 })
 
@@ -829,7 +843,7 @@ Mock.mock(/CreateOrUpdateDealer/, 'post', {
 })
 
 //BMW-修改区域经理
-Mock.mock(/UpdateRM/, 'post', {
+Mock.mock(/CreateOrUpdateRM/, 'post', {
     "Code": 200
 })
 
@@ -855,50 +869,39 @@ Mock.mock(/GetUnOrderablePartList/, 'post', {
 
 })
 
-//BMW-获取邮件地址列表
-Mock.mock(/GetMailAddressList/, 'get', {
+//BMW-获取用户列表
+Mock.mock(/GetUserList/, 'post', {
     "Code": 200,
     "Data": {
-        "TotalNumber": 4,
-        "MailAddresses": [{
-                "MailBoxAddress": "body-paint@list.bmw.com",
-                "MailBoxName": "宝马总部",
-                "MailBoxRole": "总部管理员",
-                "UpdataTime": "2018-12-13  14:07",
+        "TotalNumber": 2,
+        "Users": [{
+                "UserID": 10,
+                "LoginName": "body-paint@list.bmw.com",
+                "Name": "宝马总部",
+                "RoleCode": "HQ-Administrator",
+                "RoleName": "总部管理员",
                 "StatusCode": 101,
-                "StatusName": "启用"
+                "StatusName": "启用",
+                "LastModified": "2018-12-26 13:05"
             },
             {
-                "MailBoxAddress": "logistics1@bmw.com ",
-                "MailBoxName": "安徽9家，山东，北区",
-                "MailBoxRole": "物流部",
-                "UpdataTime": "2018-12-13  14:07",
+                "UserID": 11,
+                "LoginName": "logistics1@bmw.com",
+                "Name": "安徽9家，山东，北区",
+                "RoleCode": "Logistics",
+                "RoleName": "物流部",
                 "StatusCode": 101,
-                "StatusName": "启用"
-            },
-            {
-                "MailBoxAddress": "logistics2@bmw.com ",
-                "MailBoxName": "东区，东南区，湖北",
-                "MailBoxRole": "物流部",
-                "UpdataTime": "2018-12-13  14:07",
-                "StatusCode": 101,
-                "StatusName": "启用"
-            },
-            {
-                "MailBoxAddress": "logistics3@bmw.com ",
-                "MailBoxName": "西区，南区",
-                "MailBoxRole": "物流部",
-                "UpdataTime": "2018-12-13  14:07",
-                "StatusCode": 101,
-                "StatusName": "启用"
-            },
+                "StatusName": "启用",
+                "LastModified": "2018-12-26 13:05"
+            }
         ]
     }
+
 
 })
 
 //BMW-邮件地址状态修改
-Mock.mock(/ChangeMailAddressStatus/, 'post', {
+Mock.mock(/ChangeUserStatus/, 'post', {
     "Code": 300,
     "Message": "错误信息"
 })

@@ -15,12 +15,13 @@
             <el-button type="primary" class="newOrderButton">新建区域经理</el-button>
         </router-link>
     </div>
-    <el-table :data="RegionManagers" class="table" ref="multipleTable" @row-click="goMessageDetail">
-        <el-table-column prop="RegionName" label="区域"></el-table-column>
-        <el-table-column prop="Name" label="姓名"></el-table-column>
-        <el-table-column prop="MailBox" label="邮箱"></el-table-column>
-        <el-table-column prop="Mobile" label="电话"></el-table-column>
-        <el-table-column prop="StatusName" label="状态">
+    <el-table :data="RegionManagers" class="table" ref="multipleTable" @row-click="goMessageDetail" @sort-change="handleSortChange">
+        <el-table-column prop="RegionName" label="区域" sortable ></el-table-column>
+        <el-table-column prop="Name" label="姓名" sortable></el-table-column>
+        <el-table-column prop="MailBox" label="邮箱" sortable></el-table-column>
+        <el-table-column prop="Mobile" label="电话" sortable></el-table-column>
+        <el-table-column prop="LastModified" label="更新日期" sortable></el-table-column>
+        <el-table-column prop="StatusName" label="状态" sortable>
             <template slot-scope="scope">
                 <el-switch v-model="scope.row.StatusCode" @click.native="stopBubble" @change="handleChangeDealerStatus(scope.$index, scope.row)" active-color="#13ce66" inactive-color="#ff4949" active-text="启用" inactive-text="停用" :active-value="101" :inactive-value="102"></el-switch>
             </template>
@@ -28,9 +29,14 @@
         <el-table-column label="操作" width="180" align="center">
             <template slot-scope="scope">
                 <el-button type="text" icon="el-icon-edit" @click="goMessageDetail(scope.row)" @click.native="stopBubble">编辑</el-button>
+                <el-button type="text" icon="el-icon-delete" @click.stop="handleDeletRM(scope.row)" @click.native="stopBubble" style="color:#ff4949">删除</el-button>
             </template>
         </el-table-column>
     </el-table>
+    <div class="pagination">
+        <el-pagination background @current-change="handleCurrentChange" layout="prev, pager, next" :total="TotalNumber">
+        </el-pagination>
+    </div>
 </div>
 </template>
 
@@ -79,6 +85,15 @@ export default {
         stopBubble () {
             event.stopPropagation()
         },
+        handleCurrentChange(val) {
+            this.RowOffset = val;
+            this.getData();
+        },
+        handleSortChange(obj) {
+            this.SortType = obj.order == 'ascending' ? 'ASC' : obj.order == 'descending' ? 'DESC' : null
+            this.SortField = obj.prop
+            this.getData()
+        },
         goMessageDetail(data){
             this.$router.push({
                 name: 'systemRegionManagerDetail',
@@ -118,6 +133,20 @@ export default {
                 })
                 if (response.Code != 200) {
                     this.tableList[index].StatusCode = data.StatusCode == 101 ? 102 : 101
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        async handleDeletRM(data){
+            try {
+                const response = await BMW.ChangeRMStatus({
+                    "ID": data.ID,
+                    "StatusCode": 103
+                })
+                if (response.Code == 200) {
+                    let arrindex = this.RegionManagers.indexOf(data)
+                    this.RegionManagers.splice(arrindex,1)
                 }
             } catch (error) {
                 console.log(error)

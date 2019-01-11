@@ -92,9 +92,9 @@
                                 role: ['BMW-BP','Administrator']
                             },
                             {
-                                name: 'systemEmailAdressList',
+                                name: 'systemUserManager',
                                 index: '4-4',
-                                title: '邮件地址管理',
+                                title: '用户管理',
                                 role: ['BMW-BP','Administrator']
                             },
                             // {

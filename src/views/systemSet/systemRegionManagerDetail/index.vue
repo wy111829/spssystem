@@ -8,7 +8,9 @@
                         <el-input v-model="Data.MailBox" clearable></el-input>
                     </el-form-item>
                     <el-form-item label="地区：" prop="RegionName">
-                        <el-input v-model="Data.RegionName"></el-input>
+                        <el-select v-model="Data.RegionID" placeholder="--请选择区域--" @change="AreaChange">
+                          <el-option v-for="(item, index) in area" :key="item.ID" :label="item.Name" :value="item.ID"></el-option>
+                        </el-select>
                     </el-form-item>
                     <el-form-item label="区域经理姓名：" prop="Name">
                         <el-input v-model="Data.Name"></el-input>
@@ -50,9 +52,10 @@
             <div class="SelectDealerList">
                 <template>
                     <el-transfer filterable filter-placeholder="查询关键字"
-                     v-model="value2"
-                     :titles="[Data.RegionName+'所有经销商',Data.Name+'所辖经销商']"
-                     :data="data2">
+                        v-model="Data.Dealers"
+                        :props="{key: 'ID', label:'Name'}"
+                        :titles="[Data.RegionName+'所有经销商',Data.Name+'所辖经销商']"
+                        :data="areaDealers">
                     </el-transfer>
                 </template>
             </div>
@@ -60,6 +63,7 @@
         <el-col :span="24">
             <div class="text-center" style="margin-top:20px;">
                 <el-button type="primary" @click="submitForm('Data')">保存</el-button>
+                <el-button type="danger" @click="handleDeletDealer('Data')" v-if="Data.ID != 0">删除</el-button>
                 <el-button type="info" @click="handleGoBack">取消</el-button>
             </div>
         </el-col>
@@ -109,8 +113,26 @@ export default {
                 "MailBox": "",
                 "Mobile": 0,
                 "StatusCode": 0,
+                "Dealers":[],
                 Password: '',
             },
+            area:[{
+                ID:100001,
+                Name:"东区"
+            },{
+                ID:100002,
+                Name:"南区"
+            },{
+                ID:100003,
+                Name:"西区"
+            },{
+                ID:100004,
+                Name:"北区"
+            },{
+                ID:100005,
+                Name:"西南区"
+            }],
+            areaDealers:[],
             pswCheck: false,
             rules: {
                 Password: [{
@@ -152,9 +174,35 @@ export default {
         ...mapMutations([
             'closeTags'
         ]),
-        async UpdateRM() {
+        async AreaChange(val) {
+            this.areaDealers = []
+            this.Data.Dealers = []
             try {
-                const response = await BMW.UpdateRM(this.Data)
+                const response = await BMW.GetRegionDealerList({
+                    "RegionID":val,
+                    "SearchField":"",
+                    "SearchValue":"",
+                    "SortField":"Name",
+                    "SortType":"ASC"
+                })
+                if (response.Code == 200){
+                    this.areaDealers = response.Data.Dealers
+                    this.area.forEach((item) => {
+                        if(item.ID == val){
+                            this.Data.RegionName = item.Name
+                        }
+                    })
+                }
+            } catch (e) {
+                console.log(e)
+            }
+        },
+        async CreateOrUpdateRM() {
+            try {
+                const response = await BMW.CreateOrUpdateRM({
+                    Operation: this.Data.ID ? 'Update' : 'Create',
+                    RegionManager: this.Data
+                })
                 if (response.Code == 200) {
                     this.alertDialog()
                 }
@@ -165,7 +213,7 @@ export default {
         submitForm(formName) {
             if (!this.pswCheck) {
                 this.$delete(this.Data, 'Password'),
-                    this.$delete(this.Data, 'Passwordagain')
+                this.$delete(this.Data, 'Passwordagain')
             }
             this.$refs[formName].validate((valid) => {
                 if (valid) {
@@ -174,12 +222,25 @@ export default {
                         this.Data.Passwordagain = hex_sha1(this.Data.Passwordagain)
                     }
                     console.log(this.Data)
-                    this.UpdateRM()
+                    this.CreateOrUpdateRM()
                 } else {
                     alert('error submit!!');
                     return false;
                 }
             })
+        },
+        async handleDeletDealer(data){
+            try {
+                const response = await BMW.ChangeRMStatus({
+                    "ID": data.ID,
+                    "StatusCode": 103
+                })
+                if (response.Code == 200) {
+                    this.alertDialog()
+                }
+            } catch (error) {
+                console.log(error)
+            }
         },
         async GetRMInfo() {
             try {
@@ -187,7 +248,11 @@ export default {
                     ID: this.Data.ID
                 })
                 this.Data = response.Data
-                // console.log(this.detailData)
+                let arr = []
+                this.Data.Dealers.map((item) => {
+                    arr.push(item.ID)
+                })
+                this.Data.Dealers = arr
             } catch (error) {
                 console.log(error)
             }
@@ -196,6 +261,7 @@ export default {
             this.Data.ID = this.$route.params.id ? this.$route.params.id : 0
             if (this.Data.ID) {
                 this.GetRMInfo()
+                this.AreaChange()
             }
         },
         alertDialog() {
