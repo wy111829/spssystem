@@ -15,7 +15,7 @@
             <el-button type="primary" class="newOrderButton">新建区域经理</el-button>
         </router-link>
     </div>
-    <el-table :data="RegionManagers" class="table" ref="multipleTable" @row-click="goMessageDetail" @sort-change="handleSortChange">
+    <el-table :data="RegionManagers" class="table" ref="multipleTable" @row-click="goRMDetail" @sort-change="handleSortChange">
         <el-table-column prop="RegionName" label="区域" sortable ></el-table-column>
         <el-table-column prop="Name" label="姓名" sortable></el-table-column>
         <el-table-column prop="MailBox" label="邮箱" sortable></el-table-column>
@@ -28,7 +28,7 @@
         </el-table-column>
         <el-table-column label="操作" width="180" align="center">
             <template slot-scope="scope">
-                <el-button type="text" icon="el-icon-edit" @click="goMessageDetail(scope.row)" @click.native="stopBubble">编辑</el-button>
+                <el-button type="text" icon="el-icon-edit" @click="goRMDetail(scope.row)" @click.native="stopBubble">编辑</el-button>
                 <el-button type="text" icon="el-icon-delete" @click.stop="handleDeletRM(scope.row)" @click.native="stopBubble" style="color:#ff4949">删除</el-button>
             </template>
         </el-table-column>
@@ -94,7 +94,7 @@ export default {
             this.SortField = obj.prop
             this.getData()
         },
-        goMessageDetail(data){
+        goRMDetail(data){
             this.$router.push({
                 name: 'systemRegionManagerDetail',
                 params: {

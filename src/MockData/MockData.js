@@ -14,10 +14,10 @@ Mock.mock(/Login/, 'post', {
 })
 
 //获取用户信息
-Mock.mock(/GetUserInfo/, 'get', {
+Mock.mock(/GetLoginInfo/, 'get', {
     "Code": 200,
     "Data": {
-        "RoleCode": "Administrator",
+        "RoleCode": "Dealer",
         "UserName": "北京某某经销商"
     }
 })
@@ -279,7 +279,7 @@ Mock.mock(/GetOrderInfo([\w|\?\S*]+)/, 'get', {
         "OrderNumber": 35531201812261305023,
         "MyClaimID": 122121,
         "AccidentType": 1,
-        "StatusCode": 201,
+        "StatusCode": 206,
         "StatusName": "待提交",
         "ReferenceNumber": "DAT-20181019152745251",
         "CeateDate": "2018-10-19 10:23:31",
@@ -900,26 +900,30 @@ Mock.mock(/GetUserList/, 'post', {
 
 })
 
-//BMW-邮件地址状态修改
+//BMW-获取用户详细信息
+Mock.mock(/GetUserInfo([\w|\?\S*]+)/,'get',{
+    "Code":200,
+    "Data":{
+        "UserID":10,
+        "LoginName":"body-paint@list.bmw.com",
+        "Name":"宝马总部",
+        "RoleCode":"HQ-Administrator",
+        "RoleName":"总部管理员",
+        "StatusCode":101,
+        "StatusName":"启用"
+    }
+
+})
+
+//BMW-用户状态修改
 Mock.mock(/ChangeUserStatus/, 'post', {
-    "Code": 300,
+    "Code": 200,
     "Message": "错误信息"
 })
 
-//BMW-获取邮件地址详细信息
-Mock.mock(/GetMailAddressInfo([\w|\?\S*]+)/, 'get', {
-    "Code": 200,
-    "Data": {
-        "MailBoxCode": "BodyPaint",
-        "MailBoxName": "宝马钣喷业务组",
-        "MailBox": "body-paint@list.bmw.com",
-        "StatusCode": 101,
-        "StatusName": "启用"
-    }
-})
 
 //BMW-邮件地址修改
-Mock.mock(/UpdateMailAddress/, 'post', {
+Mock.mock(/CreateOrUpdateUser/, 'post', {
     "Code": 200
 })
 

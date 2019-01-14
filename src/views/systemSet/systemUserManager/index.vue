@@ -85,11 +85,11 @@ export default {
             this.SortField = obj.prop
             this.getData()
         },
-        goMessageDetail(data){
+        goUserDetail(data){
             this.$router.push({
                 name: 'systemUserDetail',
                 params: {
-                    id: data.ID
+                    id: data.UserID
                 }
             });
         },
@@ -98,14 +98,6 @@ export default {
                 this.SearchValue = this.SearchValue.trim()
                 this.getData()
             }
-        },
-        goUserDetail(data){
-            this.$router.push({
-                name: 'systemUserDetail',
-                params:{
-                    id: data.MailBoxCode
-                }
-            });
         },
         async ChangeUserStatus(index, data) {
             try {

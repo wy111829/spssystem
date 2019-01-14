@@ -15,7 +15,7 @@
             <el-button type="primary" class="newOrderButton">新建经销商</el-button>
         </router-link>
     </div>
-    <el-table :data="tableList" class="table" ref="multipleTable" @sort-change="handleSortChange" empty-text='搜索结果为空' @row-click="goMessageDetail">
+    <el-table :data="tableList" class="table" ref="multipleTable" @sort-change="handleSortChange" empty-text='搜索结果为空' @row-click="goDealerDetail">
         <el-table-column prop="CustomerNumber" label="账号" sortable></el-table-column>
         <el-table-column prop="CKD" label="CKD" sortable></el-table-column>
         <el-table-column prop="Name" label="经销商名称" sortable width="120"></el-table-column>
@@ -33,7 +33,7 @@
         </el-table-column>
         <el-table-column label="操作" align="center" width="120" fixed="right">
             <template slot-scope="scope">
-                <el-button type="text" icon="el-icon-edit" @click="goMessageDetail(scope.row)" @click.native="stopBubble">编辑</el-button>
+                <el-button type="text" icon="el-icon-edit" @click="goDealerDetail(scope.row)" @click.native="stopBubble">编辑</el-button>
                 <el-button type="text" icon="el-icon-delete" @click.stop="handleDeletDealer(scope.row)" @click.native="stopBubble" style="color:#ff4949">删除</el-button>
             </template>
         </el-table-column>
@@ -112,7 +112,7 @@ export default {
             this.SortField = obj.prop
             this.getData()
         },
-        goMessageDetail(data) {
+        goDealerDetail(data) {
             this.$router.push({
                 name: 'systemDealerDetail',
                 params: {

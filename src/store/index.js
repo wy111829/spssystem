@@ -65,12 +65,12 @@ const store = new Vuex.Store({
         },
     },
     actions: {
-        async GetUserInfo({
+        async GetLoginInfo({
             commit,
             state
         }) {
             try {
-                const response = await General.GetUserInfo()
+                const response = await General.GetLoginInfo()
                 state.UserRole = response.Data.RoleCode
                 state.UserName = response.Data.UserName
             } catch (error) {

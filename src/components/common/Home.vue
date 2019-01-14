@@ -45,7 +45,7 @@
         },
         methods: {
             ...mapActions([
-              'GetUserInfo'
+              'GetLoginInfo'
             ])
         },
         created(){
@@ -61,7 +61,7 @@
                 }
                 this.tagsList = arr;
             })
-            this.GetUserInfo()
+            this.GetLoginInfo()
         }
     }
 </script>

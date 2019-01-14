@@ -18,7 +18,7 @@
             <div class="form-title">
                 基本信息
             </div>
-            <el-form class="inline-form">
+            <el-form class="inline-form" :disabled="!CanEdit">
                 <el-row :gutter="20">
                     <el-col :md="6" :sm="12">
                         <el-form-item label="事故类型">
@@ -97,7 +97,7 @@
             <div class="form-title">
                 维修成本分析
             </div>
-            <el-form class="inline-form text-right">
+            <el-form class="inline-form text-right" :disabled="!CanEdit">
                 <el-row :gutter="20">
                     <el-col :md="6" :sm="12">
                         <el-form-item label="配件费用">
@@ -195,13 +195,13 @@
                 </el-table-column>
                 <el-table-column prop="Quantity" label="订购数量" min-width="90">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.Quantity" type="number" style="width:75%" min='0' :disabled="scope.row.IsUnOrderable" :class="IsQuantityRevise(scope.row)?'bgc-green':''"></el-input>
+                        <el-input v-model="scope.row.Quantity" type="number" style="width:75%" min='0' :disabled="!CanEdit||scope.row.IsUnOrderable" :class="IsQuantityRevise(scope.row)?'bgc-green':''"></el-input>
                         <i class="el-icon-info iconInfo" :title="'原始数量:'+scope.row.Quantity_Old" v-if="IsQuantityRevise(scope.row)"></i>
                     </template>
                 </el-table-column>
                 <el-table-column prop="Price" label="单价" sortable min-width="130">
                     <template slot-scope="scope">
-                        <el-input v-model="scope.row.Price" type="number" style="width:75%" min='0' :disabled="scope.row.IsUnOrderable" :class="IsPriceRevise(scope.row)?'bgc-green':''"></el-input>
+                        <el-input v-model="scope.row.Price" type="number" style="width:75%" min='0' :disabled="!CanEdit||scope.row.IsUnOrderable" :class="IsPriceRevise(scope.row)?'bgc-green':''"></el-input>
                         <i class="el-icon-info iconInfo" :title="'原始价格:'+scope.row.Price_Old" v-if="IsPriceRevise(scope.row)"></i>
                     </template>
                 </el-table-column>
@@ -224,13 +224,13 @@
                         </el-input>
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" align="center" fixed="right">
+                <el-table-column label="操作" align="center" fixed="right" v-if="CanEdit">
                     <template slot-scope="scope">
                         <el-button type="text" icon="el-icon-delete" style="color:#ff4949" @click="handleDeletPart(scope.$index, scope.row)">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
-            <el-button type="primary" @click="addPartDialog = true" style="margin-top:10px">添加零件</el-button>
+            <el-button type="primary" @click="addPartDialog = true" style="margin-top:10px" v-if="CanEdit">添加零件</el-button>
             <el-dialog title="添加零件" :visible.sync="addPartDialog" width="40%">
                 <el-form label-width="100px">
                     <el-form-item label="订购类型：">
@@ -283,7 +283,7 @@
                 <el-select v-model="AttachmentCategoryID" placeholder="请选择分类">
                     <el-option v-for="(item, index) in AttachmentSelectList" :key="index" :label="item.label" :value="item.value"></el-option>
                 </el-select>
-                <el-upload action="/FileUpload" :http-request="uploadSectionFile" :show-file-list="false" style="display:inline-block" :disabled="AttachmentCategoryID==0">
+                <el-upload action="/FileUpload" :http-request="uploadSectionFile" :show-file-list="false" style="display:inline-block" :disabled="AttachmentCategoryID==0" v-if="CanEdit">
                     <el-button type="primary" :disabled="AttachmentCategoryID==0">附件上传</el-button>
                 </el-upload>
                 <el-button type="primary" @click="AttachmentPreviewDialog = true">附件预览</el-button>
@@ -304,16 +304,16 @@
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
                         <el-button type="text" icon="el-icon-download">下载</el-button>
-                        <el-button type="text" icon="el-icon-delete" style="color:#ff4949" @click="handleRemoveFile(scope.row)">删除</el-button>
+                        <el-button type="text" icon="el-icon-delete" style="color:#ff4949" @click="handleRemoveFile(scope.row)" v-if="CanEdit">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
         </div>
-        <div class="form-box-neworder">
+        <div class="form-box-neworder" v-if="[205,206].includes(detailData.StatusCode)">
             <div class="form-title">
                 结算信息
             </div>
-            <el-form class="inline-form">
+            <el-form class="inline-form" :disabled="!(UserRole=='Dealer'&&detailData.StatusCode==205)">
                 <el-row :gutter="20">
                     <el-col :md="6" :sm="12">
                         <el-form-item label="开工单日期">
@@ -352,16 +352,16 @@
             <div class="form-title">
                 事故简述及车辆损坏情况
             </div>
-            <el-input v-model="detailData.AccidentBrief" type="textarea" width="80" rows=5></el-input>
+            <el-input v-model="detailData.AccidentBrief" type="textarea" width="80" rows=5 :disabled="!CanEdit"></el-input>
         </div>
-        <div class="form-box-neworder text-center" style="margin-top:20px">
+        <div class="form-box-neworder text-center" style="margin-top:20px" v-if="UserRole=='Dealer'">
             <el-button type="primary" @click="submitToSaveOrder('detailData')">保存</el-button>
             <el-button type="primary" @click="submitToSubmitOrder('detailData')">保存并提交</el-button>
-            <el-button @click="handleCancelOrder">取消订单</el-button>
+            <el-button @click="handleCancelOrder" v-if="UserRole=='Dealer'&&[201,202,203,204,207,208].includes(detailData.StatusCode)">取消订单</el-button>
             <el-button>结算单上传完成</el-button>
             <el-button @click="handleGoBack">返回订单列表</el-button>
         </div>
-        <div style="margin-top:20px">
+        <div style="margin-top:20px" v-if="UserRole !='Dealer'">
             <el-form class="inline-form el-row" label-width="200px">
                 <el-form-item label="审核备注：" class="el-col el-col-12" style="margin-right:10px;">
                     <el-input v-model="Comment" placeholder=""></el-input>
@@ -399,10 +399,9 @@
             <el-select v-model="AttachmentCategoryID" placeholder="请选择分类">
                 <el-option v-for="(item, index) in AttachmentSelectList" :key="index" :label="item.label" :value="item.value"></el-option>
             </el-select>
-            <el-upload action="/FileUpload" :http-request="uploadSectionFile" :show-file-list="false" style="display:inline-block" :disabled="AttachmentCategoryID==0">
+            <el-upload action="/FileUpload" :http-request="uploadSectionFile" :show-file-list="false" style="display:inline-block" :disabled="AttachmentCategoryID==0" v-if="CanEdit">
                 <el-button type="primary" :disabled="AttachmentCategoryID==0">附件上传</el-button>
             </el-upload>
-            <el-button type="primary" @click="AttachmentPreviewDialog = true">附件预览</el-button>
         </div>
         <el-table :data="AttachmentShowList" default-expand-all >
             <el-table-column type="expand">
@@ -426,7 +425,7 @@
             <el-table-column label="操作" align="center">
                 <template slot-scope="scope">
                     <el-button type="text" icon="el-icon-download">下载</el-button>
-                    <el-button type="text" icon="el-icon-delete" style="color:#ff4949" @click="handleRemoveFile(scope.row)">删除</el-button>
+                    <el-button type="text" icon="el-icon-delete" style="color:#ff4949" @click="handleRemoveFile(scope.row)" v-if="CanEdit">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -700,35 +699,51 @@ export default {
         ...mapMutations([
             'closeTags'
         ]),
-        IsQuantityRevise(row) {
+        CanEdit: function() { //能否编辑
+            if (this.UserRole == 'Dealer'){
+                switch (this.detailData.StatusCode) {
+                    case 201:
+                        return true
+                    case 207:
+                        return true
+                    case 208:
+                        return true
+                    default:
+                        return false
+                }
+            }else{
+                return false
+            }
+        },
+        IsQuantityRevise(row) { //零件数量改变
             if (!row.IsManualAddPart && row.Quantity_Old != row.Quantity) {
                 return true
             } else {
                 return false
             }
         },
-        IsPriceRevise(row) {
+        IsPriceRevise(row) {  //零件价格改变
             if (!row.IsManualAddPart && row.Price_Old != row.Price) {
                 return true
             } else {
                 return false
             }
         },
-        IsTotalPriceRevise(row) {
+        IsTotalPriceRevise(row) {  //零件总价改变
             if (!row.IsManualAddPart && row.TotalPrice_Old != row.TotalPrice) {
                 return true
             } else {
                 return false
             }
         },
-        IsUnOrderable({row,rowIndex}) {
+        IsUnOrderable({row,rowIndex}) { //判断不可订货
             if (row.IsUnOrderable) {
                 return 'UnOrderable'
             } else {
                 return ''
             }
         },
-        isImg(filename) {
+        isImg(filename) { //判断图片
             let fileType = filename.substring(filename.indexOf(".") + 1).toUpperCase();
             if (fileType == "PNG" || fileType == "JPG" || fileType == "JPEG" || fileType == "GIF") {
                 return true
