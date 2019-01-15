@@ -18,7 +18,7 @@
             <div class="form-title">
                 基本信息
             </div>
-            <el-form class="inline-form" :disabled="!CanEdit">
+            <el-form class="inline-form" :model="detailData" :disabled="!CanEdit" ref="detailData" :rules="rules">
                 <el-row :gutter="20">
                     <el-col :md="6" :sm="12">
                         <el-form-item label="事故类型">
@@ -29,64 +29,64 @@
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
-                        <el-form-item label="DAT定损单单号">
+                        <el-form-item label="DAT定损单单号" prop="ReferenceNumber">
                             <el-input v-model="detailData.ReferenceNumber" placeholder="">
                                 <el-button slot="append" @click="handleImport">导入</el-button>
                             </el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
-                        <el-form-item label="经销商CKD代码">
+                        <el-form-item label="经销商CKD代码" prop="DealerCKD">
                             <el-input v-model="detailData.DealerCKD"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
-                        <el-form-item label="经销商名称">
+                        <el-form-item label="经销商名称" prop="DealerName">
                             <el-input v-model="detailData.DealerName"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
-                        <el-form-item label="车主姓名">
+                        <el-form-item label="车主姓名" prop="VehicleOwner">
                             <el-input v-model="detailData.VehicleOwner"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
-                        <el-form-item label="车牌号">
+                        <el-form-item label="车牌号" prop="PlateNumber">
                             <el-input v-model="detailData.PlateNumber"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
-                        <el-form-item label="车架号(VIN)">
+                        <el-form-item label="车架号(VIN)" prop="VIN">
                             <el-input v-model="detailData.VIN" disabled=""></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
-                        <el-form-item label="主车型名称">
+                        <el-form-item label="主车型名称" prop="BaseModelName">
                             <el-input v-model="detailData.BaseModelName" disabled></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
-                        <el-form-item label="子车型名称">
+                        <el-form-item label="子车型名称" prop="SubModelName">
                             <el-input v-model="detailData.SubModelName" disabled></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
-                        <el-form-item label="车辆首次登记日期(保修起始时间)">
+                        <el-form-item label="车辆首次登记日期(保修起始时间)" prop="VehicleFirstRegDate">
                             <el-date-picker type="date" @change="handleDatePicker" placeholder="选择日期" v-model="detailData.VehicleFirstRegDate" style="width: 100%;"></el-date-picker>
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
-                        <el-form-item label="保险公司：">
+                        <el-form-item label="保险公司：" prop="InsurerName">
                             <el-input v-model="detailData.InsurerName" disabled></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
-                        <el-form-item label="保单号">
-                            <el-input v-model="detailData.InsuranceNumber"></el-input>
+                        <el-form-item label="保单号" prop="InsuranceNumber">
+                            <el-input v-model="detailData.InsuranceNumber" disabled></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
-                        <el-form-item label="车龄">
+                        <el-form-item label="车龄" prop="VehicleAge">
                             <el-input :value="detailData.VehicleAge" disabled></el-input>
                         </el-form-item>
                     </el-col>
@@ -97,7 +97,7 @@
             <div class="form-title">
                 维修成本分析
             </div>
-            <el-form class="inline-form text-right" :disabled="!CanEdit">
+            <el-form class="inline-form text-right" :disabled="!CanEdit" :model="detailData" ref="detailData" :rules="rules">
                 <el-row :gutter="20">
                     <el-col :md="6" :sm="12">
                         <el-form-item label="配件费用">
@@ -105,7 +105,7 @@
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
-                        <el-form-item label="工时及其他费用">
+                        <el-form-item label="工时及其他费用" prop="LaborPaintCost">
                             <el-input v-model="detailData.LaborPaintCost" type="number"></el-input>
                         </el-form-item>
                     </el-col>
@@ -121,7 +121,7 @@
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
-                        <el-form-item label="车损险保额">
+                        <el-form-item label="车损险保额" prop="InsuranceCoverage">
                             <el-input v-model="detailData.InsuranceCoverage"></el-input>
                         </el-form-item>
                     </el-col>
@@ -215,12 +215,12 @@
                 <el-table-column prop="IsOrdered" label="是否订购" width="50">
                     <template slot-scope="scope">
                         <i class="el-icon-error" title="不可订货零件" v-if="scope.row.IsUnOrderable" style="color:#ff4949"></i>
-                        <el-checkbox v-model="scope.row.IsOrdered" v-else></el-checkbox>
+                        <el-checkbox v-model="scope.row.IsOrdered" v-else :disabled="!CanEdit"></el-checkbox>
                     </template>
                 </el-table-column>
                 <el-table-column prop="LogisticsCmt" label="物流备注" show-overflow-tooltip width="200">
                     <template slot-scope="scope">
-                        <el-input placeholder="请输入内容" v-model="scope.row.LogisticsCmt" clearable :disabled="scope.row.IsUnOrderable">
+                        <el-input placeholder="" v-model="scope.row.LogisticsCmt" clearable :disabled="!CanEdit||scope.row.IsUnOrderable">
                         </el-input>
                     </template>
                 </el-table-column>
@@ -352,24 +352,28 @@
             <div class="form-title">
                 事故简述及车辆损坏情况
             </div>
-            <el-input v-model="detailData.AccidentBrief" type="textarea" width="80" rows=5 :disabled="!CanEdit"></el-input>
+            <el-form class="inline-form" :model="detailData" :disabled="!CanEdit" ref="detailData" :rules="rules">
+                <el-form-item prop="AccidentBrief">
+                    <el-input v-model="detailData.AccidentBrief" type="textarea" width="80" rows=5></el-input>
+                </el-form-item>
+            </el-form>
         </div>
         <div class="form-box-neworder text-center" style="margin-top:20px" v-if="UserRole=='Dealer'">
-            <el-button type="primary" @click="submitToSaveOrder('detailData')">保存</el-button>
-            <el-button type="primary" @click="submitToSubmitOrder('detailData')">保存并提交</el-button>
-            <el-button @click="handleCancelOrder" v-if="UserRole=='Dealer'&&[201,202,203,204,207,208].includes(detailData.StatusCode)">取消订单</el-button>
-            <el-button>结算单上传完成</el-button>
+            <el-button type="primary" @click="submitToSaveOrder('detailData')" v-if="CanEdit||detailData.StatusCode==205">保存</el-button>
+            <el-button type="primary" @click="submitToSubmitOrder('detailData')" v-if="[201,207,208].includes(detailData.StatusCode)">保存并提交</el-button>
+            <el-button @click="handleCancelOrder" v-if="[201,202,203,204,207,208].includes(detailData.StatusCode)">取消订单</el-button>
+            <el-button @click="handleFinishOrder" v-if="detailData.StatusCode==205">结算单上传完成</el-button>
             <el-button @click="handleGoBack">返回订单列表</el-button>
         </div>
         <div style="margin-top:20px" v-if="UserRole !='Dealer'">
-            <el-form class="inline-form el-row" label-width="200px">
-                <el-form-item label="审核备注：" class="el-col el-col-12" style="margin-right:10px;">
-                    <el-input v-model="Comment" placeholder=""></el-input>
+            <el-form class="inline-form el-row" label-width="100px">
+                <el-form-item label="审核备注：" class="el-col el-col-8" style="margin-right:10px;">
+                    <el-input v-model="Comment" placeholder="" style="width:200px"></el-input>
                 </el-form-item>
                 <el-button type="primary" @click="handleApproved('Approved')">通过</el-button>
-                <el-button type="danger" @click="handleApproved('Rejected')">驳回</el-button>
+                <el-button type="danger" @click="handleApproved('Returned')">驳回</el-button>
                 <el-button type="danger" @click="handleApproved('Rejected')">拒绝支持</el-button>
-                <el-button type="" @click="handleApproved('Rejected')">返回订单列表</el-button>
+                <el-button type="" @click="handleGoBack">返回订单列表</el-button>
             </el-form>
         </div>
         <div class="form-box-neworder">
@@ -461,7 +465,10 @@ export default {
                 OrderID: '',
                 MyClaimID: '',
                 AccidentType: '',
+                StatusCode: 201,
                 ReferenceNumber: "",
+                DealerCKD:'',
+                DealerName:'',
                 VehicleOwner: "",
                 PlateNumber: "",
                 VIN: "",
@@ -545,7 +552,104 @@ export default {
                     label: '发票及结算单',
                     value: 6
                 }
-            ]
+            ],
+            rules: {
+                ReferenceNumber: [{
+                        required: true,
+                        message: '请输入DAT定损单单号',
+                        trigger: 'blur'
+                    },
+                    {
+                        min: 1,
+                        max: 50,
+                        message: '输入格式有误',
+                        trigger: 'blur'
+                    }
+                ],
+                DealerCKD: [{
+                        required: true,
+                        message: '请输入经销商CKD代码',
+                        trigger: 'blur'
+                    },
+                    {
+                        min: 1,
+                        max: 50,
+                        message: '输入格式有误',
+                        trigger: 'blur'
+                    }
+                ],
+                DealerName: [{
+                        required: true,
+                        message: '请输入经销商名称',
+                        trigger: 'blur'
+                    },
+                    {
+                        min: 1,
+                        max: 50,
+                        message: '输入格式有误',
+                        trigger: 'blur'
+                    }
+                ],
+                VehicleOwner: [{
+                        required: true,
+                        message: '请输入车主姓名',
+                        trigger: 'blur'
+                    },
+                    {
+                        min: 1,
+                        max: 50,
+                        message: '输入格式有误',
+                        trigger: 'blur'
+                    }
+                ],
+                PlateNumber: [{
+                        required: true,
+                        message: '请输入车牌号',
+                        trigger: 'blur'
+                    },
+                    {
+                        min: 1,
+                        max: 50,
+                        message: '输入格式有误',
+                        trigger: 'blur'
+                    }
+                ],
+                VehicleFirstRegDate: [{
+                        required: true,
+                        message: '请选择日期',
+                        trigger: 'change'
+                    }
+                ],
+                LaborPaintCost: [{
+                        required: true,
+                        message: '请输入工时及其他费用',
+                        trigger: 'blur'
+                    },
+                    {
+                        type: 'number',
+                        message: '输入格式有误',
+                        trigger: 'blur'
+                    }
+                ],
+                InsuranceCoverage: [{
+                        required: true,
+                        message: '请输入车险保额',
+                        trigger: 'blur'
+                    },
+                    {
+                        type: 'number',
+                        message: '输入格式有误',
+                        trigger: 'blur'
+                    }
+                ],
+                AccidentBrief: [
+                    {
+                        required: true,
+                        message: '请输入事故简述及车辆损坏情况',
+                        trigger: 'blur'
+                    }
+                ]
+            }
         }
     },
     filters: {
@@ -576,6 +680,20 @@ export default {
             'UserRole',
             'ServerUrl'
         ]),
+        CanEdit() { //能否编辑
+            if (this.UserRole == 'Dealer'){
+                switch (this.detailData.StatusCode) {
+                    case 201:
+                    case 207:
+                    case 208:
+                        return true
+                    default:
+                        return false
+                }
+            }else{
+                return false
+            }
+        },
         PartCost: function() { //计算配件费用
             let Sum = 0
             this.detailData.SpareParts.map(function(item) {
@@ -693,28 +811,21 @@ export default {
                 }
             }
             return list
-        }
+        },
+        checkAttachmentList(){
+            for (var key in this.detailData.AttachmentNumbers) {
+                if(this.detailData.AttachmentNumbers[key] <= 0){
+                    alert('附件各项不能为空！');
+                    return false
+                }
+            }
+            return true
+        },
     },
     methods: {
         ...mapMutations([
             'closeTags'
         ]),
-        CanEdit: function() { //能否编辑
-            if (this.UserRole == 'Dealer'){
-                switch (this.detailData.StatusCode) {
-                    case 201:
-                        return true
-                    case 207:
-                        return true
-                    case 208:
-                        return true
-                    default:
-                        return false
-                }
-            }else{
-                return false
-            }
-        },
         IsQuantityRevise(row) { //零件数量改变
             if (!row.IsManualAddPart && row.Quantity_Old != row.Quantity) {
                 return true
@@ -846,7 +957,6 @@ export default {
             this.detailData.AttachmentNumbers.Total++
             this.detailData.AttachmentNumbers[Data.CategoryID]++
         },
-
         async uploadSectionFile(f) { //上传附件
             let param = new FormData(); //创建form对象
             param.append('file', f.file); //通过append向form对象添加数据
@@ -857,15 +967,7 @@ export default {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
-            }; //添加请求头
-            // console.log(f.action,param,config)
-            // axios.post(f.action,param,config)//上传图片
-            // .then(function(res){
-            //     console.log(res)
-            // })
-            // .catch(function (err){
-            //     console.log(err)
-            // })
+            }
             try {
                 const response = await Dealer.FileUpload(param, config)
                 if (response.Code == 200) {
@@ -875,7 +977,25 @@ export default {
                 console.log(error)
             }
         },
-
+        async handleSaveSettleInfo() { //订单结算信息保存
+            try {
+                const response = await Dealer.SaveSettleInfo({
+                    "OrderID":this.detailData.OrderID,
+                    "WIP_OpenDate":this.detailData.WIP_OpenDate,
+                    "WIP_SettleDate":this.detailData.WIP_OpenDate,
+                    "WIP_Number":this.detailData.WIP_OpenDate,
+                    "Settlement_Number":this.detailData.WIP_OpenDate,
+                    "Settlement_Cost":this.detailData.WIP_OpenDate,
+                    "Settlement_PartCost":this.detailData.WIP_OpenDate,
+                })
+                if (response.Code == 200) {
+                    //console.log(this.detailData)
+                    this.alertDialog()
+                }
+            } catch (e) {
+                console.log(e);
+            }
+        },
         async handleSaveOrder() { // 保存并不提交-经销商
             try {
                 const response = await Dealer.SaveOrder(this.detailData)
@@ -894,11 +1014,9 @@ export default {
                     "Order": this.detailData
                 })
                 if (response.Code == 200) {
-                    this.detailData.OrderID = response.OrderID
                     const subresponse = await Dealer.SubmitOrder({
                         "OrderID": this.detailData.OrderID
                     })
-                    console.log(subresponse)
                     if (subresponse.Code == 200) {
                         this.alertDialog()
                     }
@@ -907,7 +1025,7 @@ export default {
                 console.log(error)
             }
         },
-        async handleCancelOrder() {
+        async handleCancelOrder() { //取消订单
             try {
                 const response = await Dealer.CancelOrder({
                     "OrderID": this.detailData.OrderID
@@ -919,19 +1037,46 @@ export default {
                 console.log(e)
             }
         },
-        submitToSaveOrder() {
-            this.handleSaveOrder()
+        submitToSaveOrder() {  //保存点击事件
+            if(this.detailData.StatusCode == 205){
+                this.handleSaveSettleInfo()
+            }else {
+                this.handleSaveOrder()
+            }
 
         },
-        submitToSubmitOrder(formName) {
+        submitToSubmitOrder(formName) { //提交点击事件
             this.$refs[formName].validate((valid) => {
-                if (valid) {
+                if (valid&&this.checkAttachmentList) {
                     this.handleSubmitOrder()
                 } else {
-                    alert('error submit!!');
+                    alert('输入有误，请检查后提交');
                     return false;
                 }
             })
+        },
+        async handleFinishOrder() { //结束订单
+            try {
+                const response = await Dealer.SaveSettleInfo({
+                    "OrderID":this.detailData.OrderID,
+                    "WIP_OpenDate":this.detailData.WIP_OpenDate,
+                    "WIP_SettleDate":this.detailData.WIP_OpenDate,
+                    "WIP_Number":this.detailData.WIP_OpenDate,
+                    "Settlement_Number":this.detailData.WIP_OpenDate,
+                    "Settlement_Cost":this.detailData.WIP_OpenDate,
+                    "Settlement_PartCost":this.detailData.WIP_OpenDate,
+                })
+                if(response.Code == 200){
+                    const subresponse = await Dealer.FinishOrder({
+                        "OrderID": this.detailData.OrderID
+                    })
+                    if (subresponse.Code == 200) {
+                        this.alertDialog()
+                    }
+                }
+            } catch (e) {
+                console.log(e);
+            }
         },
         async handleApproved(val) { //审批 - 区域经理或BMW
             try {
@@ -939,17 +1084,16 @@ export default {
                     const response = await RegionManagers.RMApproveOrder({
                         "OrderID": this.detailData.OrderID,
                         "Result": val,
-                        Comment: this.Comment
+                        "Comment": this.Comment
                     })
                     if (response.Code == 200) {
                         this.alertDialog()
                     }
-                } else if (this.UserRole == 'BMW-BP') {
+                } else if (this.UserRole == 'HQ-Administrator') {
                     const response = await BMW.BMWApproveOrder({
                         "OrderID": this.detailData.OrderID,
                         "Result": val,
                         "Comment": this.Comment,
-                        "SpareParts": this.detailData.SpareParts
                     })
                     if (response.Code == 200) {
                         this.alertDialog()
@@ -959,7 +1103,7 @@ export default {
                 console.log(e)
             }
         },
-        async GetOrderInfo() {
+        async GetOrderInfo() { //获取订单信息
             try {
                 const response = await General.GetOrderInfo({
                     OrderID: this.detailData.OrderID

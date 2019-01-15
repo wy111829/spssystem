@@ -14,31 +14,33 @@
                     <el-option label="物流部" value="Logistics"></el-option>
                 </el-select>
             </el-form-item>
-            <template v-if="Data.UserID == 0">
-                <el-form-item label="密码：" prop="Password">
-                    <el-input v-model="Data.Password" type="Password" clearable></el-input>
-                </el-form-item>
-                <el-form-item label="密码确认：" prop="Passwordagain">
-                    <el-input v-model="Data.Passwordagain" type="Password" clearable></el-input>
-                </el-form-item>
-            </template>
-            <el-form-item label="状态：" prop="StatusCode">
-                <el-radio-group v-model="Data.StatusCode">
-                    <el-radio :label="101">启用</el-radio>
-                    <el-radio :label="102">停用</el-radio>
-                </el-radio-group>
-            </el-form-item>
-            <template v-if="Data.UserID != 0">
-                <el-form-item label="修改密码：" prop="pswCheck">
-                    <el-checkbox v-model="pswCheck"></el-checkbox>
-                </el-form-item>
-                <template v-if="pswCheck">
+            <template v-if="Data.RoleCode == 'HQ-Administrator'">
+                <template v-if="Data.UserID == 0">
                     <el-form-item label="密码：" prop="Password">
                         <el-input v-model="Data.Password" type="Password" clearable></el-input>
                     </el-form-item>
                     <el-form-item label="密码确认：" prop="Passwordagain">
                         <el-input v-model="Data.Passwordagain" type="Password" clearable></el-input>
                     </el-form-item>
+                </template>
+                <el-form-item label="状态：" prop="StatusCode">
+                    <el-radio-group v-model="Data.StatusCode">
+                        <el-radio :label="101">启用</el-radio>
+                        <el-radio :label="102">停用</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <template v-if="Data.UserID != 0">
+                    <el-form-item label="修改密码：" prop="pswCheck">
+                        <el-checkbox v-model="pswCheck"></el-checkbox>
+                    </el-form-item>
+                    <template v-if="pswCheck">
+                        <el-form-item label="密码：" prop="Password">
+                            <el-input v-model="Data.Password" type="Password" clearable></el-input>
+                        </el-form-item>
+                        <el-form-item label="密码确认：" prop="Passwordagain">
+                            <el-input v-model="Data.Passwordagain" type="Password" clearable></el-input>
+                        </el-form-item>
+                    </template>
                 </template>
             </template>
             <el-row class="text-center">

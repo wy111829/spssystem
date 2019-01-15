@@ -17,7 +17,7 @@ Mock.mock(/Login/, 'post', {
 Mock.mock(/GetLoginInfo/, 'get', {
     "Code": 200,
     "Data": {
-        "RoleCode": "Dealer",
+        "RoleCode": 'Administrator',
         "UserName": "北京某某经销商"
     }
 })
@@ -279,7 +279,7 @@ Mock.mock(/GetOrderInfo([\w|\?\S*]+)/, 'get', {
         "OrderNumber": 35531201812261305023,
         "MyClaimID": 122121,
         "AccidentType": 1,
-        "StatusCode": 206,
+        "StatusCode": 201,
         "StatusName": "待提交",
         "ReferenceNumber": "DAT-20181019152745251",
         "CeateDate": "2018-10-19 10:23:31",
@@ -646,6 +646,16 @@ Mock.mock(/SaveOrder/, 'post', {
 
 //订单提交
 Mock.mock(/SubmitOrder([\w|\?\S*]+)/, 'get', {
+    "Code": 200
+})
+
+//订单结算信息保存
+Mock.mock(/SaveSettleInfo/, 'post', {
+    "Code": 200
+})
+
+//结束订单
+Mock.mock(/FinishOrder([\w|\?\S*]+)/, 'get', {
     "Code": 200
 })
 
