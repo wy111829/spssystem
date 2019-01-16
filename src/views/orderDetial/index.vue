@@ -87,7 +87,7 @@
                     </el-col>
                     <el-col :md="6" :sm="12">
                         <el-form-item label="车龄" prop="VehicleAge">
-                            <el-input :value="detailData.VehicleAge" disabled></el-input>
+                            <el-input :value="CarAge" disabled></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -122,7 +122,7 @@
                     </el-col>
                     <el-col :md="6" :sm="12">
                         <el-form-item label="车损险保额" prop="InsuranceCoverage">
-                            <el-input v-model="detailData.InsuranceCoverage"></el-input>
+                            <el-input v-model="detailData.InsuranceCoverage" type="number"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
@@ -276,12 +276,18 @@
                     <el-radio :label="3">车辆铭牌 {{detailData.AttachmentNumbers['3']}}</el-radio>
                     <el-radio :label="4">行驶证 {{detailData.AttachmentNumbers['4']}}</el-radio>
                     <el-radio :label="5">DAT定损单 {{detailData.AttachmentNumbers['5']}}</el-radio>
-                    <el-radio :label="6">发票及结算单 {{detailData.AttachmentNumbers['6']}}</el-radio>
+                    <el-radio :label="6" v-if="[205,209].includes(detailData.StatusCode)">发票及结算单 {{detailData.AttachmentNumbers['6']}}</el-radio>
                 </el-radio-group>
             </div>
             <div class="select-box" style="margin-top:10px">
                 <el-select v-model="AttachmentCategoryID" placeholder="请选择分类">
-                    <el-option v-for="(item, index) in AttachmentSelectList" :key="index" :label="item.label" :value="item.value"></el-option>
+                    <el-option label="请选择分类" :value="0"></el-option>
+                    <el-option label="车险保单" :value="1"></el-option>
+                    <el-option label="车损照片和油漆订单截屏" :value="2"></el-option>
+                    <el-option label="车辆铭牌" :value="3"></el-option>
+                    <el-option label="行驶证" :value="4"></el-option>
+                    <el-option label="DAT定损单" :value="5"></el-option>
+                    <el-option label="发票及结算单" :value="6" v-if="[205,209].includes(detailData.StatusCode)"></el-option>
                 </el-select>
                 <el-upload action="/FileUpload" :http-request="uploadSectionFile" :show-file-list="false" style="display:inline-block" :disabled="AttachmentCategoryID==0" v-if="CanEdit">
                     <el-button type="primary" :disabled="AttachmentCategoryID==0">附件上传</el-button>
@@ -396,12 +402,18 @@
                 <el-radio :label="3">车辆铭牌 {{detailData.AttachmentNumbers['3']}}</el-radio>
                 <el-radio :label="4">行驶证 {{detailData.AttachmentNumbers['4']}}</el-radio>
                 <el-radio :label="5">DAT定损单 {{detailData.AttachmentNumbers['5']}}</el-radio>
-                <el-radio :label="6">发票及结算单 {{detailData.AttachmentNumbers['6']}}</el-radio>
+                <el-radio :label="6" v-if="[205,209].includes(detailData.StatusCode)">发票及结算单 {{detailData.AttachmentNumbers['6']}}</el-radio>
             </el-radio-group>
         </div>
         <div class="select-box" style="margin-top:10px">
             <el-select v-model="AttachmentCategoryID" placeholder="请选择分类">
-                <el-option v-for="(item, index) in AttachmentSelectList" :key="index" :label="item.label" :value="item.value"></el-option>
+                <el-option label="请选择分类" :value="0"></el-option>
+                <el-option label="车险保单" :value="1"></el-option>
+                <el-option label="车损照片和油漆订单截屏" :value="2"></el-option>
+                <el-option label="车辆铭牌" :value="3"></el-option>
+                <el-option label="行驶证" :value="4"></el-option>
+                <el-option label="DAT定损单" :value="5"></el-option>
+                <el-option label="发票及结算单" :value="6" v-if="[205,209].includes(detailData.StatusCode)"></el-option>
             </el-select>
             <el-upload action="/FileUpload" :http-request="uploadSectionFile" :show-file-list="false" style="display:inline-block" :disabled="AttachmentCategoryID==0" v-if="CanEdit">
                 <el-button type="primary" :disabled="AttachmentCategoryID==0">附件上传</el-button>
@@ -528,31 +540,6 @@ export default {
                 LogisticsCmt: ''
             },
             AttachmentCategoryID: 0,
-            AttachmentSelectList: [
-                {
-                    label:'请选择分类',
-                    value: 0
-                },
-                {
-                    label: '车险保单',
-                    value: 1
-                }, {
-                    label: '车损照片和油漆订单截屏',
-                    value: 2
-                }, {
-                    label: '车辆铭牌',
-                    value: 3
-                }, {
-                    label: '行驶证',
-                    value: 4
-                }, {
-                    label: 'DAT定损单',
-                    value: 5
-                }, {
-                    label: '发票及结算单',
-                    value: 6
-                }
-            ],
             rules: {
                 ReferenceNumber: [{
                         required: true,
@@ -626,7 +613,7 @@ export default {
                         trigger: 'blur'
                     },
                     {
-                        type: 'number',
+                        // type: 'number',
                         message: '输入格式有误',
                         trigger: 'blur'
                     }
@@ -637,7 +624,7 @@ export default {
                         trigger: 'blur'
                     },
                     {
-                        type: 'number',
+                        // type: 'number',
                         message: '输入格式有误',
                         trigger: 'blur'
                     }
@@ -693,6 +680,12 @@ export default {
             }else{
                 return false
             }
+        },
+        CarAge: function(){
+            let year = parseInt(this.detailData.VehicleAge / 12)
+            let month = this.detailData.VehicleAge % 12
+            let age = year == 0 ? month + '个月' : year + '年零' + month + '个月'
+            return age
         },
         PartCost: function() { //计算配件费用
             let Sum = 0
@@ -814,9 +807,11 @@ export default {
         },
         checkAttachmentList(){
             for (var key in this.detailData.AttachmentNumbers) {
-                if(this.detailData.AttachmentNumbers[key] <= 0){
-                    alert('附件各项不能为空！');
-                    return false
+                if( key !='6'){
+                    if(this.detailData.AttachmentNumbers[key] <= 0){
+                        alert('附件各项不能为空！');
+                        return false
+                    }
                 }
             }
             return true
@@ -952,7 +947,7 @@ export default {
                 ID:Data.ID,
                 CategoryID:Data.CategoryID,
                 FileName: Data.FileName,
-                FileSize:2.1,
+                FileSize:Data.FileSize,
             })
             this.detailData.AttachmentNumbers.Total++
             this.detailData.AttachmentNumbers[Data.CategoryID]++
