@@ -17,7 +17,7 @@ Mock.mock(/Login/, 'post', {
 Mock.mock(/GetLoginInfo/, 'get', {
     "Code": 200,
     "Data": {
-        "RoleCode": 'Administrator',
+        "RoleCode": 'Dealer',
         "UserName": "北京某某经销商"
     }
 })
@@ -26,7 +26,7 @@ Mock.mock(/GetLoginInfo/, 'get', {
 Mock.mock(/GetOrderList/, 'post', {
     "Code": 200,
     "Data": {
-        "TotalNumber": 20,
+        "TotalNumber": 10,
         "Orders": [{
                 "OrderID": 122122,
                 "OrderNumber": "3613320181226143421",
@@ -610,10 +610,10 @@ Mock.mock(/ImportOrderInfo/, 'post', {
 Mock.mock(/GetSysMessageList/, 'post', {
     "Code": 200,
     "Data": {
-        "TotalNumber": 120,
+        "TotalNumber": 2,
         "Messages": [{
                 "ID": 23,
-                "MessageContent": "这是一条测试消息。",
+                "MessageContent": "为了进一步帮助经销商事故车留修，BMW将采取一系列措施并简化申请流程以提升工作效率。我们继续提供碰撞类事故车配件折扣，次项目不和其他项目或活动重复支持。",
                 "PublishDate": "2018-10-19 14:23:38"
             },
             {

@@ -232,20 +232,20 @@
             </el-table>
             <el-button type="primary" @click="addPartDialog = true" style="margin-top:10px" v-if="CanEdit">添加零件</el-button>
             <el-dialog title="添加零件" :visible.sync="addPartDialog" width="40%">
-                <el-form label-width="100px">
+                <el-form label-width="100px" ref="newSpareParts" :model="newSpareParts" :rules="rules">
                     <el-form-item label="订购类型：">
                         <el-input disabled v-model="newSpareParts.OrderType"></el-input>
                     </el-form-item>
-                    <el-form-item label="零件号：">
+                    <el-form-item label="零件号：" prop="PartNumber">
                         <el-input v-model="newSpareParts.PartNumber" type="number"></el-input>
                     </el-form-item>
-                    <el-form-item label="配件名称：">
+                    <el-form-item label="配件名称：" prop="PartName">
                         <el-input v-model="newSpareParts.PartName"></el-input>
                     </el-form-item>
-                    <el-form-item label="订购数量：">
+                    <el-form-item label="订购数量：" prop="Quantity">
                         <el-input type="number" v-model="newSpareParts.Quantity"  min="0"></el-input>
                     </el-form-item>
-                    <el-form-item label="单价：">
+                    <el-form-item label="单价：" prop="Price">
                         <el-input type="number" v-model="newSpareParts.Price"  min="0"></el-input>
                     </el-form-item>
                     <el-form-item label="总价：">
@@ -259,7 +259,7 @@
                     </el-form-item>
                 </el-form>
                 <div class="text-center">
-                    <el-button type="primary" @click="addSpareParts()">添加该零件</el-button>
+                    <el-button type="primary" @click="addSpareParts('newSpareParts')">添加该零件</el-button>
                     <el-button  @click="addPartDialog = false">取消添加该零件</el-button>
                 </div>
             </el-dialog>
@@ -635,6 +635,34 @@ export default {
                         message: '请输入事故简述及车辆损坏情况',
                         trigger: 'blur'
                     }
+                ],
+                PartNumber: [
+                    {
+                        required: true,
+                        message: '请输入零件号',
+                        trigger: 'blur'
+                    }
+                ],
+                PartName: [
+                    {
+                        required: true,
+                        message: '请输入零件名称',
+                        trigger: 'blur'
+                    }
+                ],
+                Quantity: [
+                    {
+                        required: true,
+                        message: '请输入订购数量',
+                        trigger: 'blur'
+                    }
+                ],
+                Price: [
+                    {
+                        required: true,
+                        message: '请输入零件价格',
+                        trigger: 'blur'
+                    }
                 ]
             }
         }
@@ -889,20 +917,27 @@ export default {
             }
             this.selectAccidentTypeDialog = false
         },
-        addSpareParts() { //添加零件
-            this.newSpareParts.Price_Old = this.newSpareParts.Price
-            this.newSpareParts.Quantity_Old = this.newSpareParts.Quantity
-            this.newSpareParts.TotalPrice = this.newSpareParts.Quantity && this.newSpareParts.Price ? this.newSpareParts.Quantity * this.newSpareParts.Price : 0
-            this.newSpareParts.TotalPrice_Old = this.newSpareParts.TotalPrice
-            let Obj = JSON.parse(JSON.stringify(this.newSpareParts)) //深拷贝
-            this.detailData.SpareParts.push(Obj)
-            for (var key in this.newSpareParts) {
-                this.newSpareParts[key] = ''
-            }
-            this.newSpareParts.OrderType = "SPSO"
-            this.newSpareParts.IsOrdered = true
-            this.newSpareParts.IsManualAddPart = true
-            this.addPartDialog = false
+        addSpareParts(formName) { //添加零件
+            this.$refs[formName].validate((valid) => {
+                if (valid){
+                    this.newSpareParts.Price_Old = this.newSpareParts.Price
+                    this.newSpareParts.Quantity_Old = this.newSpareParts.Quantity
+                    this.newSpareParts.TotalPrice = this.newSpareParts.Quantity && this.newSpareParts.Price ? this.newSpareParts.Quantity * this.newSpareParts.Price : 0
+                    this.newSpareParts.TotalPrice_Old = this.newSpareParts.TotalPrice
+                    let Obj = JSON.parse(JSON.stringify(this.newSpareParts)) //深拷贝
+                    this.detailData.SpareParts.push(Obj)
+                    for (var key in this.newSpareParts) {
+                        this.newSpareParts[key] = ''
+                    }
+                    this.newSpareParts.OrderType = "SPSO"
+                    this.newSpareParts.IsOrdered = true
+                    this.newSpareParts.IsManualAddPart = true
+                    this.addPartDialog = false
+                } else {
+                    alert('数据不能为空')
+                    return false
+                }
+            })
         },
         handleDeletPart(index, data) { //删除零件
 

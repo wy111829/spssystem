@@ -144,7 +144,7 @@
                         "SortType": ''
                     })
                     this.Message = response.Data.Messages[0]
-                    this.Message.MessageContent = this.Message.MessageContent.substring(0,15)
+                    this.Message.MessageContent = this.Message.MessageContent.substring(0,140)
                 } catch (error) {
                     console.log(error)
                 }

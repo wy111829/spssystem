@@ -82,7 +82,7 @@ export default {
             SortField: 'CreateDate',
             SortType: 'DESC',
             RowOffset: 0,
-            RowCount: 20,
+            RowCount: 10,
             OrderNumbers: '',
             Orders: [{
                 "OrderID": 122122,
