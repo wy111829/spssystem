@@ -18,7 +18,7 @@ Mock.mock(/GetLoginInfo/, 'get', {
     "Code": 200,
     "Data": {
         "RoleCode": 'Dealer',
-        "UserName": "北京某某经销商"
+        "UserName": "系统管理员"
     }
 })
 

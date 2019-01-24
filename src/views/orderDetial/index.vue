@@ -612,22 +612,22 @@ export default {
                         message: '请输入工时及其他费用',
                         trigger: 'blur'
                     },
-                    {
-                        // type: 'number',
-                        message: '输入格式有误',
-                        trigger: 'blur'
-                    }
+                    // {
+                    //     type: 'number',
+                    //     message: '输入格式有误',
+                    //     trigger: 'blur'
+                    // }
                 ],
                 InsuranceCoverage: [{
                         required: true,
                         message: '请输入车险保额',
                         trigger: 'blur'
                     },
-                    {
-                        // type: 'number',
-                        message: '输入格式有误',
-                        trigger: 'blur'
-                    }
+                    // {
+                    //     type: 'number',
+                    //     message: '输入格式有误',
+                    //     trigger: 'blur'
+                    // }
                 ],
                 AccidentBrief: [
                     {
