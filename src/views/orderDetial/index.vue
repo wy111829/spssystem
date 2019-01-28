@@ -82,11 +82,10 @@
                     </el-col>
                 </el-row>
             </div>
-            <div class="form-box-neworder">
+            <div class="form-box-neworder cost">
                 <div class="form-title">
                     维修成本分析
                 </div>
-
                 <el-row :gutter="20">
                     <el-col :md="6" :sm="12">
                         <el-form-item label="配件费用">
@@ -222,57 +221,6 @@
             </div>
             <div class="form-box-neworder">
                 <div class="form-title">
-                    相关附件
-                </div>
-                <div class="radio-box">
-                    <el-radio-group v-model="AttachmentCategoryID">
-                        <el-radio :label="0">全部 {{detailData.AttachmentNumbers.Total}}</el-radio>
-                        <el-radio :label="1">车险保单 {{detailData.AttachmentNumbers['1']}}</el-radio>
-                        <el-radio :label="2">车损照片和油漆订单截屏 {{detailData.AttachmentNumbers['2']}}</el-radio>
-                        <el-radio :label="3">车辆铭牌 {{detailData.AttachmentNumbers['3']}}</el-radio>
-                        <el-radio :label="4">行驶证 {{detailData.AttachmentNumbers['4']}}</el-radio>
-                        <el-radio :label="5">DAT定损单 {{detailData.AttachmentNumbers['5']}}</el-radio>
-                        <el-radio :label="6" v-if="[205,209].includes(detailData.StatusCode)">发票及结算单 {{detailData.AttachmentNumbers['6']}}</el-radio>
-                    </el-radio-group>
-                </div>
-                <div class="select-box" style="margin-top:10px">
-                    <el-select v-model="AttachmentCategoryID" placeholder="请选择分类">
-                        <el-option label="请选择分类" :value="0"></el-option>
-                        <el-option label="车险保单" :value="1"></el-option>
-                        <el-option label="车损照片和油漆订单截屏" :value="2"></el-option>
-                        <el-option label="车辆铭牌" :value="3"></el-option>
-                        <el-option label="行驶证" :value="4"></el-option>
-                        <el-option label="DAT定损单" :value="5"></el-option>
-                        <el-option label="发票及结算单" :value="6" v-if="[205,209].includes(detailData.StatusCode)"></el-option>
-                    </el-select>
-                    <el-upload action="/FileUpload" :http-request="uploadSectionFile" :show-file-list="false" style="display:inline-block" :disabled="AttachmentCategoryID==0" v-if="CanEdit">
-                        <el-button type="primary" :disabled="AttachmentCategoryID==0">附件上传</el-button>
-                    </el-upload>
-                    <el-button type="primary" @click="AttachmentPreviewDialog = true">附件预览</el-button>
-                </div>
-                <el-table :data="AttachmentShowList">
-                    <el-table-column label="序号" prop="ID"></el-table-column>
-                    <el-table-column label="分类" prop="CategoryID">
-                        <template slot-scope="scope">
-                            {{GetCategoryName(scope.row.CategoryID)}}
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="名称" prop="FileName"></el-table-column>
-                    <el-table-column label="大小" prop="FileSize">
-                        <template slot-scope="scope">
-                            {{scope.row.FileSize+'MB'}}
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="操作" align="center">
-                        <template slot-scope="scope">
-                            <el-button type="text" icon="el-icon-download">下载</el-button>
-                            <el-button type="text" icon="el-icon-delete" style="color:#ff4949" @click="handleRemoveFile(scope.row)" v-if="CanEdit">删除</el-button>
-                        </template>
-                    </el-table-column>
-                </el-table>
-            </div>
-            <div class="form-box-neworder">
-                <div class="form-title">
                     事故简述及车辆损坏情况
                 </div>
                 <el-form-item prop="AccidentBrief">
@@ -280,6 +228,57 @@
                 </el-form-item>
             </div>
         </el-form>
+        <div class="form-box-neworder">
+            <div class="form-title">
+                相关附件
+            </div>
+            <div class="radio-box">
+                <el-radio-group v-model="AttachmentCategoryID">
+                    <el-radio :label="0">全部 {{detailData.AttachmentNumbers.Total}}</el-radio>
+                    <el-radio :label="1">车险保单 {{detailData.AttachmentNumbers['1']}}</el-radio>
+                    <el-radio :label="2">车损照片和油漆订单截屏 {{detailData.AttachmentNumbers['2']}}</el-radio>
+                    <el-radio :label="3">车辆铭牌 {{detailData.AttachmentNumbers['3']}}</el-radio>
+                    <el-radio :label="4">行驶证 {{detailData.AttachmentNumbers['4']}}</el-radio>
+                    <el-radio :label="5">DAT定损单 {{detailData.AttachmentNumbers['5']}}</el-radio>
+                    <el-radio :label="6" v-if="[205,209].includes(detailData.StatusCode)">发票及结算单 {{detailData.AttachmentNumbers['6']}}</el-radio>
+                </el-radio-group>
+            </div>
+            <div class="select-box" style="margin-top:10px">
+                <el-select v-model="AttachmentCategoryID" placeholder="请选择分类">
+                    <el-option label="请选择分类" :value="0"></el-option>
+                    <el-option label="车险保单" :value="1"></el-option>
+                    <el-option label="车损照片和油漆订单截屏" :value="2"></el-option>
+                    <el-option label="车辆铭牌" :value="3"></el-option>
+                    <el-option label="行驶证" :value="4"></el-option>
+                    <el-option label="DAT定损单" :value="5"></el-option>
+                    <el-option label="发票及结算单" :value="6" v-if="[205,209].includes(detailData.StatusCode)"></el-option>
+                </el-select>
+                <el-upload action="/FileUpload" :http-request="uploadSectionFile" :show-file-list="false" style="display:inline-block" :disabled="AttachmentCategoryID==0" v-if="CanEdit">
+                    <el-button type="primary" :disabled="AttachmentCategoryID==0">附件上传</el-button>
+                </el-upload>
+                <el-button type="primary" @click="AttachmentPreviewDialog = true">附件预览</el-button>
+            </div>
+            <el-table :data="AttachmentShowList">
+                <el-table-column label="序号" prop="ID"></el-table-column>
+                <el-table-column label="分类" prop="CategoryID">
+                    <template slot-scope="scope">
+                        {{GetCategoryName(scope.row.CategoryID)}}
+                    </template>
+                </el-table-column>
+                <el-table-column label="名称" prop="FileName"></el-table-column>
+                <el-table-column label="大小" prop="FileSize">
+                    <template slot-scope="scope">
+                        {{scope.row.FileSize+'MB'}}
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作" align="center">
+                    <template slot-scope="scope">
+                        <el-button type="text" icon="el-icon-download">下载</el-button>
+                        <el-button type="text" icon="el-icon-delete" style="color:#ff4949" @click="handleRemoveFile(scope.row)" v-if="CanEdit">删除</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </div>
         <div class="form-box-neworder" v-if="[205,206].includes(detailData.StatusCode)">
             <div class="form-title">
                 结算信息
@@ -335,6 +334,17 @@
                 <el-button type="danger" @click="handleApproved('Returned')">驳回</el-button>
                 <el-button type="danger" @click="handleApproved('Rejected')">拒绝支持</el-button>
                 <el-button type="" @click="handleGoBack">返回订单列表</el-button>
+            </el-form>
+            <el-form class="inline-form el-row" label-width="100px" v-if="sendLogistics">
+                <el-form-item class="el-col el-col-8" style="margin-right:10px;">
+                    <el-select  placeholder="--请选择物流--" v-model="Logistics" style="width:200px">
+                        <el-option label="安徽9家，山东，北区" value="1"></el-option>
+                        <el-option label="东区，东南区，湖北" value="2"></el-option>
+                        <el-option label="西区，南区" value="3"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-button type="primary" >发送物流</el-button>
+                <el-button type="primary">补发邮件</el-button>
             </el-form>
         </div>
         <div class="form-box-neworder">
@@ -468,8 +478,10 @@ export default {
             selectAccidentTypeDialog: false,
             addPartDialog: false,
             AttachmentPreviewDialog: false,
+            sendLogistics: false,
             Result: '', // 审批结果 “Approved”：通过 “Rejected”：不通过
             Comment: '', //审核备注
+            Logistics:'',
             detailData: {
                 OrderID: '',
                 MyClaimID: '',
@@ -1116,7 +1128,7 @@ export default {
                         "Comment": this.Comment,
                     })
                     if (response.Code == 200) {
-                        this.alertDialog()
+                        this.sendLogistics = true
                     }
                 }
             } catch (e) {
@@ -1182,6 +1194,11 @@ export default {
     .orderNumber {
         text-align: center;
         font-weight: 600;
+    }
+    .cost{
+        input{
+            direction: rtl
+        }
     }
     .form-box-neworder {
         .form-title {
