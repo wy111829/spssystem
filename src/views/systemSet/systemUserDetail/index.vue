@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import {BMW} from '@/networks/api'
+import {HQ} from '@/networks/api'
 import {mapState,mapMutations} from 'vuex'
 import {hex_sha1} from '@/utils/sha1'
 export default {
@@ -123,7 +123,7 @@ export default {
         ]),
         async UpdateUser (){
             try {
-                const response = await BMW.CreateOrUpdateUser({
+                const response = await HQ.CreateOrUpdateUser({
                     Operation: this.Data.UserID ? 'Update' : 'Create',
                     User: this.Data
                 })
@@ -155,7 +155,7 @@ export default {
         },
         async handleDeletUser(data){
             try {
-                const response = await BMW.ChangeUserStatus({
+                const response = await HQ.ChangeUserStatus({
                     "UserID": data.ID,
                     "StatusCode": 103
                 })
@@ -174,7 +174,7 @@ export default {
         },
         async GetUserInfo() {
             try {
-                const response = await BMW.GetUserInfo({
+                const response = await HQ.GetUserInfo({
                     ID : this.Data.UserID
                 })
                 this.Data = response.Data

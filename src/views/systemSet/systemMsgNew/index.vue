@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import {BMW} from '@/networks/api'
+import {HQ} from '@/networks/api'
 import {mapState,mapMutations} from 'vuex'
 export default {
     data () {
@@ -43,7 +43,7 @@ export default {
         },
         async SendMessage (){
             try {
-                const response = await BMW.CreateSysMessage(this.Data)
+                const response = await HQ.CreateSysMessage(this.Data)
                 if (response.Code == 200) {
                     this.alertDialog()
                 }

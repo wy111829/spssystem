@@ -3,19 +3,19 @@
     <div class="form-box-newdealer">
         <el-form class="inline-form el-row" ref="Dealer" :model="Dealer" :rules="rules" label-width="180px">
             <el-form-item label="账号(DAT客户编号)：" prop="CustomerNumber">
-                <el-input v-model="Dealer.CustomerNumber" clearable></el-input>
+                <el-input v-model.trim="Dealer.CustomerNumber" clearable></el-input>
             </el-form-item>
             <el-form-item label="经销商ID(CKD)：" prop="CKD">
-                <el-input v-model="Dealer.CKD" clearable></el-input>
+                <el-input v-model.trim="Dealer.CKD" clearable></el-input>
             </el-form-item>
             <el-form-item label="经销商名称：" prop="Name">
-                <el-input v-model="Dealer.Name" clearable></el-input>
+                <el-input v-model.trim="Dealer.Name" clearable></el-input>
             </el-form-item>
             <el-form-item label="邮箱1：" prop="MailBox1">
-                <el-input v-model="Dealer.MailBox1" clearable></el-input>
+                <el-input v-model.trim="Dealer.MailBox1" clearable></el-input>
             </el-form-item>
             <el-form-item label="邮箱2：" prop="MailBox1">
-                <el-input v-model="Dealer.MailBox2" clearable></el-input>
+                <el-input v-model.trim="Dealer.MailBox2" clearable></el-input>
             </el-form-item>
             <el-form-item label="区域： " prop="RegionID">
                 <el-select v-model="Dealer.RegionID" @change="RegionIDChange" clearable placeholder="请选择">
@@ -36,10 +36,10 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="区域经理：" prop="RegionManagerName">
-                <el-input v-model="Dealer.RegionManagerName" clearable></el-input>
+                <el-input v-model.trim="Dealer.RegionManagerName" clearable></el-input>
             </el-form-item>
             <el-form-item label="所属经销商集团：" prop="DealerGroup">
-                <el-input v-model="Dealer.DealerGroup" clearable></el-input>
+                <el-input v-model.trim="Dealer.DealerGroup" clearable></el-input>
             </el-form-item>
             <template v-if="Dealer.DealerID == 0">
                 <el-form-item label="密码：" prop="Password">
@@ -83,7 +83,7 @@
 <script>
 // import areaData from '@/defined/area.js'
 import {
-    BMW
+    HQ
 } from '@/networks/api'
 import {
     mapState,
@@ -301,7 +301,7 @@ export default {
         },
         async CreateOrUpdateDealer() {
             try {
-                const response = await BMW.CreateOrUpdateDealer({
+                const response = await HQ.CreateOrUpdateDealer({
                     Operation: this.Dealer.DealerID ? 'Update' : 'Create',
                     Dealer: this.Dealer
                 })
@@ -335,7 +335,7 @@ export default {
         },
         async GetDealerInfo() {
             try {
-                const response = await BMW.GetDealerInfo({
+                const response = await HQ.GetDealerInfo({
                     DealerID: this.Dealer.DealerID
                 })
                 this.Dealer = response.Data
@@ -346,7 +346,7 @@ export default {
         },
         async GetRegionProvCityList() {
             try {
-                const response = await BMW.GetRegionProvCityList()
+                const response = await HQ.GetRegionProvCityList()
                 this.area = response.Data.Regions
                 this.initAreaFun()
             } catch (error) {
@@ -355,7 +355,7 @@ export default {
         },
         async handleDeletDealer(data){
             try {
-                const response = await BMW.ChangeDealerStatus({
+                const response = await HQ.ChangeDealerStatus({
                     "DealerID": data.DealerID,
                     "StatusCode": 103
                 })

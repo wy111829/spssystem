@@ -42,7 +42,7 @@
 
 <script>
 import {
-    BMW
+    HQ
 } from '@/networks/api'
 
 export default {
@@ -110,7 +110,7 @@ export default {
         },
         async getData() {
             try {
-                const response = await BMW.GetRMList({
+                const response = await HQ.GetRMList({
                     "SearchField": this.SearchField,
                     "SearchValue": this.SearchValue,
                     "SortField": this.SortField,
@@ -127,7 +127,7 @@ export default {
 
         async handleChangeDealerStatus(index, data) {
             try {
-                const response = await BMW.ChangeRMStatus({
+                const response = await HQ.ChangeRMStatus({
                     "ID": data.ID,
                     "StatusCode": data.StatusCode
                 })
@@ -140,7 +140,7 @@ export default {
         },
         async handleDeletRM(data){
             try {
-                const response = await BMW.ChangeRMStatus({
+                const response = await HQ.ChangeRMStatus({
                     "ID": data.ID,
                     "StatusCode": 103
                 })

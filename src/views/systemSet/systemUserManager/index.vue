@@ -15,11 +15,11 @@
             <el-button type="primary" class="newOrderButton">新建用户</el-button>
         </router-link>
     </div>
-    <el-table :data="Users" class="table" ref="multipleTable" @row-click="goUserDetail">
-        <el-table-column prop="LoginName" label="账号(邮箱)"></el-table-column>
-        <el-table-column prop="Name" label="名称"></el-table-column>
-        <el-table-column prop="RoleName" label="角色"></el-table-column>
-        <el-table-column prop="LastModified" label="更新时间"></el-table-column>
+    <el-table :data="Users" class="table" ref="multipleTable" @row-click="goUserDetail" @sort-change="handleSortChange">
+        <el-table-column prop="LoginName" label="账号(邮箱)" sortable ></el-table-column>
+        <el-table-column prop="Name" label="名称" sortable></el-table-column>
+        <el-table-column prop="RoleName" label="角色" sortable></el-table-column>
+        <el-table-column prop="LastModified" label="更新时间" sortable></el-table-column>
         <el-table-column prop="StatusName" label="状态">
             <template slot-scope="scope">
                 <el-switch v-model="scope.row.StatusCode" @click.native="stopBubble" @change="ChangeUserStatus(scope.$index, scope.row)" active-color="#13ce66" inactive-color="#ff4949" active-text="启用" inactive-text="停用" :active-value="101" :inactive-value="102"></el-switch>
@@ -41,7 +41,7 @@
 
 <script>
 import {
-    BMW
+    HQ
 } from '@/networks/api'
 export default {
     data() { //选项 / 数据
@@ -68,7 +68,13 @@ export default {
                 value: 'LoginName',
             },{
                 label: '名称',
-                value: 'rName',
+                value: 'Name',
+            },{
+                label: '角色',
+                value: 'RoleName',
+            },{
+                label: '状态',
+                value: 'StatusName',
             },]
         }
     },
@@ -101,7 +107,7 @@ export default {
         },
         async ChangeUserStatus(index, data) {
             try {
-                const response = await BMW.ChangeUserStatus({
+                const response = await HQ.ChangeUserStatus({
                     "UserID": data.UserID,
                     "StatusCode": data.StatusCode
                 })
@@ -114,7 +120,7 @@ export default {
         },
         async handleDeletUser(data){
             try {
-                const response = await BMW.ChangeUserStatus({
+                const response = await HQ.ChangeUserStatus({
                     "UserID": data.UserID,
                     "StatusCode": 103
                 })
@@ -128,7 +134,7 @@ export default {
         },
         async getData(){
             try {
-                const response = await BMW.GetUserList({
+                const response = await HQ.GetUserList({
                     "SearchField": this.SearchField,
                     "SearchValue": this.SearchValue,
                     "SortField": this.SortField,

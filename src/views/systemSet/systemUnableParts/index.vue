@@ -33,7 +33,7 @@
 
 <script>
 import {
-    BMW
+    Admin
 } from '@/networks/api'
 export default {
     data() { //选项 / 数据
@@ -91,7 +91,7 @@ export default {
                 headers:{'Content-Type':'multipart/form-data'}
             };  //添加请求头
             try {
-                const response = await BMW.ImportUnOrderablePart(param,config)
+                const response = await Admin.ImportUnOrderablePart(param,config)
                 console.log(response)
                 if(response.Code == 200) {
                     this.getData()
@@ -102,7 +102,7 @@ export default {
         },
         async getData() {
             try {
-                const response = await BMW.GetUnOrderablePartList({
+                const response = await Admin.GetUnOrderablePartList({
                     "SearchField": this.SearchField,
                     "SearchValue": this.SearchValue,
                     "SortField": this.SortField,

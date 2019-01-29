@@ -89,7 +89,7 @@
                                 name: 'systemUnableParts',
                                 index: '4-3',
                                 title: '不可订货的配件',
-                                role: ['HQ-Administrator','Administrator']
+                                role: ['Administrator']
                             },
                             {
                                 name: 'systemUserManager',

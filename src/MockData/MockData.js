@@ -279,7 +279,7 @@ Mock.mock(/GetOrderInfo([\w|\?\S*]+)/, 'get', {
         "OrderNumber": 35531201812261305023,
         "MyClaimID": 122121,
         "AccidentType": 1,
-        "StatusCode": 201,
+        "StatusCode": 203,
         "StatusName": "待提交",
         "ReferenceNumber": "DAT-20181019152745251",
         "CeateDate": "2018-10-19 10:23:31",
@@ -669,9 +669,24 @@ Mock.mock(/RMApproveOrder/, 'post', {
     "Code": 200
 })
 
-//BMW-审批
-Mock.mock(/BMWApproveOrder/, 'post', {
-    "Code": 200
+//HQ-审批
+Mock.mock(/HQApproveOrder/, 'post', {
+    "Code": 200,
+    "Data":{
+        "OrderID":2511,
+        "StatusID":204
+    }
+
+})
+
+// HQ发物流
+Mock.mock(/SendToLogistics/, 'post', {
+    "Code": 200,
+    "Data":{
+        "OrderID":2511,
+        "StatusID":205
+    }
+
 })
 
 // 区域经理-设置经销商审批策略
@@ -679,7 +694,7 @@ Mock.mock(/SetDealerApprovePolicy/, 'post', {
     "Code": 200
 })
 
-//BMW-获取经销商列表
+//HQ-获取经销商列表
 Mock.mock(/GetDealerList/, 'post', {
     "Code": 200,
     "Data": {
@@ -727,12 +742,12 @@ Mock.mock(/GetDealerList/, 'post', {
     }
 })
 
-// BMW-经销商状态修改
+// HQ-经销商状态修改
 Mock.mock(/ChangeDealerStatus/, 'post', {
     "Code": 200,
 })
 
-//BMW-获取经销商详细信息
+//HQ-获取经销商详细信息
 Mock.mock(/GetDealerInfo([\w|\?\S*]+)/, 'get', {
     "Code": 200,
     "Data": {
@@ -756,7 +771,7 @@ Mock.mock(/GetDealerInfo([\w|\?\S*]+)/, 'get', {
 
 })
 
-//BMW-获取区域经理列表
+//HQ-获取区域经理列表
 Mock.mock(/GetRMList/, 'post', {
     "Code": 200,
     "Data": {
@@ -788,7 +803,7 @@ Mock.mock(/GetRMList/, 'post', {
     }
 })
 
-//BMW-获取指定区域经销商列表
+//HQ-获取指定区域经销商列表
 Mock.mock(/GetRegionDealerList/, 'post', {
     "Code": 200,
     "Data": {
@@ -814,12 +829,12 @@ Mock.mock(/GetRegionDealerList/, 'post', {
 
 })
 
-//BMW-区域经理状态修改
+//HQ-区域经理状态修改
 Mock.mock(/ChangeRMStatus/, 'post', {
     "Code": 200,
 })
 
-//BMW-获取区域经理详细信息
+//HQ-获取区域经理详细信息
 Mock.mock(/GetRMInfo([\w|\?\S*]+)/, 'get', {
     "Code": 200,
     "Data": {
@@ -847,17 +862,17 @@ Mock.mock(/GetRMInfo([\w|\?\S*]+)/, 'get', {
     }
 })
 
-//BMW-新建/修改经销商
+//HQ-新建/修改经销商
 Mock.mock(/CreateOrUpdateDealer/, 'post', {
     "Code": 200
 })
 
-//BMW-修改区域经理
+//HQ-修改区域经理
 Mock.mock(/CreateOrUpdateRM/, 'post', {
     "Code": 200
 })
 
-//BMW-不可订货配件清单获取
+//HQ-不可订货配件清单获取
 Mock.mock(/GetUnOrderablePartList/, 'post', {
     "Code": 200,
     "Data": {
@@ -879,7 +894,7 @@ Mock.mock(/GetUnOrderablePartList/, 'post', {
 
 })
 
-//BMW-获取用户列表
+//HQ-获取用户列表
 Mock.mock(/GetUserList/, 'post', {
     "Code": 200,
     "Data": {
@@ -910,7 +925,7 @@ Mock.mock(/GetUserList/, 'post', {
 
 })
 
-//BMW-获取用户详细信息
+//HQ-获取用户详细信息
 Mock.mock(/GetUserInfo([\w|\?\S*]+)/,'get',{
     "Code":200,
     "Data":{
@@ -925,24 +940,24 @@ Mock.mock(/GetUserInfo([\w|\?\S*]+)/,'get',{
 
 })
 
-//BMW-用户状态修改
+//HQ-用户状态修改
 Mock.mock(/ChangeUserStatus/, 'post', {
     "Code": 200,
     "Message": "错误信息"
 })
 
 
-//BMW-邮件地址修改
+//HQ-邮件地址修改
 Mock.mock(/CreateOrUpdateUser/, 'post', {
     "Code": 200
 })
 
-//BMW-新建系统消息
+//HQ-新建系统消息
 Mock.mock(/CreateSysMessage/, 'post', {
     "Code": 200
 })
 
-//BMW-删除系统消息
+//HQ-删除系统消息
 Mock.mock(/DeleteSysMessage/, 'post', {
     "Code": 200
 })
@@ -1059,7 +1074,7 @@ Mock.mock(/FileDelete([\w|\?\S*]+)/, 'get', {
     "Code": 200,
 })
 
-//BMW-不可订货配件清单导入
+//HQ-不可订货配件清单导入
 Mock.mock(/ImportUnOrderablePart/, 'post', {
     "Code": 200,
 })

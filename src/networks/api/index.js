@@ -1,10 +1,12 @@
 import General from './General'
 import Dealer from './Dealer'
 import RegionManagers from './RegionManagers'
-import BMW from './BMW'
+import HQ from './HQ'
+import Admin from './Admin'
 export {
   General,
   Dealer,
   RegionManagers,
-  BMW
+  HQ,
+  Admin
 }

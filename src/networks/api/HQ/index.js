@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export default {
-    BMWApproveOrder: (data = {}, config = {}) => axios.post('BMWApproveOrder',data, config),
+    HQApproveOrder: (data = {}, config = {}) => axios.post('HQApproveOrder',data, config),
     ChangeDealerStatus: (data = {}, config = {}) => axios.post('ChangeDealerStatus', data, config),
     GetDealerList: (data = {}, config = {}) =>axios.post('GetDealerList',data, config),
     GetDealerInfo:({DealerID}, config ={}) => axios.get('GetDealerInfo?DealerID=' + DealerID, config),
@@ -11,7 +11,6 @@ export default {
     CreateOrUpdateDealer: (data ={}, config ={}) => axios.post('CreateOrUpdateDealer', data, config),
     GetRMInfo:({ID}, config ={}) => axios.get('GetRMInfo?ID=' + ID, config),
     CreateOrUpdateRM:(data = {}, config = {}) => axios.post('CreateOrUpdateRM', data, config),
-    GetUnOrderablePartList:(data = {}, config = {}) =>axios.post('GetUnOrderablePartList',data, config),
     GetUserList:(data = {},config = {}) =>axios.post('GetUserList',data,config),
     ChangeUserStatus:(data = {}, config = {}) => axios.post('ChangeUserStatus', data, config),
     GetUserInfo:({ID}, config ={}) => axios.get('GetUserInfo?ID=' + ID, config),
@@ -19,5 +18,5 @@ export default {
     CreateSysMessage:(data = {}, config = {}) => axios.post('CreateSysMessage', data, config),
     DeleteSysMessage:(data = {}, config = {}) => axios.post('DeleteSysMessage', data, config),
     GetRegionProvCityList:(config = {}) => axios.get('GetRegionProvCityList', config),
-    ImportUnOrderablePart: (obj, config = {}) =>axios.post('ImportUnOrderablePart',obj, config)
+    SendToLogistics:(data = {}, config ={}) => axios.post('SendToLogistics', data, config)
 }

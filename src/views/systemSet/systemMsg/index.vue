@@ -1,7 +1,7 @@
 <template >
     <div class="main-container">
         <router-link class="button" to="/systemMsgNew">
-            <el-button type="primary" v-if="UserRole == 'BMW-BP' ||UserRole == 'Administrator' ">新建消息</el-button>
+            <el-button type="primary" v-if="UserRole == 'HQ-BP' ||UserRole == 'Administrator' ">新建消息</el-button>
         </router-link>
         <div class="search-box">
             <div class="sort-select">
@@ -18,7 +18,7 @@
         <el-table :data="Messages" class="table" ref='multipleTable' @row-click="goMessageDetail" @sort-change="handleSortChange">
             <el-table-column label="消息内容" prop="MessageContent"></el-table-column>
             <el-table-column label="消息发送日期" prop="PublishDate" sortable ></el-table-column>
-            <el-table-column label="操作" align="center"  v-if="UserRole == 'BMW-BP' ||UserRole == 'Administrator' ">
+            <el-table-column label="操作" align="center"  v-if="UserRole == 'HQ-BP' ||UserRole == 'Administrator' ">
                 <template slot-scope="scope">
                     <el-button type="text" icon="el-icon-delete" @click.stop="handleDelet(scope.row)" style="color:#ff4949">删除</el-button>
                 </template>
@@ -46,7 +46,7 @@
 <script>
 import {
     General,
-    BMW
+    HQ
 } from '@/networks/api'
 import {
     mapState,
@@ -97,7 +97,7 @@ export default {
         },
         async DeleteSysMessage(data) {
             try {
-                const response = await BMW.DeleteSysMessage({
+                const response = await HQ.DeleteSysMessage({
                     ID : data.ID
                 })
                 if (response.Code == 200) {

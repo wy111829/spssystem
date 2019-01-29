@@ -47,7 +47,7 @@
 
 <script>
 import {
-    BMW
+    HQ
 } from '@/networks/api'
 import {mapMutations} from 'vuex'
 export default {
@@ -128,7 +128,7 @@ export default {
         },
         async getData() {
             try {
-                const response = await BMW.GetDealerList({
+                const response = await HQ.GetDealerList({
                     "SearchField": this.SearchField,
                     "SearchValue": this.SearchValue,
                     "SortField": this.SortField,
@@ -144,7 +144,7 @@ export default {
         },
         async handleChangeDealerStatus(index, data) {
             try {
-                const response = await BMW.ChangeDealerStatus({
+                const response = await HQ.ChangeDealerStatus({
                     "DealerID": data.DealerID,
                     "StatusCode": data.StatusCode
                 })
@@ -157,7 +157,7 @@ export default {
         },
         async handleDeletDealer(data){
             try {
-                const response = await BMW.ChangeDealerStatus({
+                const response = await HQ.ChangeDealerStatus({
                     "DealerID": data.DealerID,
                     "StatusCode": 103
                 })

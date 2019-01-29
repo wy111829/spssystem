@@ -12,7 +12,7 @@
                 <el-row :gutter="20">
                     <el-col :md="6" :sm="12">
                         <el-form-item label="事故类型">
-                            <el-radio-group v-model="detailData.AccidentType">
+                            <el-radio-group v-model="detailData.AccidentType" disabled>
                                 <el-radio :label="1">大事故</el-radio>
                                 <el-radio :label="2">水淹车</el-radio>
                             </el-radio-group>
@@ -328,23 +328,22 @@
         <div style="margin-top:20px" v-if="UserRole !='Dealer'">
             <el-form class="inline-form el-row" label-width="100px">
                 <el-form-item label="审核备注：" class="el-col el-col-8" style="margin-right:10px;">
-                    <el-input v-model="Comment" placeholder="" style="width:200px"></el-input>
+                    <el-input v-model="Comment" placeholder="" style="width:200px" :disabled="!CanApproved"></el-input>
                 </el-form-item>
-                <el-button type="primary" @click="handleApproved('Approved')">通过</el-button>
-                <el-button type="danger" @click="handleApproved('Returned')">驳回</el-button>
-                <el-button type="danger" @click="handleApproved('Rejected')">拒绝支持</el-button>
+                <el-button type="primary" @click="handleApproved('Approved')" :disabled="!CanApproved">通过</el-button>
+                <el-button type="danger" @click="handleApproved('Returned')" :disabled="!CanApproved">驳回</el-button>
+                <el-button type="danger" @click="handleApproved('Rejected')" :disabled="!CanApproved">拒绝支持</el-button>
                 <el-button type="" @click="handleGoBack">返回订单列表</el-button>
             </el-form>
-            <el-form class="inline-form el-row" label-width="100px" v-if="sendLogistics">
+            <el-form class="inline-form el-row" label-width="100px" v-if="detailData.StatusCode ==204 ||detailData.StatusCode == 205">
                 <el-form-item class="el-col el-col-8" style="margin-right:10px;">
-                    <el-select  placeholder="--请选择物流--" v-model="Logistics" style="width:200px">
-                        <el-option label="安徽9家，山东，北区" value="1"></el-option>
-                        <el-option label="东区，东南区，湖北" value="2"></el-option>
-                        <el-option label="西区，南区" value="3"></el-option>
+                    <el-select  placeholder="--请选择物流--" v-model="LogisticsID" style="width:200px">
+                        <el-option v-for="(item, index) in LogisticsList" :key="item.UserID" :label="item.Name" :value="item.UserID">
+                        </el-option>
                     </el-select>
                 </el-form-item>
-                <el-button type="primary" >发送物流</el-button>
-                <el-button type="primary">补发邮件</el-button>
+                <el-button type="primary" v-if="detailData.StatusCode == 204" @click="handleSendToLogistics">发送物流</el-button>
+                <el-button type="primary" v-if="detailData.StatusCode == 205" @click="handleSendToLogistics">补发邮件</el-button>
             </el-form>
         </div>
         <div class="form-box-neworder">
@@ -464,7 +463,7 @@ import {
     General,
     Dealer,
     RegionManagers,
-    BMW
+    HQ
 } from '@/networks/api'
 import {
     mapState,
@@ -478,10 +477,9 @@ export default {
             selectAccidentTypeDialog: false,
             addPartDialog: false,
             AttachmentPreviewDialog: false,
-            sendLogistics: false,
             Result: '', // 审批结果 “Approved”：通过 “Rejected”：不通过
             Comment: '', //审核备注
-            Logistics:'',
+            LogisticsID:'',
             detailData: {
                 OrderID: '',
                 MyClaimID: '',
@@ -549,6 +547,7 @@ export default {
                 LogisticsCmt: ''
             },
             AttachmentCategoryID: 0,
+            LogisticsList:[],
             rules: {
                 ReferenceNumber: [{
                         required: true,
@@ -704,6 +703,15 @@ export default {
                         return false
                 }
             } else {
+                return false
+            }
+        },
+        CanApproved() {
+            if (this.UserRole == 'RegionManager'&& this.detailData.StatusCode ==202) {
+                return true
+            }else if (this.UserRole == 'HQ-Administrator'&& this.detailData.StatusCode ==203) {
+                return true
+            }else {
                 return false
             }
         },
@@ -1110,7 +1118,7 @@ export default {
                 console.log(e);
             }
         },
-        async handleApproved(val) { //审批 - 区域经理或BMW
+        async handleApproved(val) { //审批 - 区域经理或HQ
             try {
                 if (this.UserRole == 'RegionManager') {
                     const response = await RegionManagers.RMApproveOrder({
@@ -1122,17 +1130,38 @@ export default {
                         this.alertDialog()
                     }
                 } else if (this.UserRole == 'HQ-Administrator') {
-                    const response = await BMW.BMWApproveOrder({
+                    const response = await HQ.HQApproveOrder({
                         "OrderID": this.detailData.OrderID,
                         "Result": val,
                         "Comment": this.Comment,
                     })
                     if (response.Code == 200) {
-                        this.sendLogistics = true
+                        this.detailData.StatusCode = response.Data.StatusID
+                        const subresponse = await HQ.GetUserList({
+                        	"SearchField":"RoleCode",
+                            "SearchValue":"Logistics",
+                        })
+                        if(subresponse.Code == 200) {
+                            this.LogisticsList = subresponse.Data.Users
+                        }
+
                     }
                 }
             } catch (e) {
                 console.log(e)
+            }
+        },
+        async handleSendToLogistics() { //发物流
+            try {
+                const response = await HQ.SendToLogistics({
+                    OrderID: this.detailData.OrderID,
+                    UserID:this.LogisticsID
+                })
+                if (response.Code == 200) {
+                    this.detailData.StatusCode = response.Data.StatusID
+                }
+            } catch (error) {
+                console.log(error)
             }
         },
         async GetOrderInfo() { //获取订单信息

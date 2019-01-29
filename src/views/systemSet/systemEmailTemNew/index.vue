@@ -8,8 +8,8 @@
                 <el-select v-model="form.Recipient" placeholder="--Pleas select address role--">
                     <el-option label="Dealer" value="Dealer"></el-option>
                     <el-option label="Rgion Manager" value="RgionManager"></el-option>
-                    <el-option label="BMW body-paint team" value="BMW body-paint team"></el-option>
-                    <el-option label="BMW logistics team" value="BMW logistics team"></el-option>
+                    <el-option label="HQ body-paint team" value="HQ body-paint team"></el-option>
+                    <el-option label="HQ logistics team" value="HQ logistics team"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="正文：" class="el-col el-col-24 el-col-xs-24">

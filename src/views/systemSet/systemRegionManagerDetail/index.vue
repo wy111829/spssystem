@@ -73,7 +73,7 @@
 
 <script>
 import {
-    BMW
+    HQ
 } from '@/networks/api'
 import {
     mapState,
@@ -178,7 +178,7 @@ export default {
             this.areaDealers = []
             this.Data.Dealers = []
             try {
-                const response = await BMW.GetRegionDealerList({
+                const response = await HQ.GetRegionDealerList({
                     "RegionID":val,
                     "SearchField":"",
                     "SearchValue":"",
@@ -199,7 +199,7 @@ export default {
         },
         async CreateOrUpdateRM() {
             try {
-                const response = await BMW.CreateOrUpdateRM({
+                const response = await HQ.CreateOrUpdateRM({
                     Operation: this.Data.ID ? 'Update' : 'Create',
                     RegionManager: this.Data
                 })
@@ -231,7 +231,7 @@ export default {
         },
         async handleDeletDealer(data){
             try {
-                const response = await BMW.ChangeRMStatus({
+                const response = await HQ.ChangeRMStatus({
                     "ID": data.ID,
                     "StatusCode": 103
                 })
@@ -244,7 +244,7 @@ export default {
         },
         async GetRMInfo() {
             try {
-                const response = await BMW.GetRMInfo({
+                const response = await HQ.GetRMInfo({
                     ID: this.Data.ID
                 })
                 this.Data = response.Data
