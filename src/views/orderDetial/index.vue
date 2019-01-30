@@ -201,7 +201,7 @@
 
                     <el-table-column prop="IsOrdered" label="是否订购" width="50">
                         <template slot-scope="scope">
-                            <i class="el-icon-remove-outline" title="不可订货零件" v-if="scope.row.IsUnOrderable" style="color:#ff4949"></i>
+                            <i class="el-icon-remove-outline" title="不可订货零件" v-if="scope.row.IsUnOrderable" style="color:#ff4949;transform:rotate(45deg);font-weight:600"></i>
                             <el-checkbox v-model="scope.row.IsOrdered" v-else :disabled="!CanEdit"></el-checkbox>
                         </template>
                     </el-table-column>
@@ -342,7 +342,7 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-button type="primary" v-if="detailData.StatusCode == 204" @click="handleSendToLogistics">发送物流</el-button>
+                <el-button type="primary" v-if="detailData.StatusCode == 204" @click="handleSendToLogistics" :disabled="!Logis">发送物流</el-button>
                 <el-button type="primary" v-if="detailData.StatusCode == 205" @click="handleSendToLogistics">补发邮件</el-button>
             </el-form>
         </div>

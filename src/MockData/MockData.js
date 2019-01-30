@@ -17,7 +17,7 @@ Mock.mock(/Login/, 'post', {
 Mock.mock(/GetLoginInfo/, 'get', {
     "Code": 200,
     "Data": {
-        "RoleCode": 'HQ-Administrator',
+        "RoleCode": 'Dealer',
         "UserName": "系统管理员"
     }
 })
@@ -279,7 +279,7 @@ Mock.mock(/GetOrderInfo([\w|\?\S*]+)/, 'get', {
         "OrderNumber": 35531201812261305023,
         "MyClaimID": 122121,
         "AccidentType": 1,
-        "StatusCode": 203,
+        "StatusCode": 201,
         "StatusName": "待提交",
         "ReferenceNumber": "DAT-20181019152745251",
         "CeateDate": "2018-10-19 10:23:31",
@@ -384,7 +384,7 @@ Mock.mock(/GetOrderInfo([\w|\?\S*]+)/, 'get', {
                 "Quantity": 1,
                 "TotalPrice_Old": 600,
                 "TotalPrice": 600,
-                "IsManualAddPart": true,
+                "IsManualAddPart": false,
                 "IsManualInputPrice": false,
                 "IsUnOrderable": true,
                 "IsOrdered": false,
