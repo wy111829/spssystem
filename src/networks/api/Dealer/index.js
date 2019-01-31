@@ -9,5 +9,7 @@ export default {
     FinishOrder: ({OrderID}, config = {}) => axios.get('FinishOrder?OrderID='+ OrderID,config),
     CancelOrder: ({OrderID}, config = {}) => axios.get('CancelOrder?OrderID='+ OrderID,config),
     FileDelete: ({id}, config = {}) => axios.get('FileDelete?id' + id, config),
-    FileUpload: (obj, config = {}) =>axios.post('FileUpload',obj, config)
+    FileUpload: (obj, config = {}) =>axios.post('FileUpload',obj, config),
+    GetDealerSignature: (config = {}) => axios.get('GetDealerSignature', config),
+    UpdateDealerSignature: (data = {}, config = {}) => axios.post('UpdateDealerSignature',data,config)
 }

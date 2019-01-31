@@ -271,6 +271,7 @@ Mock.mock(/CreateOrder/, 'post', {
         "CityName": "北京"
     }
 })
+
 // 获取订单详细信息
 Mock.mock(/GetOrderInfo([\w|\?\S*]+)/, 'get', {
     "Code": 200,
@@ -663,6 +664,21 @@ Mock.mock(/FinishOrder([\w|\?\S*]+)/, 'get', {
 Mock.mock(/CancelOrder([\w|\?\S*]+)/, 'get', {
     "Code": 200
 })
+
+//获取签名信息
+Mock.mock(/GetDealerSignature/, 'get', {
+    "Code": 200,
+    "Data":{
+       "DealerSignature":"北京某某经销商"
+   }
+})
+
+
+//签名信息修改
+Mock.mock(/UpdateDealerSignature/, 'post', {
+    "Code": 200
+})
+
 
 //区域经理-审批
 Mock.mock(/RMApproveOrder/, 'post', {

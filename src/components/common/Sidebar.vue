@@ -112,6 +112,12 @@
                                 index: '4-6',
                                 title: '修改密码',
                                 role:  ['Dealer', 'RegionManager', 'HQ-Administrator','Administrator']
+                            },
+                            {
+                                name: 'systemDealerSignature',
+                                index: '4-7',
+                                title: '经销商签名',
+                                role:  ['Dealer']
                             }
                         ]
                     }

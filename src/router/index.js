@@ -132,6 +132,13 @@ export default new Router({
                 },
                 {
 
+                    path: '/systemDealerSignature',
+                    component: resolve => require(['@/views/systemSet/systemDealerSignature'], resolve),
+                    meta: { title: '经销商签名', permission: true, keepAlive: true  },
+                    name: 'systemDealerSignature'
+                },
+                {
+
                     path: '/systemDealerDetail/:id?',
                     component: resolve => require(['@/views/systemSet/systemDealerDetail'], resolve),
                     meta: { title: '经销商详情', permission: true , keepAlive: false },
