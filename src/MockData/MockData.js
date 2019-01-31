@@ -662,7 +662,12 @@ Mock.mock(/FinishOrder([\w|\?\S*]+)/, 'get', {
 
 //订单删除
 Mock.mock(/CancelOrder([\w|\?\S*]+)/, 'get', {
-    "Code": 200
+    "Code": 200,
+    "Data":{
+        "OrderID":2511,
+        "StatusID":209
+    }
+
 })
 
 //获取签名信息

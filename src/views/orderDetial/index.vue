@@ -1066,6 +1066,7 @@ export default {
                     "OrderID": this.detailData.OrderID
                 })
                 if (response.Code == 200) {
+                    this.detailData.StatusCode = response.Data.StatusID
                     this.alertDialog()
                 }
             } catch (e) {

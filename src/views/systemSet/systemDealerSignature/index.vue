@@ -3,7 +3,7 @@
     <div class="DealerSignature">
         <el-form class="inline-form el-row" label-width="150px">
             <el-form-item label="经销商签名：">
-                <el-input v-model="DealerSignature"></el-input>
+                <el-input v-model.trim="DealerSignature"></el-input>
             </el-form-item>
             <el-row class="text-center">
                 <el-button type="primary" @click="submitForm">保存</el-button>
