@@ -17,7 +17,7 @@ Mock.mock(/Login/, 'post', {
 Mock.mock(/GetLoginInfo/, 'get', {
     "Code": 200,
     "Data": {
-        "RoleCode": 'Dealer',
+        "RoleCode": 'Administrator',
         "UserName": "系统管理员"
     }
 })

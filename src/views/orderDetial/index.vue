@@ -706,7 +706,7 @@ export default {
                 return false
             }
         },
-        CanApproved() {
+        CanApproved() { //能否审批
             if (this.UserRole == 'RegionManager'&& this.detailData.StatusCode ==202) {
                 return true
             }else if (this.UserRole == 'HQ-Administrator'&& this.detailData.StatusCode ==203) {
@@ -715,7 +715,7 @@ export default {
                 return false
             }
         },
-        CarAge: function() {
+        CarAge: function() { //计算车龄
             let year = parseInt(this.detailData.VehicleAge / 12)
             let month = this.detailData.VehicleAge % 12
             let age = year == 0 ? month + '个月' : year + '年零' + month + '个月'
@@ -824,7 +824,7 @@ export default {
                 }
             }
         },
-        AttachmentShowList: function() {
+        AttachmentShowList: function() { //附件列表显示内容
             let list = []
             if (this.detailData.Attachments.length > 0) {
                 if (this.AttachmentCategoryID == 0) {
@@ -839,7 +839,7 @@ export default {
             }
             return list
         },
-        checkAttachmentList() {
+        checkAttachmentList() { //检查附件列表是否有缺省项目
             for (var key in this.detailData.AttachmentNumbers) {
                 if (key != '6') {
                     if (this.detailData.AttachmentNumbers[key] <= 0) {
@@ -890,7 +890,7 @@ export default {
                 return false
             }
         },
-        handleDatePicker(val) {
+        handleDatePicker(val) { //计算车龄
             console.log(val)
             let now = new Date()
             let cartime = new Date(val)

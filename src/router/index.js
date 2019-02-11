@@ -1,19 +1,5 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-// import home from '@/views/Home'
-// import newOrder from '@/views/newOrder'
-// import orderList from '@/views/orderList'
-// import report from '@/views/report'
-// import systemDealerManager from '@/views/systemSet/systemDealerManager'
-// import systemEmailAdressList from '@/views/systemSet/systemEmailAdressList'
-// import systemEmailAdressNew from '@/views/systemSet/systemEmailAdressNew'
-// import systemEmailTemList from '@/views/systemSet/systemEmailTemList'
-// import systemEmailTemNew from '@/views/systemSet/systemEmailTemNew'
-// import systemMsg from '@/views/systemSet/systemMsg'
-// import systemPswd from '@/views/systemSet/systemPswd'
-// import systemRegionalManger from '@/views/systemSet/systemRegionalManger'
-// import systemUnableParts from '@/views/systemSet/systemUnableParts'
-
 Vue.use(Router)
 
 export default new Router({
