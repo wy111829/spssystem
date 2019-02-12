@@ -185,30 +185,30 @@ export default {
         }
     },
     methods: {
-        stopBubble() {
+        stopBubble() { //阻止事件冒泡
             event.stopPropagation()
         },
-        handleRadioChange(val) {
+        handleRadioChange(val) { //radio事件重新获取列表数据
             //console.log(val)
             this.getData()
         },
-        handleSearch(val) {
+        handleSearch(val) { //点击搜索获取列表数据
             if (this.SearchValue.trim()) {
                 this.SearchValue = this.SearchValue.trim()
                 this.getData()
             }
         },
-        handleSortChange(obj) {
+        handleSortChange(obj) { //排序获取列表数据
             //console.log(obj)
             this.SortType = obj.order == 'ascending' ? 'ASC' : obj.order == 'descending' ? 'DESC' : null
             this.SortField = obj.prop
             this.getData()
         },
-        handleCurrentChange(val) {
+        handleCurrentChange(val) { //切换页签
             this.RowOffset = val;
             this.getData();
         },
-        handleEdit(index, data) {
+        handleEdit(index, data) { //点击编辑进入详情页
             //console.log(index, data)
             this.$router.push({
                 name: 'orderDetial',
@@ -217,7 +217,7 @@ export default {
                 }
             });
         },
-        goMessageDetail(data) {
+        goMessageDetail(data) { //进入详情页
             this.$router.push({
                 name: 'orderDetial',
                 params: {
@@ -225,7 +225,7 @@ export default {
                 }
             });
         },
-        async getData() {
+        async getData() { //调用接口获取列表数据
             try {
                 const response = await General.GetOrderList({
                     "StatusCode": this.Status,
@@ -242,16 +242,13 @@ export default {
                 console.log(error)
             }
         },
-        async getOrderNumbers() {
+        async getOrderNumbers() { //获取订单各类型数量
             try {
                 const response = await General.GetOrderNumbers()
                 this.OrderNumbers = response.Data
             } catch (e) {
                 console.log(e)
             }
-        },
-        search() {
-
         }
     },
     computed: {

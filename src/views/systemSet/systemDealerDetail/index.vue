@@ -287,7 +287,7 @@ export default {
                 }
             })
         },
-        initAreaFun() {
+        initAreaFun() { //地区联动初始化
             this.area.map((item) => {
                 if (item.ID == this.Dealer.RegionID) {
                     this.ProvinceIDList = item.Provinces

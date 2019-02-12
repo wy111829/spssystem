@@ -172,7 +172,7 @@
                     <el-table-column label="订购类型" prop="OrderType"></el-table-column>
                     <el-table-column label="" width="25">
                         <template slot-scope="scope">
-                            <span v-if="scope.row.IsManualAddPart" class="symbol">M</span>
+                            <span v-if="scope.row.IsManualAddPart" class="symbol" title="手动添加的零件">M</span>
                             <span v-if="scope.row.IsManualInputPrice">*</span>
                         </template>
                     </el-table-column>
@@ -342,7 +342,7 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-button type="primary" v-if="detailData.StatusCode == 204" @click="handleSendToLogistics" :disabled="!Logis">发送物流</el-button>
+                <el-button type="primary" v-if="detailData.StatusCode == 204" @click="handleSendToLogistics" :disabled="!LogisticsID">发送物流</el-button>
                 <el-button type="primary" v-if="detailData.StatusCode == 205" @click="handleSendToLogistics">补发邮件</el-button>
             </el-form>
         </div>
@@ -1176,13 +1176,13 @@ export default {
                 console.log(error)
             }
         },
-        routeChange() {
+        routeChange() { //路由改变，如果有OrderID获取数据
             this.detailData.OrderID = this.$route.params.id ? this.$route.params.id : 0
             if (this.detailData.OrderID) {
                 this.GetOrderInfo()
             }
         },
-        async handleImport() {
+        async handleImport() { //导入订单信息
             try {
                 const importInfo = await Dealer.ImportOrderInfo({
                     "ReferenceNumber": this.detailData.ReferenceNumber
@@ -1195,7 +1195,7 @@ export default {
                 console.log(error)
             }
         },
-        alertDialog() {
+        alertDialog() { //alert对话框
             this.$alert('操作完成，返回订单列表', '提示', {
                 confirmButtonText: '确定',
                 callback: action => {
@@ -1203,7 +1203,7 @@ export default {
                 }
             })
         },
-        handleGoBack() {
+        handleGoBack() { //返回列表页并关闭当前页签
             this.closeTags(this.$route.name)
             this.$router.push({
                 name: 'orderList'
@@ -1254,6 +1254,7 @@ export default {
     .symbol {
         background-color: #ff4949;
         color: #fff;
+        cursor: default;
     }
     .bgc-green {
         input {

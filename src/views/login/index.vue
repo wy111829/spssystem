@@ -51,7 +51,7 @@ export default {
         }
     },
     methods: {
-        submitForm(formName) {
+        submitForm(formName) { //登录button
             if (this.ruleForm.username && this.ruleForm.username.length > 0 && this.ruleForm.password && this.ruleForm.password.length > 0) {
                 localStorage.setItem('ms_username', this.ruleForm.username)
                 this.goLogin()
@@ -59,7 +59,7 @@ export default {
                 this.$alert('用户名或密码错误', '提示')
             }
         },
-        async goLogin() {
+        async goLogin() { //调用Login接口
             try {
                 const response = await General.Login({
                     LoginName: this.ruleForm.username,

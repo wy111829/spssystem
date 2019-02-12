@@ -78,7 +78,7 @@ export default {
         }
     },
     methods: {
-        async getData() {
+        async getData() { //获取数据
             try {
                 const response = await RegionManagers.GetDealerPolicyList({
                   "SearchField": this.SearchField,
@@ -94,7 +94,7 @@ export default {
 
             }
         },
-        async changeApprovePolicy(index, data){
+        async changeApprovePolicy(index, data){ //审批策略设置
             try{
                 const response = await RegionManagers.SetDealerApprovePolicy({
                     "DealerID":data.DealerID,
