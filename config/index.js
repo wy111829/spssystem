@@ -14,6 +14,7 @@ module.exports = {
       '/BigAccident':{
           target: 'http://172.18.86.80:8080',
           changeOrigin: true,
+          secure: false,
           pathRewrite:{
               '^/BigAccident': 'BigAccident'
           }

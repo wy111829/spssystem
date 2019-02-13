@@ -142,12 +142,12 @@
             async GetSysMessageList() {
                 try {
                     const response = await General.GetSysMessageList({
-                        "RowOffset":1,
-                        "RowCount":1,
+                        "RowOffset":0,
+                        "RowCount":20,
                         "SearchField": '',
                         "SearchValue": '',
-                        "SortField": '',
-                        "SortType": ''
+                        "SortField": 'PublishDate',
+                        "SortType": 'DESC'
                     })
                     this.Message = response.Data.Messages[0]
                     this.Message.MessageContent = this.Message.MessageContent.substring(0,140)

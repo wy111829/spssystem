@@ -12,7 +12,7 @@
                 <el-row :gutter="20">
                     <el-col :md="6" :sm="12">
                         <el-form-item label="事故类型">
-                            <el-radio-group v-model="detailData.AccidentType" disabled>
+                            <el-radio-group v-model="detailData.AccidentTypeID" disabled>
                                 <el-radio :label="1">大事故</el-radio>
                                 <el-radio :label="2">水淹车</el-radio>
                             </el-radio-group>
@@ -189,7 +189,7 @@
                     <el-table-column prop="Price" label="单价" sortable min-width="130">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.Price" type="number" style="width:75%" min='0' :disabled="!CanEdit||scope.row.IsUnOrderable" :class="IsPriceRevise(scope.row)?'bgc-green':''"></el-input>
-                            <i class="el-icon-info iconInfo" :title="'原始价格:'+scope.row.Price_Old" v-if="IsPriceRevise(scope.row)"></i>
+                            <i class="el-icon-info iconInfo" :title="'原始价格:'+scope.row.Price_OLd" v-if="IsPriceRevise(scope.row)"></i>
                         </template>
                     </el-table-column>
                     <el-table-column label="总价" show-overflow-tooltip sortable min-width="135">
@@ -273,7 +273,7 @@
                 </el-table-column>
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
-                        <el-button type="text" icon="el-icon-download">下载</el-button>
+                        <a :href="ServerUrl+'/BigAccident/Action/FileDownLoad?OrderNumber='+ detailData.OrderNumber + '&DownloadFileName='+scope.row.DownloadFileName"><el-button type="text" icon="el-icon-download">下载</el-button></a>
                         <el-button type="text" icon="el-icon-delete" style="color:#ff4949" @click="handleRemoveFile(scope.row)" v-if="CanEdit">删除</el-button>
                     </template>
                 </el-table-column>
@@ -428,8 +428,8 @@
         <el-table :data="AttachmentShowList" default-expand-all>
             <el-table-column type="expand">
                 <template slot-scope="scope" v-if="isImg(scope.row.FileName)">
-                    <!-- <img :src="ServerUrl+'/BigAccident/Action/FileDownLoad?filename='+ scope.row.FileName" /> -->
-                    <img src="../../assets/login-bg1.png" style="width:90%" />
+                    <img :src="ServerUrl+'/BigAccident/Action/FileDownLoad?OrderNumber='+ detailData.OrderNumber + '&DownloadFileName='+scope.row.DownloadFileName" />
+                    <!-- <img src="../../assets/login-bg1.png" style="width:90%" /> -->
                 </template>
             </el-table-column>
             <el-table-column label="序号" prop="ID"></el-table-column>
@@ -446,7 +446,7 @@
             </el-table-column>
             <el-table-column label="操作" align="center">
                 <template slot-scope="scope">
-                    <el-button type="text" icon="el-icon-download">下载</el-button>
+                    <a :href="ServerUrl+'/BigAccident/Action/FileDownLoad?OrderNumber='+ detailData.OrderNumber + '&DownloadFileName='+scope.row.DownloadFileName"><el-button type="text" icon="el-icon-download">下载</el-button></a>
                     <el-button type="text" icon="el-icon-delete" style="color:#ff4949" @click="handleRemoveFile(scope.row)" v-if="CanEdit">删除</el-button>
                 </template>
             </el-table-column>
@@ -482,10 +482,15 @@ export default {
             LogisticsID:'',
             detailData: {
                 OrderID: '',
+                OrderNumber: '',
                 MyClaimID: '',
-                AccidentType: '',
+                AccidentTypeID: '',
                 StatusCode: 201,
+                StatusName:'',
+                CeateDate:'',
+                LastModified:'',
                 ReferenceNumber: "",
+                DealerID:'',
                 DealerCKD: '',
                 DealerName: '',
                 VehicleOwner: "",
@@ -862,7 +867,7 @@ export default {
             }
         },
         IsPriceRevise(row) { //零件价格改变
-            if (!row.IsManualAddPart && row.Price_Old != row.Price) {
+            if (!row.IsManualAddPart && row.Price_OLd != row.Price) {
                 return true
             } else {
                 return false
@@ -968,7 +973,10 @@ export default {
         async handleRemoveFile(row) { // 附件删除
             try {
                 const response = await Dealer.FileDelete({
-                    id: row.ID
+                    "ID": row.ID,
+                    "OrderNumber":this.detailData.OrderNumber,
+                    "DownloadFileName":row.DownloadFileName
+
                 })
                 if (response.Code == 200) {
                     //this.detailData.Attachments.splice(index, 1)
@@ -987,6 +995,7 @@ export default {
                 ID: Data.ID,
                 CategoryID: Data.CategoryID,
                 FileName: Data.FileName,
+                DownloadFileName:Data.DownloadFileName,
                 FileSize: Data.FileSize,
             })
             this.detailData.AttachmentNumbers.Total++
