@@ -54,7 +54,7 @@
             <template slot-scope="scope">
                 <el-button type="text" icon="el-icon-edit" @click.stop="goMessageDetail(scope.row)" @click.native="stopBubble" v-if="UserRole=='Dealer'&& [201,205,207,208].includes(scope.row.StatusCode)">编辑</el-button>
                 <el-button type="text" icon="el-icon-view" @click.stop="goMessageDetail(scope.row)" @click.native="stopBubble" v-else>查看</el-button>
-                <el-button type="text" icon="el-icon-delete" @click.stop="goMessageDetail(scope.row)" @click.native="stopBubble" style="color:#ff4949" v-if="UserRole=='Dealer'&&[201,202,203,204,207,208].includes(scope.row.StatusCode)">取消</el-button>
+                <el-button type="text" icon="el-icon-delete" @click.stop="handleCancelOrder(scope.row)" @click.native="stopBubble" style="color:#ff4949" v-if="UserRole=='Dealer'&&[201,202,203,204,207,208].includes(scope.row.StatusCode)">取消</el-button>
             </template>
         </el-table-column>
     </el-table>
@@ -67,7 +67,8 @@
 
 <script>
 import {
-    General
+    General,
+    Dealer
 } from '@/networks/api'
 import {
     mapState
@@ -147,7 +148,7 @@ export default {
                 sortable: true,
                 width:110
             }, {
-                prop: 'AccidentType',
+                prop: 'AccidentTypeName',
                 label: '申请类型',
                 sortable: true,
                 width:70
@@ -224,6 +225,19 @@ export default {
                     id: data.OrderID
                 }
             });
+        },
+        async handleCancelOrder(data) { //取消订单
+            console.log(data);
+            try {
+                const response = await Dealer.CancelOrder({
+                    "OrderID": data.OrderID
+                })
+                if (response.Code == 200) {
+                    this.$router.go(0)
+                }
+            } catch (e) {
+                console.log(e)
+            }
         },
         async getData() { //调用接口获取列表数据
             try {

@@ -189,7 +189,7 @@
                     <el-table-column prop="Price" label="单价" sortable min-width="130">
                         <template slot-scope="scope">
                             <el-input v-model="scope.row.Price" type="number" style="width:75%" min='0' :disabled="!CanEdit||scope.row.IsUnOrderable" :class="IsPriceRevise(scope.row)?'bgc-green':''"></el-input>
-                            <i class="el-icon-info iconInfo" :title="'原始价格:'+scope.row.Price_OLd" v-if="IsPriceRevise(scope.row)"></i>
+                            <i class="el-icon-info iconInfo" :title="'原始价格:'+scope.row.Price_Old" v-if="IsPriceRevise(scope.row)"></i>
                         </template>
                     </el-table-column>
                     <el-table-column label="总价" show-overflow-tooltip sortable min-width="135">
@@ -485,6 +485,7 @@ export default {
                 OrderNumber: '',
                 MyClaimID: '',
                 AccidentTypeID: '',
+                AccidentTypeName:'',
                 StatusCode: 201,
                 StatusName:'',
                 CeateDate:'',
@@ -721,10 +722,14 @@ export default {
             }
         },
         CarAge: function() { //计算车龄
-            let year = parseInt(this.detailData.VehicleAge / 12)
-            let month = this.detailData.VehicleAge % 12
-            let age = year == 0 ? month + '个月' : year + '年零' + month + '个月'
-            return age
+            if(this.detailData.VehicleAge){
+                let year = parseInt(this.detailData.VehicleAge / 12)
+                let month = this.detailData.VehicleAge % 12
+                let age = year == 0 ? month + '个月' : year + '年零' + month + '个月'
+                return age
+            }else {
+                return 0
+            }
         },
         PartCost: function() { //计算配件费用
             let Sum = 0
@@ -867,7 +872,7 @@ export default {
             }
         },
         IsPriceRevise(row) { //零件价格改变
-            if (!row.IsManualAddPart && row.Price_OLd != row.Price) {
+            if (!row.IsManualAddPart && row.Price_Old != row.Price) {
                 return true
             } else {
                 return false
@@ -917,7 +922,7 @@ export default {
         async handleCreateOrder(type) { //创建新订单
             try {
                 const response = await Dealer.CreateOrder({
-                    AccidentType: type
+                    AccidentTypeID: type
                 })
                 for (var variable in response.Data) {
                     this.detailData[variable] = response.Data[variable]
