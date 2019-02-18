@@ -5,7 +5,7 @@ export default {
     ImportOrderInfo: (data = {}, config = {}) => axios.post('ImportOrderInfo',data,config),
     SaveOrder: (obj, config = {}) => axios.post('SaveOrder', obj, config),
     SubmitOrder: ({OrderID}, config = {}) => axios.get('SubmitOrder?OrderID='+ OrderID,config),
-    SaveSettleInfo: (data = {}, config = {}) => axios.post('SaveSettleInfo',data,config),
+    SaveSettlementInfo: (data = {}, config = {}) => axios.post('SaveSettlementInfo',data,config),
     FinishOrder: ({OrderID}, config = {}) => axios.get('FinishOrder?OrderID='+ OrderID,config),
     CancelOrder: ({OrderID}, config = {}) => axios.get('CancelOrder?OrderID='+ OrderID,config),
     FileDelete: (data = {}, config = {}) => axios.post('FileDelete', data, config),

@@ -5,7 +5,7 @@ const portUrl = '/BigAccident/Action/'
 
 // 设置全局请求前缀
 axios.defaults.baseURL = portUrl
-axios.defaults.headers['Content-Type'] ='application/x-www-form-urlencoded;charset=UTF-8'
+//axios.defaults.headers['Content-Type'] ='application/x-www-form-urlencoded;charset=UTF-8'
 axios.defaults.withCredentials = true
 axios.interceptors.response.use((response) => {
     // console.log('=====axios--response====', response)

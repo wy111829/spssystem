@@ -62,7 +62,7 @@
                     </el-col>
                     <el-col :md="6" :sm="12">
                         <el-form-item label="车辆首次登记日期(保修起始时间)" prop="VehicleFirstRegDate">
-                            <el-date-picker type="date" @change="handleDatePicker" placeholder="选择日期" v-model="detailData.VehicleFirstRegDate" style="width: 100%;"></el-date-picker>
+                            <el-date-picker type="date"  placeholder="选择日期" v-model="detailData.VehicleFirstRegDate" style="width: 100%;"></el-date-picker>
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
@@ -141,7 +141,7 @@
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
-                        <el-form-item label="是否购买涉水险" v-if="detailData.AccidentType=='2'">
+                        <el-form-item label="是否购买涉水险" v-if="detailData.AccidentTypeID=='2'">
                             <el-radio-group v-model="detailData.HasWadingInsurance">
                                 <el-radio :label="true">是</el-radio>
                                 <el-radio :label="false">否</el-radio>
@@ -149,7 +149,7 @@
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
-                        <el-form-item label="申请额外服务费" v-if="detailData.AccidentType=='1'">
+                        <el-form-item label="申请额外服务费" v-if="detailData.AccidentTypeID=='1'">
                             <el-radio-group v-model="detailData.ApplyExtraServiceCost">
                                 <el-radio :label="true">是</el-radio>
                                 <el-radio :label="false">否</el-radio>
@@ -157,7 +157,7 @@
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
-                        <el-form-item label="额外服务费" v-if="detailData.AccidentType=='1'&&detailData.ApplyExtraServiceCost">
+                        <el-form-item label="额外服务费" v-if="detailData.AccidentTypeID=='1'&&detailData.ApplyExtraServiceCost">
                             <i class="el-icon-info iconInfo" title="=(采购零件总额-增值税)*10%"></i>
                             <el-input :value="ExtraServiceCost" disabled></el-input>
                         </el-form-item>
@@ -358,13 +358,13 @@
         </div>
     </div>
     <el-dialog title="你正在创建新订单，请选择事故类型：" class="selectAccidentType" :close-on-click-modal="false" :close-on-press-escape="false" :visible.sync="selectAccidentTypeDialog" :show-close="false">
-        <el-radio-group v-model="detailData.AccidentType" style="text-align:center">
+        <el-radio-group v-model="detailData.AccidentTypeID" style="text-align:center">
             <el-radio :label="1">大事故</el-radio>
             <el-radio :label="2">水淹车</el-radio>
         </el-radio-group>
         <div slot="footer" class="dialog-footer">
             <el-button @click="handleGoBack()">取消</el-button>
-            <el-button type="primary" @click="handleCreateOrder(detailData.AccidentType)" :disabled="!detailData.AccidentType">确 定</el-button>
+            <el-button type="primary" @click="handleCreateOrder(detailData.AccidentTypeID)" :disabled="!detailData.AccidentTypeID">确 定</el-button>
         </div>
     </el-dialog>
     <el-dialog title="添加零件" :visible.sync="addPartDialog" width="40%">
@@ -488,7 +488,7 @@ export default {
                 AccidentTypeName:'',
                 StatusCode: 201,
                 StatusName:'',
-                CeateDate:'',
+                CreateDate:'',
                 LastModified:'',
                 ReferenceNumber: "",
                 DealerID:'',
@@ -508,13 +508,13 @@ export default {
                 SubModelName: "",
                 VehicleMadeCountry: '',
                 VehicleFirstRegDate: "",
-                VehicleAge: '',
-                InsurerID: '',
+                VehicleAge:0,
+                InsurerID: 0,
                 InsurerName: "",
                 InsuranceNumber: "",
                 AccidentBrief: "",
                 PartCost: '',
-                LaborPaintCost: '',
+                LaborPaintCost: 0,
                 RepairCost: '',
                 OrderPartCost: '',
                 InsuranceCoverage: '',
@@ -525,7 +525,7 @@ export default {
                 OrderPartDiscount: '',
                 ApplyExtraServiceCost: true,
                 HasWadingInsurance: '',
-                ExtraServiceCost: '',
+                ExtraServiceCost: 0,
                 SpareParts: [],
                 Attachments: [],
                 AttachmentNumbers: {
@@ -722,13 +722,24 @@ export default {
             }
         },
         CarAge: function() { //计算车龄
-            if(this.detailData.VehicleAge){
-                let year = parseInt(this.detailData.VehicleAge / 12)
-                let month = this.detailData.VehicleAge % 12
+
+            // if(this.detailData.VehicleAge){
+            //     let year = parseInt(this.detailData.VehicleAge / 12)
+            //     let month = this.detailData.VehicleAge % 12
+            //     let age = year == 0 ? month + '个月' : year + '年零' + month + '个月'
+            //     return age
+            // }else
+            if (this.detailData.VehicleFirstRegDate) {
+                let now = new Date()
+                let cartime = new Date(this.detailData.VehicleFirstRegDate)
+                let cartotlemonth = Math.round((now - cartime) / 1000 / 60 / 60 / 24 / 30)
+                this.detailData.VehicleAge = cartotlemonth
+                let year = parseInt(cartotlemonth / 12)
+                let month = cartotlemonth % 12
                 let age = year == 0 ? month + '个月' : year + '年零' + month + '个月'
                 return age
             }else {
-                return 0
+                return ''
             }
         },
         PartCost: function() { //计算配件费用
@@ -753,67 +764,67 @@ export default {
         },
         RepairCost: function() { //计算维修费用
             if (this.PartCost || this.detailData.LaborPaintCost) {
-                let Num = Number(this.PartCost) + Number(this.detailData.LaborPaintCost)
-                Num = Number(Num).toFixed(2)
+                let Num = parseFloat(this.PartCost) + parseFloat(this.detailData.LaborPaintCost)
+                Num = parseFloat(Num.toFixed(2))
                 this.detailData.RepairCost = Num
                 return Num
             } else {
-                this.detailData.RepairCost = ''
+                this.detailData.RepairCost = 0
                 return ''
             }
         },
         Repair_Div_Insurance: function() { //计算维修费用/车损险保额
             if (this.detailData.InsuranceCoverage) {
                 let Num = this.RepairCost / this.detailData.InsuranceCoverage * 100
-                Num = Number(Num).toFixed(2)
+                Num = parseFloat(Num.toFixed(2))
                 this.detailData.Repair_Div_Insurance = Num
                 return Num + '%'
             } else {
-                this.detailData.Repair_Div_Insurance = ''
+                this.detailData.Repair_Div_Insurance = 0
                 return ''
             }
         },
         Part_Div_Repair: function() { //配件费用/维修费用
             if (this.RepairCost) {
                 let Num = this.PartCost / this.RepairCost * 100
-                Num = Number(Num).toFixed(2)
+                Num = parseFloat(Num.toFixed(2))
                 this.detailData.Part_Div_Repair = Num
                 return Num + '%'
             } else {
-                this.detailData.Part_Div_Repair = ''
+                this.detailData.Part_Div_Repair = 0
                 return ''
             }
         },
         OrderPart_Div_Part: function() { //计算采购零件总额/配件费用
             if (this.PartCost) {
                 let Num = this.OrderPartCost / this.PartCost * 100
-                Num = Number(Num).toFixed(2)
+                Num = parseFloat(Num.toFixed(2))
                 this.detailData.OrderPart_Div_Part = Num
                 return Num + '%'
             } else {
-                this.detailData.OrderPart_Div_Part = ''
+                this.detailData.OrderPart_Div_Part = 0
                 return ''
             }
         },
         OrderPartDiscount: function() { //计算配件折扣支持
             if (this.OrderPartCost) {
                 let Num = this.OrderPartCost / 1.16 * 0.15
-                Num = Number(Num).toFixed(2)
+                Num = parseFloat(Num.toFixed(2))
                 this.detailData.OrderPartDiscount = Num
                 return Num
             } else {
-                this.detailData.OrderPartDiscount = ''
+                this.detailData.OrderPartDiscount = 0
                 return ''
             }
         },
         ExtraServiceCost: function() { //计算额外服务费
             if (this.detailData.ApplyExtraServiceCost && this.OrderPartCost) {
                 let Num = this.OrderPartCost / 1.16 * 0.1
-                Num = Number(Num).toFixed(2)
+                Num = parseFloat(Num.toFixed(2))
                 this.detailData.ExtraServiceCost = Num
                 return Num
             } else {
-                this.detailData.ExtraServiceCost = ''
+                this.detailData.ExtraServiceCost = 0
                 return ''
             }
         },
@@ -900,16 +911,16 @@ export default {
                 return false
             }
         },
-        handleDatePicker(val) { //计算车龄
-            console.log(val)
-            let now = new Date()
-            let cartime = new Date(val)
-            let cartotlemonth = Math.round((now - cartime) / 1000 / 60 / 60 / 24 / 30)
-            // let year = parseInt(cartotlemonth / 12)
-            // let month = cartotlemonth % 12
-            // this.detailData.VehicleAge = year == 0 ? month + '个月' : year + '年零' + month + '个月'
-            this.detailData.VehicleAge = cartotlemonth
-        },
+        // handleDatePicker(val) { //计算车龄
+        //     console.log(val)
+        //     let now = new Date()
+        //     let cartime = new Date(val)
+        //     let cartotlemonth = Math.round((now - cartime) / 1000 / 60 / 60 / 24 / 30)
+        //     // let year = parseInt(cartotlemonth / 12)
+        //     // let month = cartotlemonth % 12
+        //     // this.detailData.VehicleAge = year == 0 ? month + '个月' : year + '年零' + month + '个月'
+        //     this.detailData.VehicleAge = cartotlemonth
+        // },
         // toggleSelection(rows) {
         //     if (rows) {
         //         rows.forEach(row => {
@@ -1009,7 +1020,7 @@ export default {
         async uploadSectionFile(f) { //上传附件
             let param = new FormData(); //创建form对象
             param.append('file', f.file); //通过append向form对象添加数据
-            param.append('OrderId', this.detailData.OrderId);
+            param.append('OrderID', this.detailData.OrderID);
             param.append('OrderNumber', this.detailData.OrderNumber);
             param.append('CategoryID', this.AttachmentCategoryID);
             let config = {
@@ -1046,10 +1057,12 @@ export default {
             }
         },
         async handleSaveOrder() { // 保存并不提交-经销商
+            console.log(this.detailData)
             try {
                 const response = await Dealer.SaveOrder(this.detailData)
                 if (response.Code == 200) {
                     //console.log(this.detailData)
+                    this.detailData.StatusID = response.Data.StatusID
                     this.alertDialog()
                 }
             } catch (error) {
@@ -1058,15 +1071,13 @@ export default {
         },
         async handleSubmitOrder() { // 保存并提交-经销商
             try {
-                const response = await Dealer.SaveOrder({
-                    "Operation": this.detailData.OrderID ? 'Update' : 'Create',
-                    "Order": this.detailData
-                })
+                const response = await Dealer.SaveOrder(this.detailData)
                 if (response.Code == 200) {
                     const subresponse = await Dealer.SubmitOrder({
                         "OrderID": this.detailData.OrderID
                     })
                     if (subresponse.Code == 200) {
+                        //this.detailData.StatusID = subresponse.Data.StatusID
                         this.alertDialog()
                     }
                 }
@@ -1112,7 +1123,7 @@ export default {
         },
         async handleFinishOrder() { //结束订单
             try {
-                const response = await Dealer.SaveSettleInfo({
+                const response = await Dealer.SaveSettlementInfo({
                     "OrderID": this.detailData.OrderID,
                     "WIP_OpenDate": this.detailData.WIP_OpenDate,
                     "WIP_SettleDate": this.detailData.WIP_OpenDate,

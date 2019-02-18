@@ -825,7 +825,6 @@ Mock.mock(/GetRMList/, 'post', {
                 "StatusName": "启用",
                 "LastModified": "2018-12-26 13:23"
             }
-
         ]
     }
 })
