@@ -194,7 +194,7 @@
                     </el-table-column>
                     <el-table-column label="总价" show-overflow-tooltip sortable min-width="135">
                         <template slot-scope="scope">
-                            <el-input disabled :value="scope.row.Price?scope.row.Quantity*scope.row.Price:''" style="width:75%" :class="IsTotalPriceRevise(scope.row)?'bgc-green':''"></el-input>
+                            <el-input disabled :value="scope.row.Price?Math.round(scope.row.Quantity*scope.row.Price*100)/100:''" style="width:75%" :class="IsTotalPriceRevise(scope.row)?'bgc-green':''"></el-input>
                             <i class="el-icon-info iconInfo" :title="'原始价格:'+scope.row.TotalPrice_Old" v-if="IsTotalPriceRevise(scope.row)"></i>
                         </template>
                     </el-table-column>
@@ -240,7 +240,7 @@
                     <el-radio :label="3">车辆铭牌 {{detailData.AttachmentNumbers['3']}}</el-radio>
                     <el-radio :label="4">行驶证 {{detailData.AttachmentNumbers['4']}}</el-radio>
                     <el-radio :label="5">DAT定损单 {{detailData.AttachmentNumbers['5']}}</el-radio>
-                    <el-radio :label="6" v-if="[205,209].includes(detailData.StatusCode)">发票及结算单 {{detailData.AttachmentNumbers['6']}}</el-radio>
+                    <el-radio :label="6" v-if="[205,206].includes(detailData.StatusCode)">发票及结算单 {{detailData.AttachmentNumbers['6']}}</el-radio>
                 </el-radio-group>
             </div>
             <div class="select-box" style="margin-top:10px">
@@ -251,7 +251,7 @@
                     <el-option label="车辆铭牌" :value="3"></el-option>
                     <el-option label="行驶证" :value="4"></el-option>
                     <el-option label="DAT定损单" :value="5"></el-option>
-                    <el-option label="发票及结算单" :value="6" v-if="[205,209].includes(detailData.StatusCode)"></el-option>
+                    <el-option label="发票及结算单" :value="6" v-if="[205,206].includes(detailData.StatusCode)"></el-option>
                 </el-select>
                 <el-upload action="/FileUpload" :http-request="uploadSectionFile" :show-file-list="false" style="display:inline-block" :disabled="AttachmentCategoryID==0" v-if="CanEdit">
                     <el-button type="primary" :disabled="AttachmentCategoryID==0">附件上传</el-button>
@@ -351,9 +351,9 @@
                 申请日志
             </div>
             <el-row v-for="(item,index) in this.detailData.ApplicationLogs" :key="index" class="ApplicationLogs">
-                <el-col :span="5" class="OperationDate">{{item.OperationDate}}</el-col>
-                <el-col :span="5">{{item.Operator}} :{{item.Operation}}</el-col>
-                <el-col :span="5">审批备注：{{item.Comments}}</el-col>
+                <el-col :span="3" class="OperationDate">{{item.OperationDate}}</el-col>
+                <el-col :span="7">{{item.Operator}} :{{item.Operation}}</el-col>
+                <el-col :span="7">审批备注：{{item.Comments}}</el-col>
             </el-row>
         </div>
     </div>
@@ -385,7 +385,7 @@
                 <el-input type="number" v-model="newSpareParts.Price" min="0"></el-input>
             </el-form-item>
             <el-form-item label="总价：">
-                <el-input type="number" disabled :value="newSpareParts.Quantity&&newSpareParts.Price?newSpareParts.Quantity*newSpareParts.Price:''"></el-input>
+                <el-input type="number" disabled :value="newSpareParts.Quantity&&newSpareParts.Price?Math.round(newSpareParts.Quantity*newSpareParts.Price*100)/100:''"></el-input>
             </el-form-item>
             <el-form-item label="是否订购：">
                 <el-checkbox v-model="newSpareParts.IsOrdered"></el-checkbox>
@@ -408,7 +408,7 @@
                 <el-radio :label="3">车辆铭牌 {{detailData.AttachmentNumbers['3']}}</el-radio>
                 <el-radio :label="4">行驶证 {{detailData.AttachmentNumbers['4']}}</el-radio>
                 <el-radio :label="5">DAT定损单 {{detailData.AttachmentNumbers['5']}}</el-radio>
-                <el-radio :label="6" v-if="[205,209].includes(detailData.StatusCode)">发票及结算单 {{detailData.AttachmentNumbers['6']}}</el-radio>
+                <el-radio :label="6" v-if="[205,206].includes(detailData.StatusCode)">发票及结算单 {{detailData.AttachmentNumbers['6']}}</el-radio>
             </el-radio-group>
         </div>
         <div class="select-box" style="margin-top:10px">
@@ -513,11 +513,11 @@ export default {
                 InsurerName: "",
                 InsuranceNumber: "",
                 AccidentBrief: "",
-                PartCost: '',
+                PartCost: 0,
                 LaborPaintCost: 0,
-                RepairCost: '',
-                OrderPartCost: '',
-                InsuranceCoverage: '',
+                RepairCost: 0,
+                OrderPartCost: 0,
+                InsuranceCoverage: 0,
                 Repair_Div_Insurance: '',
                 Repair_Div_Insurance: '',
                 Part_Div_Repair: '',
@@ -759,13 +759,14 @@ export default {
                     Sum += item.TotalPrice
                 }
             })
+            Sum = Math.round(Sum * 100) / 100
             this.detailData.OrderPartCost = Sum
             return Sum
         },
         RepairCost: function() { //计算维修费用
             if (this.PartCost || this.detailData.LaborPaintCost) {
                 let Num = parseFloat(this.PartCost) + parseFloat(this.detailData.LaborPaintCost)
-                Num = parseFloat(Num.toFixed(2))
+                Num = Math.round(parseFloat(Num) * 100) / 100
                 this.detailData.RepairCost = Num
                 return Num
             } else {
@@ -776,7 +777,7 @@ export default {
         Repair_Div_Insurance: function() { //计算维修费用/车损险保额
             if (this.detailData.InsuranceCoverage) {
                 let Num = this.RepairCost / this.detailData.InsuranceCoverage * 100
-                Num = parseFloat(Num.toFixed(2))
+                Num = Math.round(parseFloat(Num) * 100) / 100
                 this.detailData.Repair_Div_Insurance = Num
                 return Num + '%'
             } else {
@@ -787,7 +788,7 @@ export default {
         Part_Div_Repair: function() { //配件费用/维修费用
             if (this.RepairCost) {
                 let Num = this.PartCost / this.RepairCost * 100
-                Num = parseFloat(Num.toFixed(2))
+                Num = Math.round(parseFloat(Num) * 100) / 100
                 this.detailData.Part_Div_Repair = Num
                 return Num + '%'
             } else {
@@ -798,7 +799,7 @@ export default {
         OrderPart_Div_Part: function() { //计算采购零件总额/配件费用
             if (this.PartCost) {
                 let Num = this.OrderPartCost / this.PartCost * 100
-                Num = parseFloat(Num.toFixed(2))
+                Num = Math.round(parseFloat(Num) * 100) / 100
                 this.detailData.OrderPart_Div_Part = Num
                 return Num + '%'
             } else {
@@ -809,7 +810,7 @@ export default {
         OrderPartDiscount: function() { //计算配件折扣支持
             if (this.OrderPartCost) {
                 let Num = this.OrderPartCost / 1.16 * 0.15
-                Num = parseFloat(Num.toFixed(2))
+                Num = Math.round(parseFloat(Num) * 100) / 100
                 this.detailData.OrderPartDiscount = Num
                 return Num
             } else {
@@ -820,7 +821,7 @@ export default {
         ExtraServiceCost: function() { //计算额外服务费
             if (this.detailData.ApplyExtraServiceCost && this.OrderPartCost) {
                 let Num = this.OrderPartCost / 1.16 * 0.1
-                Num = parseFloat(Num.toFixed(2))
+                Num = Math.round(parseFloat(Num) * 100) / 100
                 this.detailData.ExtraServiceCost = Num
                 return Num
             } else {
@@ -1163,18 +1164,25 @@ export default {
                     })
                     if (response.Code == 200) {
                         this.detailData.StatusCode = response.Data.StatusID
-                        const subresponse = await HQ.GetUserList({
-                        	"SearchField":"RoleCode",
-                            "SearchValue":"Logistics",
-                        })
-                        if(subresponse.Code == 200) {
-                            this.LogisticsList = subresponse.Data.Users
-                        }
+                        this.getLogisticsList()
 
                     }
                 }
             } catch (e) {
                 console.log(e)
+            }
+        },
+        async getLogisticsList() { //获取物流列表
+            try {
+                const subresponse = await HQ.GetUserList({
+                    "SearchField":"RoleCode",
+                    "SearchValue":"Logistics",
+                })
+                if(subresponse.Code == 200) {
+                    this.LogisticsList = subresponse.Data.Users
+                }
+            } catch (e) {
+                console.log(e);
             }
         },
         async handleSendToLogistics() { //发物流
@@ -1197,6 +1205,9 @@ export default {
                 })
                 this.detailData = response.Data
                 // console.log(this.detailData)
+                if (this.detailData.StatusCode == 204 ||this.detailData.StatusCode == 205){
+                    this.getLogisticsList()
+                }
             } catch (error) {
                 console.log(error)
             }

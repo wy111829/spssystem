@@ -146,7 +146,7 @@ export default {
                 prop: 'OrderNumber',
                 label: '订单号',
                 sortable: true,
-                width:110
+                width:115
             }, {
                 prop: 'AccidentTypeName',
                 label: '申请类型',
