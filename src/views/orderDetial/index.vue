@@ -1,6 +1,6 @@
 <template>
 <div class="newOrder-container">
-    <div class="container">
+    <div class="container" v-loading.fullscreen.lock="loading">
         <el-form class="inline-form" :model="detailData" :disabled="!CanEdit" ref="detailData" :rules="rules">
             <div class="form-box-neworder">
                 <div class="orderNumber">
@@ -62,7 +62,7 @@
                     </el-col>
                     <el-col :md="6" :sm="12">
                         <el-form-item label="车辆首次登记日期(保修起始时间)" prop="VehicleFirstRegDate">
-                            <el-date-picker type="date"  placeholder="选择日期" v-model="detailData.VehicleFirstRegDate" style="width: 100%;"></el-date-picker>
+                            <el-date-picker type="date" placeholder="选择日期" v-model="detailData.VehicleFirstRegDate" style="width: 100%;"></el-date-picker>
                         </el-form-item>
                     </el-col>
                     <el-col :md="6" :sm="12">
@@ -256,6 +256,9 @@
                 <el-upload action="/FileUpload" :http-request="uploadSectionFile" :show-file-list="false" style="display:inline-block" :disabled="AttachmentCategoryID==0" v-if="CanEdit">
                     <el-button type="primary" :disabled="AttachmentCategoryID==0">附件上传</el-button>
                 </el-upload>
+                <el-upload action="/FileUpload" :http-request="uploadSectionFile" :show-file-list="false" style="display:inline-block"  v-if="UserRole == 'Dealer' && detailData.StatusCode==205 && AttachmentCategoryID==6">
+                    <el-button type="primary" :disabled="AttachmentCategoryID==0">发票及结算单上传</el-button>
+                </el-upload>
                 <el-button type="primary" @click="AttachmentPreviewDialog = true">附件预览</el-button>
             </div>
             <el-table :data="AttachmentShowList">
@@ -273,7 +276,9 @@
                 </el-table-column>
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
-                        <a :href="ServerUrl+'/BigAccident/Action/FileDownLoad?OrderNumber='+ detailData.OrderNumber + '&DownloadFileName='+scope.row.DownloadFileName"><el-button type="text" icon="el-icon-download">下载</el-button></a>
+                        <a :href="ServerUrl+'/BigAccident/Action/FileDownLoad?OrderNumber='+ detailData.OrderNumber + '&DownloadFileName='+scope.row.DownloadFileName">
+                            <el-button type="text" icon="el-icon-download">下载</el-button>
+                        </a>
                         <el-button type="text" icon="el-icon-delete" style="color:#ff4949" @click="handleRemoveFile(scope.row)" v-if="CanEdit">删除</el-button>
                     </template>
                 </el-table-column>
@@ -337,13 +342,13 @@
             </el-form>
             <el-form class="inline-form el-row" label-width="100px" v-if="detailData.StatusCode ==204 ||detailData.StatusCode == 205">
                 <el-form-item class="el-col el-col-8" style="margin-right:10px;">
-                    <el-select  placeholder="--请选择物流--" v-model="LogisticsID" style="width:200px">
+                    <el-select placeholder="--请选择物流--" v-model="LogisticsID" style="width:200px">
                         <el-option v-for="(item, index) in LogisticsList" :key="item.UserID" :label="item.Name" :value="item.UserID">
                         </el-option>
                     </el-select>
                 </el-form-item>
                 <el-button type="primary" v-if="detailData.StatusCode == 204" @click="handleSendToLogistics" :disabled="!LogisticsID">发送物流</el-button>
-                <el-button type="primary" v-if="detailData.StatusCode == 205" @click="handleSendToLogistics">补发邮件</el-button>
+                <el-button type="primary" v-if="detailData.StatusCode == 205" @click="handleSendToLogistics" :disabled="!LogisticsID">补发邮件</el-button>
             </el-form>
         </div>
         <div class="form-box-neworder">
@@ -446,7 +451,9 @@
             </el-table-column>
             <el-table-column label="操作" align="center">
                 <template slot-scope="scope">
-                    <a :href="ServerUrl+'/BigAccident/Action/FileDownLoad?OrderNumber='+ detailData.OrderNumber + '&DownloadFileName='+scope.row.DownloadFileName"><el-button type="text" icon="el-icon-download">下载</el-button></a>
+                    <a :href="ServerUrl+'/BigAccident/Action/FileDownLoad?OrderNumber='+ detailData.OrderNumber + '&DownloadFileName='+scope.row.DownloadFileName">
+                        <el-button type="text" icon="el-icon-download">下载</el-button>
+                    </a>
                     <el-button type="text" icon="el-icon-delete" style="color:#ff4949" @click="handleRemoveFile(scope.row)" v-if="CanEdit">删除</el-button>
                 </template>
             </el-table-column>
@@ -474,24 +481,25 @@ export default {
     name: 'orderDetail',
     data: function() {
         return {
+            loading: false,
             selectAccidentTypeDialog: false,
             addPartDialog: false,
             AttachmentPreviewDialog: false,
             Result: '', // 审批结果 “Approved”：通过 “Rejected”：不通过
             Comment: '', //审核备注
-            LogisticsID:'',
+            LogisticsID: '',
             detailData: {
                 OrderID: '',
                 OrderNumber: '',
                 MyClaimID: '',
                 AccidentTypeID: '',
-                AccidentTypeName:'',
+                AccidentTypeName: '',
                 StatusCode: 201,
-                StatusName:'',
-                CreateDate:'',
-                LastModified:'',
+                StatusName: '',
+                CreateDate: '',
+                LastModified: '',
                 ReferenceNumber: "",
-                DealerID:'',
+                DealerID: '',
                 DealerCKD: '',
                 DealerName: '',
                 VehicleOwner: "",
@@ -508,7 +516,7 @@ export default {
                 SubModelName: "",
                 VehicleMadeCountry: '',
                 VehicleFirstRegDate: "",
-                VehicleAge:0,
+                VehicleAge: 0,
                 InsurerID: 0,
                 InsurerName: "",
                 InsuranceNumber: "",
@@ -553,7 +561,7 @@ export default {
                 LogisticsCmt: ''
             },
             AttachmentCategoryID: 0,
-            LogisticsList:[],
+            LogisticsList: [],
             rules: {
                 ReferenceNumber: [{
                         required: true,
@@ -713,11 +721,11 @@ export default {
             }
         },
         CanApproved() { //能否审批
-            if (this.UserRole == 'RegionManager'&& this.detailData.StatusCode ==202) {
+            if (this.UserRole == 'RegionManager' && this.detailData.StatusCode == 202) {
                 return true
-            }else if (this.UserRole == 'HQ-Administrator'&& this.detailData.StatusCode ==203) {
+            } else if (this.UserRole == 'HQ-Administrator' && this.detailData.StatusCode == 203) {
                 return true
-            }else {
+            } else {
                 return false
             }
         },
@@ -738,7 +746,7 @@ export default {
                 let month = cartotlemonth % 12
                 let age = year == 0 ? month + '个月' : year + '年零' + month + '个月'
                 return age
-            }else {
+            } else {
                 return ''
             }
         },
@@ -897,7 +905,10 @@ export default {
                 return false
             }
         },
-        IsUnOrderable({row,rowIndex}) { //判断不可订货
+        IsUnOrderable({
+            row,
+            rowIndex
+        }) { //判断不可订货
             if (row.IsUnOrderable) {
                 return 'UnOrderable'
             } else {
@@ -991,8 +1002,8 @@ export default {
             try {
                 const response = await Dealer.FileDelete({
                     "ID": row.ID,
-                    "OrderNumber":this.detailData.OrderNumber,
-                    "DownloadFileName":row.DownloadFileName
+                    "OrderNumber": this.detailData.OrderNumber,
+                    "DownloadFileName": row.DownloadFileName
 
                 })
                 if (response.Code == 200) {
@@ -1012,7 +1023,7 @@ export default {
                 ID: Data.ID,
                 CategoryID: Data.CategoryID,
                 FileName: Data.FileName,
-                DownloadFileName:Data.DownloadFileName,
+                DownloadFileName: Data.DownloadFileName,
                 FileSize: Data.FileSize,
             })
             this.detailData.AttachmentNumbers.Total++
@@ -1072,6 +1083,7 @@ export default {
         },
         async handleSubmitOrder() { // 保存并提交-经销商
             try {
+                this.loading = true
                 const response = await Dealer.SaveOrder(this.detailData)
                 if (response.Code == 200) {
                     const subresponse = await Dealer.SubmitOrder({
@@ -1079,8 +1091,13 @@ export default {
                     })
                     if (subresponse.Code == 200) {
                         //this.detailData.StatusID = subresponse.Data.StatusID
+                        this.loading = false
                         this.alertDialog()
+                    }else {
+                        this.loading = false
                     }
+                }else {
+                    this.loading = false
                 }
             } catch (error) {
                 console.log(error)
@@ -1101,7 +1118,7 @@ export default {
         },
         submitToSaveOrder() { //保存点击事件
             if (this.detailData.StatusCode == 205) {
-                this.handleSaveSettleInfo()
+                this.SaveSettlementInfo()
             } else {
                 this.handleSaveOrder()
             }
@@ -1122,27 +1139,56 @@ export default {
                 }
             })
         },
-        async handleFinishOrder() { //结束订单
+        async SaveSettlementInfo (){ //订单结算信息保存
             try {
                 const response = await Dealer.SaveSettlementInfo({
                     "OrderID": this.detailData.OrderID,
                     "WIP_OpenDate": this.detailData.WIP_OpenDate,
-                    "WIP_SettleDate": this.detailData.WIP_OpenDate,
-                    "WIP_Number": this.detailData.WIP_OpenDate,
-                    "Settlement_Number": this.detailData.WIP_OpenDate,
-                    "Settlement_Cost": this.detailData.WIP_OpenDate,
-                    "Settlement_PartCost": this.detailData.WIP_OpenDate,
+                    "WIP_SettleDate": this.detailData.WIP_SettleDate,
+                    "WIP_Number": this.detailData.WIP_Number,
+                    "Settlement_Number": this.detailData.Settlement_Number,
+                    "Settlement_Cost": this.detailData.Settlement_Cost,
+                    "Settlement_PartCost": this.detailData.Settlement_PartCost,
                 })
-                if (response.Code == 200) {
-                    const subresponse = await Dealer.FinishOrder({
-                        "OrderID": this.detailData.OrderID
+                if (response.Code == 200){
+                    this.$message({
+                        message: '保存成功',
+                        type: 'success'
                     })
-                    if (subresponse.Code == 200) {
-                        this.alertDialog()
-                    }
+                } else {
+                    alert('保存失败')
                 }
             } catch (e) {
                 console.log(e);
+            }
+        },
+
+        async handleFinishOrder() { //结束订单
+            if (this.detailData.AttachmentNumbers[6] <= 0){
+                alert('请上传发票及结算单！');
+                return false;
+            }else {
+                try {
+                    const response = await Dealer.SaveSettlementInfo({
+                        "OrderID": this.detailData.OrderID,
+                        "WIP_OpenDate": this.detailData.WIP_OpenDate,
+                        "WIP_SettleDate": this.detailData.WIP_SettleDate,
+                        "WIP_Number": this.detailData.WIP_Number,
+                        "Settlement_Number": this.detailData.Settlement_Number,
+                        "Settlement_Cost": this.detailData.Settlement_Cost,
+                        "Settlement_PartCost": this.detailData.Settlement_PartCost,
+                    })
+                    if (response.Code == 200) {
+                        const subresponse = await Dealer.FinishOrder({
+                            "OrderID": this.detailData.OrderID
+                        })
+                        if (subresponse.Code == 200) {
+                            this.alertDialog()
+                        }
+                    }
+                } catch (e) {
+                    console.log(e);
+                }
             }
         },
         async handleApproved(val) { //审批 - 区域经理或HQ
@@ -1157,6 +1203,7 @@ export default {
                         this.alertDialog()
                     }
                 } else if (this.UserRole == 'HQ-Administrator') {
+                    this.loading = true
                     const response = await HQ.HQApproveOrder({
                         "OrderID": this.detailData.OrderID,
                         "Result": val,
@@ -1165,7 +1212,11 @@ export default {
                     if (response.Code == 200) {
                         this.detailData.StatusCode = response.Data.StatusID
                         this.getLogisticsList()
-
+                        this.loading = false
+                        this.$message({
+                            message: '审批成功',
+                            type: 'success'
+                        })
                     }
                 }
             } catch (e) {
@@ -1175,10 +1226,10 @@ export default {
         async getLogisticsList() { //获取物流列表
             try {
                 const subresponse = await HQ.GetUserList({
-                    "SearchField":"RoleCode",
-                    "SearchValue":"Logistics",
+                    "SearchField": "RoleCode",
+                    "SearchValue": "Logistics",
                 })
-                if(subresponse.Code == 200) {
+                if (subresponse.Code == 200) {
                     this.LogisticsList = subresponse.Data.Users
                 }
             } catch (e) {
@@ -1187,12 +1238,18 @@ export default {
         },
         async handleSendToLogistics() { //发物流
             try {
+                this.loading = true
                 const response = await HQ.SendToLogistics({
                     OrderID: this.detailData.OrderID,
-                    UserID:this.LogisticsID
+                    UserID: this.LogisticsID
                 })
                 if (response.Code == 200) {
                     this.detailData.StatusCode = response.Data.StatusID
+                    this.loading = false
+                    this.$message({
+                        message: '物流已发送',
+                        type: 'success'
+                    })
                 }
             } catch (error) {
                 console.log(error)
@@ -1200,13 +1257,17 @@ export default {
         },
         async GetOrderInfo() { //获取订单信息
             try {
+                this.loading = true
                 const response = await General.GetOrderInfo({
                     OrderID: this.detailData.OrderID
                 })
                 this.detailData = response.Data
+                this.loading = false
                 // console.log(this.detailData)
-                if (this.detailData.StatusCode == 204 ||this.detailData.StatusCode == 205){
-                    this.getLogisticsList()
+                if (this.detailData.StatusCode == 204 || this.detailData.StatusCode == 205) {
+                    if (this.UserRole == 'HQ-Administrator'){
+                        this.getLogisticsList()
+                    }
                 }
             } catch (error) {
                 console.log(error)
@@ -1219,6 +1280,7 @@ export default {
             }
         },
         async handleImport() { //导入订单信息
+            this.loading = true
             try {
                 const importInfo = await Dealer.ImportOrderInfo({
                     "ReferenceNumber": this.detailData.ReferenceNumber
@@ -1227,6 +1289,7 @@ export default {
                 for (var variable in importInfo.Data) {
                     this.detailData[variable] = importInfo.Data[variable]
                 }
+                this.loading = false
             } catch (error) {
                 console.log(error)
             }
@@ -1261,9 +1324,9 @@ export default {
         text-align: center;
         font-weight: 600;
     }
-    .cost{
-        input{
-            direction: rtl
+    .cost {
+        input {
+            direction: rtl;
         }
     }
     .form-box-neworder {

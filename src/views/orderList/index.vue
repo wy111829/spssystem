@@ -80,7 +80,7 @@ export default {
             Status: 0,
             SearchField: '',
             SearchValue: '',
-            SortField: 'CreateDate',
+            SortField: 'LastModified',
             SortType: 'DESC',
             RowOffset: 0,
             RowCount: 10,

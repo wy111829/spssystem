@@ -1,7 +1,7 @@
 <template >
     <div class="main-container">
         <router-link class="button" to="/systemMsgNew">
-            <el-button type="primary" v-if="UserRole == 'HQ-BP' ||UserRole == 'Administrator' ">新建消息</el-button>
+            <el-button type="primary" v-if="UserRole == 'HQ-Administrator' ||UserRole == 'Administrator' ">新建消息</el-button>
         </router-link>
         <div class="search-box">
             <div class="sort-select">
@@ -68,7 +68,7 @@ export default {
             SearchField: '',
             SearchValue: '',
             SortField: 'PublishDate',
-            SortType: 'ASC',
+            SortType: 'DESC',
             dialogFormVisible: false,
             MessageDetail: '',
             MessageDetailPublishDate:'',
