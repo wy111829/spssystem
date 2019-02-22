@@ -76,7 +76,7 @@ export default {
                 label: '邮箱',
                 value: 'MailBox',
             }, {
-                label: '手机',
+                label: '电话',
                 value: 'Mobile',
             }]
         }

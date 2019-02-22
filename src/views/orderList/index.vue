@@ -30,7 +30,7 @@
             </div>
         </div>
 
-        <router-link class="button" to="/orderDetial" v-if="UserRole == 'Dealer'">
+        <router-link class="button" to="/orderDetail" v-if="UserRole == 'Dealer'">
             <el-button type="primary" class="newOrderButton" style="font-size:13px">新建订单</el-button>
         </router-link>
     </div>
@@ -212,7 +212,7 @@ export default {
         handleEdit(index, data) { //点击编辑进入详情页
             //console.log(index, data)
             this.$router.push({
-                name: 'orderDetial',
+                name: 'orderDetail',
                 params: {
                     id: data.OrderID
                 }
@@ -220,7 +220,7 @@ export default {
         },
         goMessageDetail(data) { //进入详情页
             this.$router.push({
-                name: 'orderDetial',
+                name: 'orderDetail',
                 params: {
                     id: data.OrderID
                 }

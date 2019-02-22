@@ -1,24 +1,43 @@
 <template>
 <div class="main-container">
     <el-row :gutter="20">
-        <el-col :md="12" :sm="24">
-            <div class="RMDetail">
-                <el-form ref="Data" :model="Data" class="inline-form el-row" label-width="150px" :rules="rules">
-                    <el-form-item label="账号(邮箱)：" prop="MailBox">
-                        <el-input v-model="Data.MailBox" clearable></el-input>
+        <el-form ref="Data" :model="Data" class="inline-form el-row" label-width="150px" :rules="rules">
+            <el-col :md="12" :sm="24">
+                <el-form-item label="账号(邮箱)：" prop="MailBox">
+                    <el-input v-model="Data.MailBox" clearable></el-input>
+                </el-form-item>
+                <el-form-item label="地区：" prop="RegionName">
+                    <el-select v-model="Data.RegionID" placeholder="--请选择区域--">
+                        <el-option v-for="(item, index) in area" :key="item.ID" :label="item.Name" :value="item.ID"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="区域经理姓名：" prop="Name">
+                    <el-input v-model="Data.Name"></el-input>
+                </el-form-item>
+                <el-form-item label="手机：" prop="Mobile">
+                    <el-input v-model="Data.Mobile" clearable></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :md="12" :sm="24">
+                <template v-if="Data.ID == 0">
+                    <el-form-item label="密码：" prop="Password">
+                        <el-input v-model="Data.Password" type="Password" clearable></el-input>
                     </el-form-item>
-                    <el-form-item label="地区：" prop="RegionName">
-                        <el-select v-model="Data.RegionID" placeholder="--请选择区域--" @change="AreaChange">
-                          <el-option v-for="(item, index) in area" :key="item.ID" :label="item.Name" :value="item.ID"></el-option>
-                        </el-select>
+                    <el-form-item label="密码确认：" prop="Passwordagain">
+                        <el-input v-model="Data.Passwordagain" type="Password" clearable></el-input>
                     </el-form-item>
-                    <el-form-item label="区域经理姓名：" prop="Name">
-                        <el-input v-model="Data.Name"></el-input>
+                </template>
+                <el-form-item label="状态：" prop="StatusCode">
+                    <el-radio-group v-model="Data.StatusCode">
+                        <el-radio :label="101">启用</el-radio>
+                        <el-radio :label="102">停用</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <template v-if="Data.ID != 0">
+                    <el-form-item label="修改密码：" prop="pswCheck">
+                        <el-checkbox v-model="pswCheck"></el-checkbox>
                     </el-form-item>
-                    <el-form-item label="手机：" prop="Mobile">
-                        <el-input v-model="Data.Mobile" clearable></el-input>
-                    </el-form-item>
-                    <template v-if="Data.ID == 0">
+                    <template v-if="pswCheck">
                         <el-form-item label="密码：" prop="Password">
                             <el-input v-model="Data.Password" type="Password" clearable></el-input>
                         </el-form-item>
@@ -26,30 +45,8 @@
                             <el-input v-model="Data.Passwordagain" type="Password" clearable></el-input>
                         </el-form-item>
                     </template>
-                    <el-form-item label="状态：" prop="StatusCode">
-                        <el-radio-group v-model="Data.StatusCode">
-                            <el-radio :label="101">启用</el-radio>
-                            <el-radio :label="102">停用</el-radio>
-                        </el-radio-group>
-                    </el-form-item>
-                    <template v-if="Data.ID != 0">
-                        <el-form-item label="修改密码：" prop="pswCheck">
-                            <el-checkbox v-model="pswCheck"></el-checkbox>
-                        </el-form-item>
-                        <template v-if="pswCheck">
-                            <el-form-item label="密码：" prop="Password">
-                                <el-input v-model="Data.Password" type="Password" clearable></el-input>
-                            </el-form-item>
-                            <el-form-item label="密码确认：" prop="Passwordagain">
-                                <el-input v-model="Data.Passwordagain" type="Password" clearable></el-input>
-                            </el-form-item>
-                        </template>
-                    </template>
-                </el-form>
-            </div>
-        </el-col>
-        <el-col :md="12" :sm="24">
-            <div class="SelectDealerList">
+                </template>
+                <!-- <div class="SelectDealerList">
                 <template>
                     <el-transfer filterable filter-placeholder="查询关键字"
                         v-model="Data.Dealers"
@@ -58,12 +55,25 @@
                         :data="areaDealers">
                     </el-transfer>
                 </template>
-            </div>
+            </div> -->
+            </el-col>
+        </el-form>
+        <el-col :span="24">
+            <el-table :data="Data.Dealers" class="table" ref="multipleTable" empty-text='该地区经销商列表为空' v-if="$route.params.id" @row-click="goDealerDetail">
+                <el-table-column prop="CustomerNumber" label="账号" sortable></el-table-column>
+                <el-table-column prop="CKD" label="CKD" sortable></el-table-column>
+                <el-table-column prop="Name" label="经销商名称" sortable width="120"></el-table-column>
+                <el-table-column prop="RegionName" label="地区"></el-table-column>
+                <el-table-column prop="ProvinceName" label="省份" sortable></el-table-column>
+                <el-table-column prop="CityName" label="城市" sortable></el-table-column>
+                <el-table-column prop="MailBox1" label="邮箱1" sortable width="160" align="center"></el-table-column>
+                <el-table-column prop="MailBox2" label="邮箱2" sortable width="160" align="center"></el-table-column>
+            </el-table>
         </el-col>
         <el-col :span="24">
             <div class="text-center" style="margin-top:20px;">
                 <el-button type="primary" @click="submitForm('Data')">保存</el-button>
-                <el-button type="danger" @click="handleDeletDealer('Data')" v-if="Data.ID != 0">删除</el-button>
+                <el-button type="danger" @click="handleDeletRM('Data')" v-if="Data.ID != 0">删除</el-button>
                 <el-button type="info" @click="handleGoBack">取消</el-button>
             </div>
         </el-col>
@@ -107,32 +117,30 @@ export default {
             Data: {
                 "ID": null,
                 "RegionID": "",
-                "RegionName": "",
                 "Name": "",
-                "LoginName": "",
                 "MailBox": "",
                 "Mobile": 0,
                 "StatusCode": 0,
-                "Dealers":[],
+                "Dealers": [],
                 Password: '',
             },
-            area:[{
-                ID:100001,
-                Name:"东区"
-            },{
-                ID:100002,
-                Name:"南区"
-            },{
-                ID:100003,
-                Name:"西区"
-            },{
-                ID:100004,
-                Name:"北区"
-            },{
-                ID:100005,
-                Name:"西南区"
+            area: [{
+                ID: "100001",
+                Name: "东区"
+            }, {
+                ID: "100002",
+                Name: "南区"
+            }, {
+                ID: "100003",
+                Name: "西区"
+            }, {
+                ID: "100004",
+                Name: "北区"
+            }, {
+                ID: "100005",
+                Name: "西南区"
             }],
-            areaDealers:[],
+            areaDealers: [],
             pswCheck: false,
             rules: {
                 Password: [{
@@ -174,29 +182,29 @@ export default {
         ...mapMutations([
             'closeTags'
         ]),
-        async AreaChange(val) {
-            this.areaDealers = []
-            this.Data.Dealers = []
-            try {
-                const response = await HQ.GetRegionDealerList({
-                    "RegionID":val,
-                    "SearchField":"",
-                    "SearchValue":"",
-                    "SortField":"Name",
-                    "SortType":"ASC"
-                })
-                if (response.Code == 200){
-                    this.areaDealers = response.Data.Dealers
-                    this.area.forEach((item) => {
-                        if(item.ID == val){
-                            this.Data.RegionName = item.Name
-                        }
-                    })
-                }
-            } catch (e) {
-                console.log(e)
-            }
-        },
+        // async AreaChange(val) {
+        //     this.areaDealers = []
+        //     this.Data.Dealers = []
+        //     try {
+        //         const response = await HQ.GetRegionDealerList({
+        //             "RegionID": val,
+        //             "SearchField": "",
+        //             "SearchValue": "",
+        //             "SortField": "Name",
+        //             "SortType": "ASC"
+        //         })
+        //         if (response.Code == 200) {
+        //             this.areaDealers = response.Data.Dealers
+        //             this.area.forEach((item) => {
+        //                 if (item.ID == val) {
+        //                     this.Data.RegionName = item.Name
+        //                 }
+        //             })
+        //         }
+        //     } catch (e) {
+        //         console.log(e)
+        //     }
+        // },
         async CreateOrUpdateRM() {
             try {
                 const response = await HQ.CreateOrUpdateRM({
@@ -211,9 +219,11 @@ export default {
             }
         },
         submitForm(formName) {
-            if (!this.pswCheck) {
-                this.$delete(this.Data, 'Password'),
-                this.$delete(this.Data, 'Passwordagain')
+            if (this.Data.ID != 0){
+                if (!this.pswCheck) {
+                    this.$delete(this.Data, 'Password'),
+                    this.$delete(this.Data, 'Passwordagain')
+                }
             }
             this.$refs[formName].validate((valid) => {
                 if (valid) {
@@ -229,7 +239,15 @@ export default {
                 }
             })
         },
-        async handleDeletDealer(data){
+        goDealerDetail(data) {
+            this.$router.push({
+                name: 'systemDealerDetail',
+                params: {
+                    id: data.DealerID
+                }
+            });
+        },
+        async handleDeletRM(data) {
             try {
                 const response = await HQ.ChangeRMStatus({
                     "ID": data.ID,
@@ -248,11 +266,11 @@ export default {
                     ID: this.Data.ID
                 })
                 this.Data = response.Data
-                let arr = []
-                this.Data.Dealers.map((item) => {
-                    arr.push(item.ID)
-                })
-                this.Data.Dealers = arr
+                // let arr = []
+                // this.Data.Dealers.map((item) => {
+                //     arr.push(item.ID)
+                // })
+                // this.Data.Dealers = arr
             } catch (error) {
                 console.log(error)
             }
@@ -261,7 +279,7 @@ export default {
             this.Data.ID = this.$route.params.id ? this.$route.params.id : 0
             if (this.Data.ID) {
                 this.GetRMInfo()
-                this.AreaChange()
+                // this.AreaChange()
             }
         },
         alertDialog() {
@@ -295,7 +313,7 @@ export default {
 .el-transfer__buttons {
     width: 5%;
 }
-.el-transfer-panel .el-transfer-panel__header .el-checkbox .el-checkbox__label{
+.el-transfer-panel .el-transfer-panel__header .el-checkbox .el-checkbox__label {
     font-size: 14px;
     color: #606266;
 }

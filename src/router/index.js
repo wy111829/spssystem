@@ -29,10 +29,10 @@ export default new Router({
                     name: 'DealerManagment'
                 },
                 {
-                    path: '/orderDetial/:id?',
-                    component: resolve => require(['@/views/orderDetial'], resolve),
+                    path: '/orderDetail/:id?',
+                    component: resolve => require(['@/views/orderDetail'], resolve),
                     meta: { title: '订单详情', keepAlive: false  },
-                    name: 'orderDetial'
+                    name: 'orderDetail'
                 },
                 {
                     path: '/report',

@@ -30,7 +30,7 @@
     export default {
         data(){
             return {
-                tagsList: ['orderDetial'],
+                tagsList: ['orderDetail'],
                 collapse: false
             }
         },

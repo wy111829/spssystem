@@ -14,29 +14,32 @@
             <el-form-item label="邮箱1：" prop="MailBox1">
                 <el-input v-model.trim="Dealer.MailBox1" clearable></el-input>
             </el-form-item>
-            <el-form-item label="邮箱2：" prop="MailBox1">
+            <el-form-item label="邮箱2：" prop="MailBox2">
                 <el-input v-model.trim="Dealer.MailBox2" clearable></el-input>
             </el-form-item>
             <el-form-item label="区域： " prop="RegionID">
-                <el-select v-model="Dealer.RegionID" @change="RegionIDChange" clearable placeholder="请选择">
+                <el-select v-model="Dealer.RegionID" @change="RegionIDChange" placeholder="请选择">
                     <el-option v-for="(item, index) in area" :key="item.ID" :label="item.Name" :value="item.ID">
                     </el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="省份：" prop="ProvinceID">
-                <el-select v-model="Dealer.ProvinceID" @change="ProvinceIDChange" clearable placeholder="请选择">
+                <el-select v-model="Dealer.ProvinceID" @change="ProvinceIDChange" placeholder="请选择">
                     <el-option v-for="(item, index) in ProvinceIDList" :key="item.ID" :label="item.Name" :value="item.ID">
                     </el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="城市：" prop="CityID">
-                <el-select v-model="Dealer.CityID" @change="CityIDChange" clearable placeholder="请选择">
+                <el-select v-model="Dealer.CityID" @change="CityIDChange" placeholder="请选择">
                     <el-option v-for="(item, index) in CityIDList" :key="item.ID" :label="item.Name" :value="item.ID">
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="区域经理：" prop="RegionManagerName">
-                <el-input v-model.trim="Dealer.RegionManagerName" clearable></el-input>
+            <el-form-item label="区域经理：" prop="RegionManagerID">
+                <el-select v-model="Dealer.RegionManagerID" @change="RegionManagerChange" placeholder="请选择">
+                    <el-option v-for="(item, index) in RegionManagersList" :key="item.ID" :label="item.Name" :value="item.ID">
+                    </el-option>
+                </el-select>
             </el-form-item>
             <el-form-item label="所属经销商集团：" prop="DealerGroup">
                 <el-input v-model.trim="Dealer.DealerGroup" clearable></el-input>
@@ -128,6 +131,7 @@ export default {
                 "CityID": "",
                 "CityName": "",
                 "RegionManagerID":"",
+                "RegionManagerName":"",
                 "DealerGroup":"",
                 "StatusCode": '',
                 "StatusName":"",
@@ -171,16 +175,10 @@ export default {
                         trigger: 'blur'
                     }
                 ],
-                RegionManagerName: [{
+                RegionManagerID: [{
                         required: true,
-                        message: '区域经理',
-                        trigger: 'blur'
-                    },
-                    {
-                        min: 1,
-                        max: 100,
-                        message: '长度小于100个字',
-                        trigger: 'blur'
+                        message: '选择区域经理',
+                        trigger: 'change'
                     }
                 ],
                 Password: [{
@@ -209,7 +207,7 @@ export default {
                     trigger: 'change'
                 }],
                 DealerGroup: [{
-                        required: true,
+                        required: false,
                         message: '请输入经销商集团',
                         trigger: 'blur'
                     },
@@ -232,9 +230,7 @@ export default {
                     }
                 ],
                 MailBox2: [{
-                        required: true,
-                        message: '请输入邮箱地址',
-                        trigger: 'blur'
+                        required: false,
                     },
                     {
                         type: 'email',
@@ -249,6 +245,7 @@ export default {
                 }]
             },
             area: [],
+            RegionManagersList: [],
             ProvinceIDList: [],
             CityIDList: [],
             pswCheck: false
@@ -261,10 +258,13 @@ export default {
         RegionIDChange(RegionID) {
             this.ProvinceIDList = []
             this.CityIDList = []
+            this.RegionManagersList = []
             this.Dealer.ProvinceID = ''
             this.Dealer.CityID = ''
+            this.Dealer.RegionManagerID = ''
             this.area.map((item) => {
                 if (item.ID == RegionID) {
+                    this.RegionManagersList = item.RegionManagers
                     this.Dealer.RegionName = item.Name
                     this.ProvinceIDList = item.Provinces
                 }
@@ -287,10 +287,18 @@ export default {
                 }
             })
         },
+        RegionManagerChange(RegionManagerID) {
+            this.RegionManagersList.map((item) => {
+                if (item.ID == RegionManagerID) {
+                    this.Dealer.RegionManagerName = item.Name
+                }
+            })
+        },
         initAreaFun() { //地区联动初始化
             this.area.map((item) => {
                 if (item.ID == this.Dealer.RegionID) {
                     this.ProvinceIDList = item.Provinces
+                    this.RegionManagersList = item.RegionManagers
                     item.Provinces.map((citem) => {
                         if (citem.ID == this.Dealer.ProvinceID) {
                             this.CityIDList = citem.Cities

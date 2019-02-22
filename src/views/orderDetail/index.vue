@@ -262,7 +262,7 @@
                 <el-button type="primary" @click="AttachmentPreviewDialog = true">附件预览</el-button>
             </div>
             <el-table :data="AttachmentShowList">
-                <el-table-column label="序号" prop="ID"></el-table-column>
+                <el-table-column label="序号" type="index" :index="indexMethod"></el-table-column>
                 <el-table-column label="分类" prop="CategoryID">
                     <template slot-scope="scope">
                         {{GetCategoryName(scope.row.CategoryID)}}
@@ -271,7 +271,7 @@
                 <el-table-column label="名称" prop="FileName"></el-table-column>
                 <el-table-column label="大小" prop="FileSize">
                     <template slot-scope="scope">
-                        {{scope.row.FileSize+'MB'}}
+                        {{Math.round(scope.row.FileSize/1024/1024*100)/100+'MB'}}
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" align="center">
@@ -437,7 +437,7 @@
                     <!-- <img src="../../assets/login-bg1.png" style="width:90%" /> -->
                 </template>
             </el-table-column>
-            <el-table-column label="序号" prop="ID"></el-table-column>
+            <el-table-column label="序号" type="index" :index="indexMethod"></el-table-column>
             <el-table-column label="分类" prop="CategoryID">
                 <template slot-scope="scope">
                     {{GetCategoryName(scope.row.CategoryID)}}
@@ -446,7 +446,7 @@
             <el-table-column label="名称" prop="FileName"></el-table-column>
             <el-table-column label="大小" prop="FileSize">
                 <template slot-scope="scope">
-                    {{scope.row.FileSize+'MB'}}
+                    {{Math.round(scope.row.FileSize/1024/1024*100)/100+'MB'}}
                 </template>
             </el-table-column>
             <el-table-column label="操作" align="center">
@@ -1308,6 +1308,9 @@ export default {
                 name: 'orderList'
             })
         },
+        indexMethod(index) {
+            return index + 1
+        }
     },
     watch: {
         '$route': 'routeChange',

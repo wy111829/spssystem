@@ -88,7 +88,6 @@ export default {
                 "RoleCode":"HQ-Administrator",
                 "RoleName":"总部管理员",
                 "StatusCode":101,
-                "StatusName":"启用",
                 Password:'',
             },
             pswCheck: false,
@@ -157,6 +156,7 @@ export default {
             try {
                 const response = await HQ.ChangeUserStatus({
                     "UserID": data.ID,
+                    "RoleCode":this.UserRole,
                     "StatusCode": 103
                 })
                 if (response.Code == 200) {
@@ -199,6 +199,12 @@ export default {
     },
     watch: {
         '$route': 'routeChange'
+    },
+    computer: {
+        ...mapState([
+            'UserName',
+            'UserRole'
+        ]),
     },
     created() {
         this.routeChange()

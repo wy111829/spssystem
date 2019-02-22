@@ -43,6 +43,9 @@
 import {
     HQ
 } from '@/networks/api'
+import {
+    mapState
+} from 'vuex'
 export default {
     data() { //选项 / 数据
         return {
@@ -109,6 +112,7 @@ export default {
             try {
                 const response = await HQ.ChangeUserStatus({
                     "UserID": data.UserID,
+                    "RoleCode":this.UserRole,
                     "StatusCode": data.StatusCode
                 })
                 if (response.Code != 200) {
@@ -122,6 +126,7 @@ export default {
             try {
                 const response = await HQ.ChangeUserStatus({
                     "UserID": data.UserID,
+                    "RoleCode": this.UserRole,
                     "StatusCode": 103
                 })
                 if (response.Code == 200) {
@@ -149,8 +154,11 @@ export default {
             }
         }
     },
-    components: { //定义组件
-
+    computer: {
+        ...mapState([
+            'UserName',
+            'UserRole'
+        ]),
     },
     created() { //生命周期函数
         this.getData()
