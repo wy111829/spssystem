@@ -326,7 +326,7 @@
         <div class="form-box-neworder text-center" style="margin-top:20px" v-if="UserRole=='Dealer'">
             <el-button type="primary" @click="submitToSaveOrder('detailData')" v-if="CanEdit||detailData.StatusCode==205">保存</el-button>
             <el-button type="primary" @click="submitToSubmitOrder('detailData')" v-if="[201,207,208].includes(detailData.StatusCode)">保存并提交</el-button>
-            <el-button @click="handleCancelOrder" v-if="[201,202,203,204,207,208].includes(detailData.StatusCode)">取消订单</el-button>
+            <el-button @click="confirmOperation" v-if="[201,202,203,204,207,208].includes(detailData.StatusCode)">取消订单</el-button>
             <el-button @click="handleFinishOrder" v-if="detailData.StatusCode==205">结算单上传完成</el-button>
             <el-button @click="handleGoBack">返回订单列表</el-button>
         </div>
@@ -1103,6 +1103,20 @@ export default {
                 console.log(error)
             }
         },
+        confirmOperation() {
+            this.$confirm('确认取消订单？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.handleCancelOrder()
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消操作'
+                });
+            });
+        },
         async handleCancelOrder() { //取消订单
             try {
                 const response = await Dealer.CancelOrder({
@@ -1257,12 +1271,10 @@ export default {
         },
         async GetOrderInfo() { //获取订单信息
             try {
-                this.loading = true
                 const response = await General.GetOrderInfo({
                     OrderID: this.detailData.OrderID
                 })
                 this.detailData = response.Data
-                this.loading = false
                 // console.log(this.detailData)
                 if (this.detailData.StatusCode == 204 || this.detailData.StatusCode == 205) {
                     if (this.UserRole == 'HQ-Administrator'){

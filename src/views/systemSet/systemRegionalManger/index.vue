@@ -29,7 +29,7 @@
         <el-table-column label="操作" width="180" align="center">
             <template slot-scope="scope">
                 <el-button type="text" icon="el-icon-edit" @click="goRMDetail(scope.row)" @click.native="stopBubble">编辑</el-button>
-                <el-button type="text" icon="el-icon-delete" @click.stop="handleDeletRM(scope.row)" @click.native="stopBubble" style="color:#ff4949">删除</el-button>
+                <el-button type="text" icon="el-icon-delete" @click.stop="confirmOperation(scope.row)" @click.native="stopBubble" style="color:#ff4949">删除</el-button>
             </template>
         </el-table-column>
     </el-table>
@@ -44,7 +44,10 @@
 import {
     HQ
 } from '@/networks/api'
-
+import {
+    mapState,
+    mapMutations
+} from 'vuex'
 export default {
     data() { //选项 / 数据
         return {
@@ -82,6 +85,9 @@ export default {
         }
     },
     methods: { //事件处理器
+        ...mapMutations([
+            'closeTags'
+        ]),
         stopBubble () {
             event.stopPropagation()
         },
@@ -138,6 +144,21 @@ export default {
                 console.log(error)
             }
         },
+        confirmOperation(data) {
+            console.log(data);
+            this.$confirm('确认删除'+ data.Name +'？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.handleDeletRM(data)
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消操作'
+                });
+            });
+        },
         async handleDeletRM(data){
             try {
                 const response = await HQ.ChangeRMStatus({
@@ -145,6 +166,10 @@ export default {
                     "StatusCode": 103
                 })
                 if (response.Code == 200) {
+                    this.$message({
+                        type: 'success',
+                        message: '删除成功'
+                    });
                     let arrindex = this.RegionManagers.indexOf(data)
                     this.RegionManagers.splice(arrindex,1)
                 }

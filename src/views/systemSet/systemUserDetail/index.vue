@@ -46,7 +46,7 @@
             <el-row class="text-center">
                 <el-form-item>
                     <el-button type="primary" @click="submitForm('Data')">保存</el-button>
-                    <el-button type="danger" @click="handleDeletUser('Data')" v-if="Data.ID != 0">删除</el-button>
+                    <el-button type="danger" @click="confirmOperation" v-if="Data.ID != 0">删除</el-button>
                     <el-button type="info" @click="handleGoBack">取消</el-button>
                 </el-form-item>
             </el-row>
@@ -152,11 +152,25 @@ export default {
                 }
             })
         },
-        async handleDeletUser(data){
+        confirmOperation() {
+            this.$confirm('确认删除'+this.Data.Name +'？' , '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.handleDeletUser()
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消操作'
+                });
+            });
+        },
+        async handleDeletUser(){
             try {
                 const response = await HQ.ChangeUserStatus({
-                    "UserID": data.ID,
-                    "RoleCode":this.UserRole,
+                    "UserID": this.Data.UserID,
+                    "RoleCode":this.Data.RoleCode,
                     "StatusCode": 103
                 })
                 if (response.Code == 200) {
@@ -200,7 +214,7 @@ export default {
     watch: {
         '$route': 'routeChange'
     },
-    computer: {
+    computed: {
         ...mapState([
             'UserName',
             'UserRole'

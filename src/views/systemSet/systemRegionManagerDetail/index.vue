@@ -73,7 +73,7 @@
         <el-col :span="24">
             <div class="text-center" style="margin-top:20px;">
                 <el-button type="primary" @click="submitForm('Data')">保存</el-button>
-                <el-button type="danger" @click="handleDeletRM('Data')" v-if="Data.ID != 0">删除</el-button>
+                <el-button type="danger" @click="confirmOperation()" v-if="Data.ID != 0">删除</el-button>
                 <el-button type="info" @click="handleGoBack">取消</el-button>
             </div>
         </el-col>
@@ -247,10 +247,24 @@ export default {
                 }
             });
         },
-        async handleDeletRM(data) {
+        confirmOperation() {
+            this.$confirm('确认删除'+this.Data.Name +'？' , '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.handleDeletRM()
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消操作'
+                });
+            });
+        },
+        async handleDeletRM() {
             try {
                 const response = await HQ.ChangeRMStatus({
-                    "ID": data.ID,
+                    "ID": this.Data.ID,
                     "StatusCode": 103
                 })
                 if (response.Code == 200) {

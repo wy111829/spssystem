@@ -28,7 +28,7 @@
         <el-table-column label="操作" width="180" align="center">
             <template slot-scope="scope">
                 <el-button type="text" icon="el-icon-edit" @click="goUserDetail(scope.row)" @click.native="stopBubble">编辑</el-button>
-                <el-button type="text" icon="el-icon-delete" @click.stop="handleDeletUser(scope.row)" @click.native="stopBubble" style="color:#ff4949">删除</el-button>
+                <el-button type="text" icon="el-icon-delete" @click.stop="confirmOperation(scope.row)" @click.native="stopBubble" style="color:#ff4949">删除</el-button>
             </template>
         </el-table-column>
     </el-table>
@@ -109,10 +109,11 @@ export default {
             }
         },
         async ChangeUserStatus(index, data) {
+            console.log(data);
             try {
                 const response = await HQ.ChangeUserStatus({
                     "UserID": data.UserID,
-                    "RoleCode":this.UserRole,
+                    "RoleCode":data.RoleCode,
                     "StatusCode": data.StatusCode
                 })
                 if (response.Code != 200) {
@@ -122,14 +123,33 @@ export default {
                 console.log(error)
             }
         },
+        confirmOperation(data) {
+            console.log(data);
+            this.$confirm('确认删除'+ data.Name +'？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.handleDeletUser(data)
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消操作'
+                });
+            });
+        },
         async handleDeletUser(data){
             try {
                 const response = await HQ.ChangeUserStatus({
                     "UserID": data.UserID,
-                    "RoleCode": this.UserRole,
+                    "RoleCode": data.RoleCode,
                     "StatusCode": 103
                 })
                 if (response.Code == 200) {
+                    this.$message({
+                        type: 'success',
+                        message: '删除成功'
+                    });
                     let arrindex = this.Users.indexOf(data)
                     this.Users.splice(arrindex,1)
                 }
@@ -154,7 +174,7 @@ export default {
             }
         }
     },
-    computer: {
+    computed: {
         ...mapState([
             'UserName',
             'UserRole'

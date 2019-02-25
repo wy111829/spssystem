@@ -54,7 +54,7 @@
             <template slot-scope="scope">
                 <el-button type="text" icon="el-icon-edit" @click.stop="goMessageDetail(scope.row)" @click.native="stopBubble" v-if="UserRole=='Dealer'&& [201,205,207,208].includes(scope.row.StatusCode)">编辑</el-button>
                 <el-button type="text" icon="el-icon-view" @click.stop="goMessageDetail(scope.row)" @click.native="stopBubble" v-else>查看</el-button>
-                <el-button type="text" icon="el-icon-delete" @click.stop="handleCancelOrder(scope.row)" @click.native="stopBubble" style="color:#ff4949" v-if="UserRole=='Dealer'&&[201,202,203,204,207,208].includes(scope.row.StatusCode)">取消</el-button>
+                <el-button type="text" icon="el-icon-delete" @click.stop="confirmOperation(scope.row)" @click.native="stopBubble" style="color:#ff4949" v-if="UserRole=='Dealer'&&[201,202,203,204,207,208].includes(scope.row.StatusCode)">取消</el-button>
             </template>
         </el-table-column>
     </el-table>
@@ -146,17 +146,17 @@ export default {
                 prop: 'OrderNumber',
                 label: '订单号',
                 sortable: true,
-                width:115
+                width: 115
             }, {
                 prop: 'AccidentTypeName',
                 label: '申请类型',
                 sortable: true,
-                width:70
+                width: 70
             }, {
                 prop: 'StatusName',
                 label: '状态',
                 sortable: true,
-                width:55
+                width: 55
             }, {
                 prop: 'DealerName',
                 label: '经销商名称',
@@ -166,22 +166,22 @@ export default {
                 prop: 'SubModelName',
                 label: '车型',
                 sortable: true,
-                width:55
+                width: 55
             }, {
                 prop: 'PlateNumber',
                 label: '车牌号',
                 sortable: true,
-                width:60
+                width: 60
             }, {
                 prop: 'VIN',
                 label: '车架号',
                 sortable: true,
-                width:110
+                width: 110
             }, {
                 prop: 'LastModified',
                 label: '更新日期',
                 sortable: true,
-                width:100
+                width: 100
             }]
         }
     },
@@ -226,6 +226,20 @@ export default {
                 }
             });
         },
+        confirmOperation(data) {
+            this.$confirm('确认取消订单？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.handleCancelOrder(data)
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消操作'
+                });
+            });
+        },
         async handleCancelOrder(data) { //取消订单
             console.log(data);
             try {
@@ -233,7 +247,12 @@ export default {
                     "OrderID": data.OrderID
                 })
                 if (response.Code == 200) {
-                    this.$router.go(0)
+                    this.$alert('订单已取消', '提示', {
+                        confirmButtonText: '确定',
+                        callback: action => {
+                            this.$router.go(0)
+                        }
+                    })
                 }
             } catch (e) {
                 console.log(e)

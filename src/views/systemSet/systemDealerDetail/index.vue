@@ -74,7 +74,7 @@
             <el-row class="text-center">
                 <el-form-item>
                     <el-button type="primary" @click="submitForm('Dealer')">保存</el-button>
-                    <el-button type="danger" @click="handleDeletDealer('Dealer')" v-if="Dealer.DealerID != 0">删除</el-button>
+                    <el-button type="danger" @click="confirmOperation" v-if="Dealer.DealerID != 0">删除</el-button>
                     <el-button type="info" @click="handleGoBack">取消</el-button>
                 </el-form-item>
             </el-row>
@@ -361,10 +361,24 @@ export default {
                 console.log(error)
             }
         },
-        async handleDeletDealer(data){
+        confirmOperation() {
+            this.$confirm('确认删除'+this.Dealer.Name +'？' , '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.handleDeletDealer()
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消操作'
+                });
+            });
+        },
+        async handleDeletDealer(){
             try {
                 const response = await HQ.ChangeDealerStatus({
-                    "DealerID": data.DealerID,
+                    "DealerID": this.Dealer.DealerID,
                     "StatusCode": 103
                 })
                 if (response.Code == 200) {
